@@ -81,7 +81,6 @@ echo "done";exit;
 
         $this->make_purc($prefix);
         $this->make_sale($prefix);
-        $this->make_cashsale($prefix);
         $this->make_lr($prefix);
         $this->make_lrdet($prefix);
         $this->make_bill($prefix);
