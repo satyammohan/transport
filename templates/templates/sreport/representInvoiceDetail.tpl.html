@@ -1,0 +1,68 @@
+<fieldset>
+    <legend>Representative-wise Sales Invoice Detail</legend>
+    <form method="post" action="index.php?module=sreport&func=representInvoiceDetail">
+        <table>
+            <tr>
+                <td valign="top">Start Date :</td>
+                <td valign="top"><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td valign="top">End Date :</td>
+                <td valign="top"><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="representInvoiceDetail" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Representative-wise Sales Invoice Detail Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data}
+        <table id='report' border="1">
+            <tr>
+                <th>Sl</th><th>Representative</th><th>Invoice No.</th><th>Date</th><th>Party Name</th>
+                <th>Party Address</th><th>Product Name</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th>
+                <th>GST+Cess+TCS</th><th>Total Amount</th>
+            </tr>
+            {$c1=0}{$cf1=0}{$c2=0}{$c3=0}{$c4=0}
+            {foreach item=x name=it key=key from=$data}
+            <tr>
+                <td>{$key+1}</td>
+                <td>{$x.rname}</td>
+                <td>{$x.invno}</td>
+                <td>{$x.date|date_format:'d-m-Y'}</td>
+                <td>{$x.pname}</td>
+                <td>{$x.address1}</td>
+                <td>{$x.name}</td>
+                <td align="right">{$x.rate|string_format:"%.2f"}</td>
+                <td align="right">{$x.qty|string_format:"%.2f"}</td>
+                <td align="right">{$x.free|string_format:"%.2f"}</td>
+                <td align="right">{$x.goods_amount|string_format:"%.2f"}</td>
+                <td align="right">{($x.tax_amount+$x.cessamt + ($x.goods_amount+$x.tax_amount+$x.cessamt)*($x.tcsper/100))|string_format:"%.2f"}</td>
+                <td align="right">{($x.goods_amount+($x.tax_amount+$x.cessamt + ($x.goods_amount+$x.tax_amount+$x.cessamt)*($x.tcsper/100)))|string_format:"%.2f"}</td>
+                {$c1 = $c1 + ($x.qty+$x.free)}
+                {$c2 = $c2 + $x.goods_amount}
+                {$c3 = $c3 + ($x.tax_amount+$x.cessamt + ($x.goods_amount+$x.tax_amount+$x.cessamt)*($x.tcsper/100))}
+                {$c4 = $c4 + ($x.goods_amount+($x.tax_amount+$x.cessamt + ($x.goods_amount+$x.tax_amount+$x.cessamt)*($x.tcsper/100)))}
+
+            </tr>
+            {/foreach}
+            <tr>
+                <th colspan="8">Total</th>
+                <th align="right">{$c1|string_format:"%.0f"}</th>
+                <th align="right">{$cf1|string_format:"%.0f"}</th>
+                <th align="right">{$c2|string_format:"%.2f"}</th>
+                <th align="right">{$c3|string_format:"%.2f"}</th>
+                <th align="right">{$c4|string_format:"%.2f"}</th>
+            </tr>
+        </table>
+    {else}
+        <b>No Record Found!</b>
+    {/if}
+</div>

@@ -1,0 +1,26 @@
+<form method="post" action="index.php?module=salary&func=saveupdate">
+    <fieldset>
+        <legend>Salary Masters</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>ESI % :</b></td>
+                <td><input type="text" name="master[esi]" value="{$master.esi}" /></td>
+            </tr>
+            <tr>
+                <td><b>EPF % (Employeer) :</b></td>
+                <td><input type="text" name="master[epfo]" value="{$master.epfo}" /></td>
+            </tr>
+            <tr>
+                <td><b>EPF % (Employee) :</b></td>
+                <td><input type="text" name="master[epfe]" value="{$master.epfe}" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" name="id" value="{$master.id_salarymaster}" />
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

@@ -1,0 +1,29 @@
+<form method="post" action="index.php?module=bonus&func={if $data.id_bonus}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_bonus}Edit{else}Add{/if} Bonus Details</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td>{$data.name}</td>
+            </tr>
+            <tr>
+                <td><b>Quantity:</b></td>
+                <td><input type="text" name="bonus[qty]"  value="{$data.qty}"/>
+            </tr>
+            <tr>
+                <td><b>Free Bonus:</b></td>
+                <td><input type="text" name="bonus[free]"  value="{$data.free}"/>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" name="id" value="{$data.id_bonus}">
+                    <input type="hidden" name="id_company" value="{$smarty.request.id_company}">
+                    <input type="hidden" name="id_product" value="{$data.id_product}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                    <input type="hidden" name="frombatch" value="{$smarty.request.frombatch}"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

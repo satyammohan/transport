@@ -1,0 +1,55 @@
+<fieldset>
+    <legend><h3>Discount Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="Discount" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Discount Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <tr>
+            <th>Sl</th><th>Bill No.</th><th>Date</th><th>Name</th><th>Room</th><th>Days</th><th>Type</th><th>Rent</th><th>Discount</th><th>GST</th><th>Total</th>
+        </tr>
+        {$total=0}{$gstamt=0}{$discount=0}
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.no}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.name}</td>
+                <td>{$x.roomnumber}</td>
+                <td>{$x.daysstay}</td>
+                <td>{$x.type}</td>
+                <td align="right">{($x.total+$x.discount+$x.gstamt)|string_format:"%.2f"}</td>
+                <td align="right">{$x.discount}</td>
+                <td align="right">{$x.gstamt}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+                {$gstamt=$gstamt+$x.gstamt}
+                {$discount=$discount+$x.discount}
+                {$total=$total+$x.total}
+            </tr>
+        {/foreach}
+        <tr>
+            <th colspan="7">Total :</th>
+            <td align="right"><b>{($discount+$gstamt+$total)|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$discount|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$gstamt|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$total|string_format:"%.2f"}</b></td>
+        </tr>
+    </table>
+</div>

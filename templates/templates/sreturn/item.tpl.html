@@ -1,0 +1,63 @@
+i<script type="text/javascript">
+    function dosubmit() {
+        url = "index.php?module=sreturn&func=itemrep&ce=0";
+        data = $("#ajaxform").serialize();
+        $.post(url, data, function(msg) {
+            html = "Itemwise Sales Return Period " + $("#startdate").val() + " - " + $("#enddate").val() + "<br /><br />";
+            $("#print_data").html(html + msg);
+        });
+	return false;
+    }
+    $(document).ready(function() {
+        $("#startdate").focus();
+        $('#ajaxitem').tokenize({
+            nbDropdownElements: 30,
+            newElements: false,
+            maxElements: 50,
+            searchMinLength: 2,
+            datas: "index.php?module=sreport&func=getproducts"
+        });
+    });
+</script>    
+<fieldset>
+    <legend>Itemwise Sales Return</legend>
+    <form id="ajaxform" method="post" onsubmit="return dosubmit();">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" id="startdate" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" id="enddate" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Company:
+                    <select name="company">
+                        <option value=" ">All</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td rowspan="3" style="vertical-align: top" >Item:
+                    <select name="itemids[]" id="ajaxitem" multiple="multiple" ></select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">Option : 
+                    <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    <div id="print_data">
+    </div>
+</div>
+

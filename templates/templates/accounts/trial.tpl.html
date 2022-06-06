@@ -1,0 +1,38 @@
+<fieldset>
+    <legend>Trial Balance</legend>
+    <form method="post" action="index.php?module=accounts&func=trial">
+        <table>
+            <tr>
+                <td>As on Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Option :</td>
+                <td><input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if} />Groupwise
+                </td>
+                <td><input type="checkbox" name="opening" {if isset($smarty.request.opening)}checked="checked"{/if}>Opening
+                <input type="checkbox" name="transact" value="1" {if $smarty.request.transact}checked="checked"{/if}>Transaction
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="TrialBalance" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    {if isset($smarty.request.opening)}
+        Opening Trial Balance
+    {else}
+        Trial Balance as on {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    {/if}
+    <br /><br />
+    {if $data}
+    {include file="accounts/trial{$smarty.request.option}{$smarty.request.transact}.tpl.html"}
+    {else}
+    <b>No Record Found!</b>
+    {/if}
+</div>

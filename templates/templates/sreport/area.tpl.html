@@ -1,0 +1,44 @@
+<fieldset>
+    <legend>Areawise Sales</legend>
+    <form method="post" action="index.php?module=sreport&func=area">
+        <table>
+            <tr>
+                <td valign="top">Start Date :</td>
+                <td valign="top"><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td valign="top">End Date :</td>
+                <td valign="top"><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td valign="top">Choose Area:</td>
+                <td>
+                    <select name="area[]" multiple="multiple">
+                        {html_options options=$area selected=$smarty.request.area}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">Option : <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                                                <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                </td>
+		<td>Ltr/KG :<input type="checkbox" name="ltrkg" {if isset($smarty.request.ltrkg)} checked='checked' {/if}>
+		</td>
+	    </tr>
+            <tr>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Areawise Sales Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data }
+    {include file="sreport/area{$smarty.request.option}.tpl.html"}
+    {else}
+    <b>No Record Found!</b>
+    {/if}
+</div>

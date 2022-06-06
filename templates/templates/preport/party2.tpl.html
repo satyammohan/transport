@@ -1,0 +1,48 @@
+{$gtotal=0}
+{foreach item=v key=k from=$data}
+Party: <b>{$party[$k]}</b>
+<table border="1" width="40%">
+    <tr>
+        <th width="100">Date</th>
+        <th align="right">VAT</th>
+       	<th>Cash</th>
+        <th>No of Cash bills</th>
+        <th>Credit</th>
+        <th>No of Credit bills</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0} {$cash=0} {$cashtot=0}
+    {$total=0} {$credit=0} {$credittot=0}
+    {foreach item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td align="right">{$v1.vat|string_format:"%.2f"}</td>
+        <td align="right">{$v1.cashtotal|string_format:"%.2f"}</td>
+        <td>{$v1.cashbills}</td>
+        <td align="right">{$v1.credittotal|string_format:"%.2f"}</td>
+        <td>{$v1.creditbills}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$vattot = $vattot + $v1.vat}
+    {$cash=$cash+$v1.cashbills}
+    {$credit=$credit+$v1.creditbills}
+    {$cashtot=$cashtot+$v1.cashtotal}
+    {$credittot=$credittot+$v1.credittotal}
+    {$total = $total + $v1.total}
+    {/foreach}
+    <tr>
+        <th class="right">Party Total</th>
+        <th align="right">{$vattot|string_format:"%.2f"}</th>
+        <th align="right">{$cashtot}</th>
+        <th align="right">{$cash}</th>
+        <th align="right">{$credittot}</th>
+        <th align="right">{$credit}</th>
+
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>
+{$gtotal = $gtotal + $total}
+{/foreach}
+<div style="width:39.7%; height:20px; text-align: right; font-size: 14px; border:2px solid;">
+    <b><span style="margin-right: 55px;">Grandtotal:</span> {$gtotal}</b>
+</div>

@@ -1,0 +1,61 @@
+
+
+<form method="post" action="index.php?module=report&func=search_group&ack=1" name="f1">
+    <table cellspacing="2" cellpadding="2"  width="70%">
+        <tr>
+            <td colspan="5" bgcolor="grey" style="color: black;">Details of Head</td>
+        </tr>
+        <tr>
+            <td><div><b>Select group</b></div>
+                <div> <select name="head[id_group][]" multiple="multiple">
+                        {html_options  options=$group} 
+                    </select></div>
+            </td>
+        </tr>
+        <tr >
+            <td colspan="5"><input type="submit" name="go" value="Search"/></td>
+        </tr>
+    </table>
+</form>
+{if isset($sdata)}
+<div id=printTable>
+    <table  style="border:2px" class="btable">
+        <thead>
+            <tr>
+            </tr>
+            <tr>
+                <th>Name</th><th>Group</th><th>Address1</th><th>Address2</th><th>Address3</th><th>Tin No</th><th>Tin Date</th><th>Phone</th><th>Mobile</th><th>Area</th><th>Transport</th><th>Opening Balance </th><th>Opening Balance Type</th><th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach from=$sdata item=ch  }
+            <tr>
+                <td>{$ch.name}</td>	
+                <td>{get_name key=$ch.id_group list=$group}</td>
+                <td>{$ch.address1}</td>			
+                <td>{$ch.address2}</td>			
+                <td>{$ch.address3}</td>			
+                <td>{$ch.tin_no}</td>
+                <td>{$ch.tin_date|date_format:$smarty_date}</td>
+                <td>{$ch.phone}</td>
+                <td>{$ch.mobile}</td>
+                <td>{get_name key=$ch.id_area list=$area}</td>
+                <td>{if $ch.id_transport==0}Not taken{else}{get_name key=$ch.id_transport list=$transport}{/if}</td>
+                <td>{$ch.obal}</td>
+                <td>{if $ch.otype==0}Debit{else}Credit{/if}</td>
+
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+{/if}
+<script>
+    function printTable(){
+        var head = "about:<html><head></head><body onLoad='this.print()'>";
+        var body = document.getElementById('printTable').innerHTML;
+        var foot = "</body></html>";
+
+        window.open(head + body + foot,'','');}
+</script>
+<a href=# onClick="printTable();">Print Table</a>

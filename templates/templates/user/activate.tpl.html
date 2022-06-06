@@ -1,0 +1,95 @@
+<script type="text/javascript" src="{$source}js/ddslick.js"></script>
+<script type="text/javascript">
+    var ddData = Array();
+    var ddYear = Array();
+    {foreach from=$info item=mod name=f}
+    ddData['{$smarty.foreach.f.index}'] = { text: "{$mod.name} ", value: '{$mod.name}', selected: false, description: "&nbsp;" };
+    {/foreach}
+    
+    $(document).ready(function() {
+        $(".classname").focus();
+        var fdata=Array();
+        $('#dds').ddslick({
+            data:ddData,
+            width:400,
+            {if isset($smarty.session.sid)}
+            'defaultSelectedIndex' : '{$smarty.session.sid}',
+            {/if}
+            onSelected: function(selectedData) {
+                var cur_comp = selectedData['selectedData'].text;
+                $('#cname').val(cur_comp);
+                $('#sindex').val(selectedData['selectedIndex']);
+                $.getJSON("index.php?module=info&func=ddslick",{ name:cur_comp },function(fdata) {
+                    $('#year_select').ddslick("destroy");
+                    $('#year_select').ddslick({
+                        data:fdata,
+                        width:280,
+                        {if isset($smarty.session.yselect)}
+                            'defaultSelectedIndex' : '{$smarty.session.yselect}',
+                        {/if}
+                        onSelected:function(Data){
+                            $('#cid').val((Data['selectedData'].value));
+                            $('#yindex').val((Data['selectedIndex']));
+                        }
+                    })
+                })
+            }   
+        });
+    });
+</script>
+<style type="text/css">
+    .classname {
+        -moz-box-shadow:inset 0px 0px 13px -12px #ffffff;
+        -webkit-box-shadow:inset 0px 0px 13px -12px #ffffff;
+        box-shadow:inset 0px 0px 13px -12px #ffffff;
+        background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+        background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+        filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+        background-color:#ededed;
+        -moz-border-radius:6px;
+        -webkit-border-radius:6px;
+        border-radius:6px;
+        border:1px solid #dcdcdc;
+        display:inline-block;
+        color:#777777;
+        font-family:Arial Black;
+        font-size:24px;
+        font-weight:bold;
+        padding:6px 24px;
+        text-decoration:none;
+        text-shadow:-10px 0px 5px #ffffff;
+        height: 50px;
+        cursor: pointer;
+    }
+</style>
+<h3>Welcome, {$smarty.session.user}</h3>
+<center>
+    <h2>:: Select Company and Financial Year ::</h2>
+    <form action="index.php?module=info&func=prefix" method="post">
+        <table>
+            <tr>
+                <td><div id="dds"></div></td>
+                <td><div id="year_select"></div></td>
+                <td>
+                    <input type="hidden" name="cname" id="cname" />
+                    <input type="hidden" name="index" id="sindex" />
+                    <input type="hidden" name="yindex" id="yindex" />
+                    <input type="hidden" name="id" id="cid" />
+                    <input type="submit" name="submit" value="Go" class="classname" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</center>
+
+<style>
+    .dd-select {
+        border: none;
+    }
+    .dd-selected {
+        height:20px !important;
+        border: 1px solid #09192A;
+        border-radius: 25px;
+    }
+</style>
+

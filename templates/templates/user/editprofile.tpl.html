@@ -1,0 +1,18 @@
+    <div id="wrapperl">
+        <div id="login" class="animate form">
+            <form id="edit_profile_form" method="post" action="index.php?module=user&func=updateprofile" >
+                <h1>Edit Profile</h1>
+                <p> 
+                    <label for="name" class="" > Your Name</label>
+                    <input id="name" name="user[name]"  type="text" value={$profile.name}> 
+                </p>
+                <p> 
+                    <label for="email" class="youmail" data-icon="e" > Your email</label>
+                    <input id="email" name="user[email]"  type="email" value={$profile.email}> 
+                </p>
+                <p class="button">
+                    <input type="submit" id="update" value="update">
+                </p>
+            </form>
+        </div>
+    </div>

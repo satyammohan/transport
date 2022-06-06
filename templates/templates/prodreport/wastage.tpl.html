@@ -1,0 +1,90 @@
+<script type="text/javascript">
+    $(function() {
+        $("#all").val("{$smarty.request.all}");
+    });
+</script>
+<fieldset>
+    <legend>Production Report</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                </td>
+                <td>
+                    <select name="all" id="all">
+                        <option value="Wastage">Wastage</option>
+                        <option value="Issue+Wastage">Issue+Wastage</option>
+                        <option value="Issue">Issue</option>
+                        <option value="Produce">Produce</option>
+                        <option value="Sample">Sample</option>
+                        <option value="Reject">Reject</option>
+                        <option value="Shortage">Shortage</option>
+                    </select>
+                </td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Production Report {$smarty.request.all} Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data}
+        {$slno = 1}
+        <table border="1">
+        {if $smarty.request.option!="2"}
+            <tr>
+                <th>Sl.No.</th><th>Prod Sl. No.</th><th>Date</th><th>Ref.No.</th><th>Ref.date</th><th>Shift</th><th>Item</th><th>Quantity</th><th>Free</th>
+            </tr>
+            {$no = ""}
+            {section name=x loop=$data}
+            <tr>
+                {if $no != $data[x].slno}
+                    <td align="right">{$slno++}</td>
+                    <td>{$data[x].slno}</td>
+                    <td>{$data[x].date|date_format:$smarty_date}</td>
+                    <td>{$data[x].reference_no}</td>
+                    <td>{$data[x].reference_date|date_format:$smarty_date}</td>
+                    <td>{$data[x].shift}</td>
+                {else}
+                    <td colspan="6">&nbsp;</td>
+                {/if}
+                {$no = $data[x].slno}
+                <td>{$data[x].name}</td>
+                <td align="right">{$data[x].qty|string_format:"%.3f"}</td>
+                <td align="right">{$data[x].free|string_format:"%.3f"}</td>
+            </tr>
+            {/section}
+        {else}
+            <tr><th>Sl.No.</th><th>Item</th><th>Quantity</th><th>Free</th><th>Rate</th><th>Valuation</th></tr>
+            {$netwaste=0}
+            {section name=x loop=$data}
+            <tr>
+                <td align="right">{$slno++}</td><td>{$data[x].name}</td>
+                <td align="right">{$data[x].qty|string_format:"%.3f"}</td>
+                <td align="right">{$data[x].free|string_format:"%.3f"}</td>
+                <td align="right">{$osrate[$data[x].id_product]|string_format:"%.3f"}</td>
+                {$total = $data[x].qty+$data[x].free}
+                <td align="right">{($total*$osrate[$data[x].id_product])|string_format:"%.2f"}</td>
+                {$netwaste=$netwaste+($total*$osrate[$data[x].id_product])}
+            </tr>
+            {/section}
+            <tr><th colspan="5">Total Valuation :</th><th align="right">{$netwaste|string_format:"%.2f"}</th></tr>
+        {/if}
+        </table>
+    {else}
+        <b>No Record Found!</b>
+    {/if}
+</div>

@@ -1,0 +1,123 @@
+<title>Partner Login</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+
+
+<link rel="stylesheet" href="/source/js/jquery.mobile-1.4.5/demos/css/themes/default/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="/source/js/jquery.mobile-1.4.5/demos/_assets/css/jqm-demos.css">
+<script src="/js/jquery.mobile-1.4.5/demos/js/jquery.js"></script>
+<script src="/source/js/jquery.mobile-1.4.5/demos/_assets/js/index.js"></script>
+<script src="/source/js/jquery.mobile-1.4.5/demos/js/jquery.mobile-1.4.5.min.js"></script>
+
+
+
+{$smarty_date='d-m-Y' scope="global"}
+{if $smarty.session.id_user}
+<div><b>{$smarty.session.name}</b> {$smarty.session.type|ucfirst} Login</div>
+<div class="topnav">
+  <a href="index.php?module=partner&func=home"><i class="top2 fa fa-home" aria-hidden="true"></i></a>
+  {if $smarty.session.type=='party'}
+    <a href="index.php?module=partner&func=invoice">Bill</a>
+    <a href="index.php?module=partner&func=ledger">Ledger</a>
+    <a href="index.php?module=partner&func=createOrder">Add Order</a>
+    <a href="index.php?module=partner&func=myOrders&approve=0">My Order</a>
+    <!--<a href="index.php?module=partner&func=orderHistory">History</a>-->
+    <a href="index.php?module=partner&func=myStock">Stock</a>
+  {/if}
+  {if $smarty.session.type=='representative'}
+    <a href="index.php?module=partner&func=myparty">Party</a>
+    <a href="index.php?module=partner&func=approveOrder&approve=0">Approve</a>
+    <a href="index.php?module=partner&func=unbilledOrder">Un-Billed</a>
+  {/if}
+  <a href="index.php?module=user&func=logout"><i class="top2 fa fa-sign-out" aria-hidden="true"></i></a>
+  <script>
+    $( document ).ready(function() {
+      setTimeout(function(){ 
+        alert("Software idle for 10 mins. Forced Logout");
+        $(location).attr('href', 'index.php?module=user&func=logout')
+      }, 600000);
+    });
+  </script>
+</div>
+{/if}
+<div class="err_msg"><b>{$smarty.session.msg}</b></div>
+<div class="demo-wrap">
+  <div class="demo-content">
+    {include file=$page}
+  </div>
+</div>
+<script>
+    $( document ).ready(function() {
+      setTimeout(function(){ 
+        $('.err_msg').hide('slow');
+      }, 5000);
+    });
+</script>
+
+<style>
+.top2 {
+  margin-top:3px;
+}
+.topnav {
+  background-color: green;
+  overflow: hidden;
+}
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 5px 5px;
+  text-decoration: none;
+  font-size: 15px;
+}
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+table, td, th {
+  border:1px solid black;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+.demo-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.demo-wrap:before {
+  content: ' ';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  background-image: url('/partner/odiray.jpeg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%;
+}
+.demo-content {
+  position: relative;
+}
+.noborder {
+  border:none !important;
+}
+.err_msg {
+  background-color:grey;
+  font-size:15px;
+  text-align:center;
+}
+table {
+  font-size:13px;
+}
+</style>

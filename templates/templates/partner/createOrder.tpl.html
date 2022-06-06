@@ -1,0 +1,47 @@
+<script>
+    function show(id) {
+        $("#"+id).toggle();
+    }
+    function update(id, v, p) {
+        myq = $("#q"+id).html();
+        myq1 = myq*1 - preq*1 + v*1;
+        $("#q"+id).html(myq1);
+
+        mya = $("#a"+id).html();
+        mya1 = (mya*1 - prea*1 + p*v).toFixed(2);
+        $("#a"+id).html(mya1);
+    }
+    function myFunction(q, r) {
+        preq = q;
+        prea = q*r;
+    }
+    var preq=0; prea=0;
+</script>
+<b><div class="float-left">Add Order</div><div class="float-right">Ledg:{if $balance<0}{abs($balance)} DB{else}{abs($balance)} CR{/if}</div></b>
+{$sl = 1}
+<form method="post" action="index.php?module=partner&func=saveOrder">
+    {foreach from=$items item=mod key=k}
+        <button type="button" class="bs btn btn-primary dropdown-toggle" data-toggle="dropdown" onclick="show('c_{$sl}');">{$k}
+            (Qty:<span id="qq_{$sl}">0</span> Value:<span id="aq_{$sl}">0</span>)</button><br>
+        <table class='tbl' id="c_{$sl}" style="display: none; width:100%">
+        <tr><th>Name</th><th>Rate</th><th>Qty</th><!--<th>Free</th>--></tr>
+        {foreach from=$mod item=m}
+        <tr>
+            <td>{$m.name}</td>
+            {if $dealer==1}
+                {$price = $m.distributor_price}
+            {else}
+                {$price = $m.seller_price}
+            {/if}
+            <td align="right"><input tabindex="-1" name="price[{$m.id_product}]" value="{$price}" readonly="readonly" class="ns"></td>
+            <td><input name="item[{$m.id_product}]" min="0" type="number" class="ns" onfocus="myFunction(this.value, {$price})" onblur="update('q_{$sl}', this.value, {$price})" size="4"></td>
+            <!--<td><input name="free[{$m.id_product}]" min="0" type="number" class="ns" size="4"></td>-->
+        </tr>
+        {/foreach}
+        </table>
+        {$sl = $sl + 1}
+    {/foreach}
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" value="Save Order">
+    </div>
+</form>

@@ -1,0 +1,46 @@
+<script>
+    function reload(type) {
+        let url = "index.php?module=partner&func=myOrders";
+        let cond = "";
+        if (type) {
+            cond = "&approve="+type;
+        }
+        $(location).attr('href', url+cond);
+    }
+</script>
+My Order History Show : <select data-inline="true" onchange="reload(this.value)">
+    <option value="" {if !isset($smarty.request.approve)}selected=selected{/if}>All</option>
+    <option value="1" {if $smarty.request.approve=="1"}selected=selected{/if}>Approved</option>
+    <option value="0" {if $smarty.request.approve=="0"}selected=selected{/if}>Pending</option>
+</select>
+{if $order}
+<table data-role="table" data-mode="columntoggle" class="ui-responsive">
+    <tr>
+       	<th>Sl.</th><th>Status</th><th>Order Date</th><th>Time</th><th class="float-right">Value</th><th>Product</th><th>Qty</th><th>Appv.Qty</th><th class="float-right">Value</th>
+    </tr>
+    {$prev=0}
+    {$sl=1}
+    {section name=x loop=$order}
+    <tr>
+        {if $prev!=$order[x].time}
+            <td>{$sl}</td>
+            {$sl = $sl + 1}
+            <td>{if $order[x].approve}Approved{else}Pending{/if}</td>
+                <td>{$order[x].date|date_format:$smarty_date}</td>
+            <td>{$order[x].time}</td>
+            {$time = "{$order[x].date}{$order[x].time}"}
+            <td class="float-right">{$value[$time]|string_format:"%.2f"}</td>
+        {else}
+            <th colspan="5" class="noborder">&nbsp;</th>
+        {/if}
+        <td>{$order[x].name}</td>
+        <td align="right">{$order[x].qty|string_format:"%.0f"}</td>
+        <td align="right">{$order[x].approve_qty|string_format:"%.0f"}</td>
+        <td class="float-right">{$order[x].amount|string_format:"%.2f"}</td>
+    </tr>
+    {$prev=$order[x].time}
+    {/section}
+</table>
+{else}
+    No My Orders.
+{/if}

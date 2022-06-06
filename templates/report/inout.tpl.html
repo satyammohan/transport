@@ -1,0 +1,61 @@
+<fieldset>
+    <legend><h3>Check-in Check-out Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Check-in time</td>
+                <td><input type="text" name="in" size="5" value='{$smarty.request.in}' /></td>
+                <td>Check-Out Time</td>
+                <td><input type="text" name="out" size="5" value='{$smarty.request.out}' /></td>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="InOut" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Check-in Check-out Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}
+    <h5><b>Check In time is {$smarty.request.in} and Check Out time is {$smarty.request.out}.</b></h5>
+    <table id='report' border="1">
+        <thead>    
+            <tr>
+                <th>#</th><th>No.</th><th>Name</th><th>Phone</th><th>Checkin Date</th><th>Checkout Date</th><th>CI Time</th><th>CO Time</th><th>Room</th>
+                <th>Days</th><th>Rent</th><th>Discount</th><th>Net Rate</th><th>GST</th><th>Total</th><th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            {$s=1}
+            {foreach from=$data item=x}
+            {if $x.daysstay!=$x.actual}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.no}</td>
+                <td>{$x.name}</td><td>{$x.mobile}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.depature_date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.time}</td>
+                <td>{$x.depature_time}</td>
+                <td>{$x.roomnumber}</td>
+               
+                <td>{$x.daysstay}</td>
+                <td align="right">{$x.rent|string_format:"%.2f"}</td>
+                <td align="right">{$x.discount|string_format:"%.2f"}</td>
+                <td align="right">{($x.goodsamount_0+$x.goodsamount_5+$x.goodsamount_12+$x.goodsamount_18)|string_format:"%.2f"}</td>
+                <td align="right">{($x.sgst_5+$x.sgst_12+$x.sgst_18+$x.cgst_5+$x.cgst_12+$x.cgst_18)|string_format:"%.2f"}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+                <td>{if $x.daysstay!=$x.actual}Charged for {$x.daysstay} days but it should be {$x.actual} days.{/if}</td>
+            </tr>
+            {/if}
+            {/foreach}
+        </tbody>
+    </table>
+</div>

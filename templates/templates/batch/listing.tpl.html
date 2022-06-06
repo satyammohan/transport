@@ -1,0 +1,52 @@
+<script>
+function changeme(id) {
+    window.location.href="index.php?module=batch&func=listing&id_company="+id;
+}
+</script>
+<table id="dataTable" border="1">
+    <thead>    
+        <tr> 
+            <th colspan="11">
+	    	    <select id="item" name="batch[iid_company]" onchange="changeme(this.value)" >
+                    {html_options options=$company selected=$smarty.request.id_company}
+                </select>
+                <select id="list_status" onchange="update_listing('batch', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a href="index.php?module=batch&func=edit"><div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Item name</th><th>Batch No</th><th>Exp Date</th><th>Mrp</th><th>MRP Without Tax</th>
+            <th>Purchasing Price</th><th>Selling Price</th><th>Distributor Price</th><th>Mfg Date</th><th>Created</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$batch item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.batch_no}</td>
+        <td>{$mod.expiry_date|date_format:$smarty_date}</td>
+        <td>{$mod.mrp}</td>
+        <td>{$mod.mrp_without_tax}</td>
+        <td>{$mod.purchase_price}</td>
+        <td>{$mod.seller_price}</td>
+        <td>{$mod.distributor_price}</td>
+        <td>{$mod.mfg_date}</td>
+        <td>{$mod.create_date}</td>
+        <td><select onchange="update_status('batch', '{$mod.id_batch}', this.value,$('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select>
+        </td>
+        <td>
+            <a href="index.php?module=batch&func=delete&id={$mod.id_batch}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=batch&func=edit&id={$mod.id_batch}"><div class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("trans");
+        tbl_handler();
+    });
+</script>

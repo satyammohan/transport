@@ -1,0 +1,118 @@
+<div id="course_select" style="position: absolute;width: 100%;top: 5%;left: 10%">
+    {if ($st==1)}
+    <div id="show_mr">
+        <table id="dataTable">
+            <thead>    
+                <tr>
+                    <td colspan="8" align="right"><a class="voucher"   href="index.php?module=voucher&func=edit&ce=0&st={$st}"><img src="img/apps/Add.png"> </a></td>
+                </tr>
+                <tr>
+                    <th><b>Mr No</b></th><th><b>Transaction Date</b></th><th><b>Debit</b></th><th><b>Credit</b></th><th><b>Amount</b></th><th><b>Remark</b></th><th>&nbsp;</th>
+                </tr>
+            </thead>
+            {foreach from=$voucher item=mod  }
+            {if $mod.mr_no}
+            <tr>
+                <td>{$mod.mr_no}</td>
+                <td>{$mod.trans_date}</td>
+                <td>{get_name key=$mod.debit list=$group}</td>
+                <td>{$mod.credit}</td>
+                <td>{$mod.amount}</td>
+                <td>{$mod.remark}</td>
+                <td><a class="voucher" href="index.php?module=voucher&func=edit&id={$mod.id}&ce=0&st={$st}"><img src="img/apps/Edit.png" width="25" height="25" title="edit"></a>
+                    <a href="index.php?module=voucher&func=delete&id={$mod.id}&ce=0&status={$st}" onclick="return confirm('Do you want to delete?');"><img src="img/apps/Delete.png" width="25" height="25" title="delete"></a></td>
+            </tr>
+            {/if}
+            {/foreach}
+        </table>
+    </div>
+    {/if}
+    {if ($st==2)}
+    <div id="show_payment">
+        <table id="dataTable">
+            <thead>    
+                <tr>
+                    <td colspan="8" align="right"><a class="voucher"   href="index.php?module=voucher&func=edit&ce=0&st={$st}"><img src="img/apps/Add.png"> </a></td>
+                </tr>
+                <tr>
+                    <th><b>Voucher No</b></th><th><b>Transaction Date</b></th><th><b>Debit</b></th><th><b>Credit</b></th><th><b>Amount</b></th><th><b>Remark</b></th><th>&nbsp;</th>
+                </tr>
+            </thead>
+            {foreach from=$voucher item=mod  }
+            {if $mod.voucher_no}
+            <tr>
+                <td>{$mod.voucher_no}</td>
+                <td>{$mod.trans_date}</td>
+                <td>{$mod.debit}</td>
+                <td>{$mod.credit}</td>
+                <td>{$mod.amount}</td>
+                <td>{$mod.remark}</td>
+                <td><a class="voucher" href="index.php?module=voucher&func=edit&id={$mod.id}&ce=0&st={$st}"><img src="img/apps/Edit.png" width="25" height="25" title="edit"></a>
+                    <a href="index.php?module=voucher&func=delete&id={$mod.id}&ce=0&status={$st}" onclick="return confirm('Do you want to delete?');"><img src="img/apps/Delete.png" width="25" height="25" title="delete"></a></td>
+            </tr>
+            {/if}
+            {/foreach}
+        </table>
+    </div>
+    {/if}
+    {if ($st==3)}
+    <div id="show_bank">
+        <table id="dataTable">
+            <thead>    
+                <tr>
+                    <td colspan="8" align="right"><a class="voucher"   href="index.php?module=voucher&func=edit&ce=0&st={$st}"><img src="img/apps/Add.png"> </a></td>
+                </tr>
+                <tr>
+                    <th><b>Bank No</b></th><th><b>Transaction Date</b></th><th><b>Debit</b></th><th><b>Credit</b></th><th><b>Amount</b></th><th><b>Remark</b></th><th>&nbsp;</th>
+                </tr>
+            </thead>
+            {foreach from=$voucher item=mod  }
+            {if $mod.bank_no}
+            <tr>
+                <td>{$mod.bank_no}</td>
+                <td>{$mod.trans_date}</td>
+                <td>{$mod.debit}</td>
+                <td>{$mod.credit}</td>
+                <td>{$mod.amount}</td>
+                <td>{$mod.remark}</td>
+                <td><a class="voucher" href="index.php?module=voucher&func=edit&id={$mod.id}&ce=0&st={$st}"><img src="img/apps/Edit.png" width="25" height="25" title="edit"></a>
+                    <a href="index.php?module=voucher&func=delete&id={$mod.id}&ce=0&status={$st}" onclick="return confirm('Do you want to delete?');"><img src="img/apps/Delete.png" width="25" height="25" title="delete"></a></td>
+            </tr>
+            {/if}
+            {/foreach}
+        </table>
+    </div>
+    {/if}
+    {if ($st==4)}
+    <div id="show_other">
+        <table id="dataTable">
+            <thead>    
+                <tr>
+                    <td colspan="8" align="right"><a class="voucher"   href="index.php?module=voucher&func=edit&ce=0&st={$st}"><img src="img/apps/Add.png"> </a></td>
+                </tr>
+                <tr>
+                    <th><b>Mr No</b></th><th><b>Transaction Type</b></th><th><b>Debit</b></th><th><b>Credit</b></th><th><b>Amount</b></th><th><b>Remark</b></th><th>&nbsp;</th>
+                </tr>
+            </thead>
+            {foreach from=$voucher item=mod  }
+            <tr>
+                <td>{$mod.v_no}</td>
+                <td>{$mod.trans_date}</td>
+                <td>{$mod.debit}</td>
+                <td>{$mod.credit}</td>
+                <td>{$mod.amount}</td>
+                <td>{$mod.remark}</td>
+                <td><a class="voucher" href="index.php?module=voucher&func=edit&id={$mod.id}&ce=0&st={$st}"><img src="img/apps/Edit.png" width="25" height="25" title="edit"></a>
+                    <a href="index.php?module=voucher&func=delete&id={$mod.id}&ce=0&status={$st}" onclick="return confirm('Do you want to delete?');"><img src="img/apps/Delete.png" width="25" height="25" title="delete"></a></td>
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+    {/if}
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("voucher");
+        tbl_handler();
+    });
+</script>

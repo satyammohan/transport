@@ -1,0 +1,31 @@
+<h2>RCM Details and GST %</h2>
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Group</th><th>Name</th><th>Address</th><th>Address2</th><th>RCM</th><th>GST %</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.gname}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}</td>
+        <td>{$mod.address2}</td>
+        <td><select onchange="savehead('rcm', this.value, {$mod.id_head} )">
+                <option {if $mod.rcm!=1}selected="selected"{/if} value="0">No</option>
+                <option {if $mod.rcm==1}selected="selected"{/if} value="1">Yes</option>
+            </select>
+        </td>
+        <td><input size='5' value='{$mod.rcmper}' onblur="savehead('rcmper', this.value, {$mod.id_head} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function savehead(fld, fvalue, id) {
+        var url = "index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+</script>

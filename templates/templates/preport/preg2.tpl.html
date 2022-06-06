@@ -1,0 +1,45 @@
+<table border="1" id="report">
+    <tr>
+       	<th>Sl.No.</th>
+        <th>Date</th>
+        <th>No of Bills</th>
+       	<th align="right">GST</th>
+       	<th>Cash</th>
+        <th>No of Cash bills</th>
+        <th>Credit</th>
+        <th>No of Credit bills</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0} {$cash=0} {$cashtot=0}
+    {$total=0} {$credit=0} {$credittot=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].billn}</td>
+        <td align="right">{$data[x].vat|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].cashtotal|string_format:"%.2f"}</td>
+        <td>{$data[x].cashbills}</td>
+        <td align="right">{$data[x].credittotal|string_format:"%.2f"}</td>
+        <td>{$data[x].creditbills}</td>
+        <td align="right">{$data[x].total|string_format:"%.2f"}</td>
+    </tr>
+    {$cash = $cash+$data[x].cashtotal}
+    {$credit = $credit+$data[x].credittotal}
+    {$vattot = $vattot + $data[x].vat}
+    {$total = $total + $data[x].total}
+    {$cashtot=$cashtot + $data[x].cashbills}
+    {$credittot=$credittot + $data[x].creditbills}
+    {/section}
+    <tr>
+        <th>&nbsp;</th>
+       	<th></th>
+        <th>Total</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$cash|string_format:"%.2f"}</th>
+        <th> {$cashtot}</th>
+        <th align="right">{$credit|string_format:"%.2f"}</th>
+        <th>{$credittot}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

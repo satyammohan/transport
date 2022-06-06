@@ -1,0 +1,34 @@
+{$gtotal=0} {$gvattot=0}
+<table border="1" width="100%">
+     <tr>
+        <th>Sl No</th><th>Date</th><th>Name</th><th>Address</th><th class="right">GST</th><th class="right">Total</th>
+    </tr>
+{foreach item=v key=k from=$data}
+    {$vattot=0}
+    {$total=0} 
+    {foreach name=x item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$smarty.foreach.x.index+1}</td>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td>{$v1.party_name}</td>
+        <td>{$v1.party_address}&nbsp;&nbsp;&nbsp;{$v1.party_address1}</td>
+        <td align="right">{$v1.vat|string_format:"%.2f"}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$vattot = $vattot + $v1.vat}
+    {$gvattot = $gvattot + $v1.vat}
+    {$total = $total + $v1.total}
+    {$gtotal = $gtotal + $v1.total}
+    {/foreach}
+    <tr>
+        <th colspan="4" class="right">Party Total</th>
+        <th align="right">{$vattot|string_format:"%.2f"}</th>
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+{/foreach}
+    <tr>
+        <th colspan="4" class="right">Grand Total</th>
+        <th align="right">{$gvattot|string_format:"%.2f"}</th>
+        <th align="right">{$gtotal|string_format:"%.2f"}</th>
+    </tr>
+</table>

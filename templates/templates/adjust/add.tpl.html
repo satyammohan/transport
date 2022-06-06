@@ -1,0 +1,89 @@
+{$jsurl = "{$source}jsmodule/adjust.js?{$smarty.now}"}
+<script type="text/javascript" src="{$jsurl}"></script>
+{include file='common/generaljs.tpl.html'}
+<div id="salemessage"></div>
+<form method="post" action="" name="adjust" id="adjust" autocomplete="off">
+    <fieldset>
+        <legend>{if $sdata.id_adjust}Edit{else}Add{/if} Stock Adjustment Note</legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td colspan="2">
+                    <table width="100%">
+                        <tr>
+                            <td><b>Note No</b></td><td><b>Date</b></td><td><b>Ref. No</b></td><td><b>Ref. Date</b></td><td><b>Company Name</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" name="adjust[no]" size="12" value="{if $sdata.no}{$sdata.no}{else}{$no}{/if}" id="inv" /><br><span id="msgbox"></span>
+                            </td>
+                            <td>
+                                {if isset($sdata.date)}{$date=$sdata.date}{else}{$date=$smarty.now}{/if}
+                                <input type="text" id="date" name='adjust[date]' class="dtpick" value="{$date|date_format:$smarty_date}"/>
+                            </td>
+                            <td><input type="text" name="adjust[bill_no]" value="{$sdata.bill_no}"/></td>
+                            <td><input type="text" name="adjust[bill_date]" class="dtpick"  value="{$sdata.bill_date|date_format:$smarty_date}"/></td>
+                            <td><select name="adjust[id_company]" id="id_company">
+                                    <option value="">All Company</option>
+                                    {html_options options=$company selected=$sdata.id_company}
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="height:350px; overflow:auto;">
+                        <table width="100%" class="btable">
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;</th><th>Item Details</th><th>Batch</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mtable">
+                                <tr class="tabRow">
+                                    <td><a onclick="removeRow(this);" href="#" tabindex="-1" ><img src="{$source}images/close.png" /></a></td>
+                                    <td>
+                                        <input class="drop" type="text" name="items[]" id="item__1" style="width:450px" onblur="getValues();getbatch(this.id);" required="required"/>
+                                        <input type="hidden" name="id_product[]" id="id_product__1" />
+                                    </td>
+                                    <td><input class="drop" type="text" name="batch_no[]" id="batch_no__1" size="20" />
+                                        <input type="hidden" name="id_batch[]" id="id_batch__1" />
+                                        <input type="text" name="exp_date[]" id="exp_date__1" size="12" tabindex="-1" />
+                                    </td>
+                                    <td><input type="text" size="12" name="rate[]" id="rate__1"  tabindex="-1" class="ra" /></td>
+                                    <td><input type="text" size="12" name="quantity[]" onblur="getValues();" id="qty__1" required="required" class="ra"/></td>
+                                    <td><input type="text" size="12" name="free[]" id="free__1" class="ra" onblur="rowadd(this, 'mtable');" /></td>
+                                    <td><input type="text" size="12" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="ra"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td width="70%" ></td>
+                <td valign="top" width="70%" >
+                    <table>
+                        <tr>
+                            <td  align="right"><b>Total:</b></td>
+                            <td><input type="text" name="adjust[total]" id="total" class="ra" value="{$sdata.total}"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Description:</b></td>
+                            <td><textarea name="adjust[memo]" cols="60" rows="5">{$sdata.memo}</textarea></td>
+                        </tr>  
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="3">
+                    <input type="hidden" name="id" value="{$sdata.id_adjust}" id="id_adjust" />
+                    <input type="button" value="Save" id="sub" style="cursor: pointer" name="save"/>
+                    <input type="button" value="Save & Print" id="print" style="cursor: pointer" name="print"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

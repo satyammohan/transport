@@ -1,0 +1,39 @@
+<table id='report' border="1">
+    <tr>
+       	<th>HSN</th><th>Description</th><th>UQC</th><th>Total Quantity</th><th>Total Value</th>
+		{if $smarty.request.option==3 || $smarty.request.option==5}<th>Tax Rate</th>{/if}
+        <th>Taxable Value</th>
+        <th>Integrated Tax Amount</th><th>Central Tax Amount</th><th>State/UT Tax Amount</th><th>Cess Amount</th>    
+    </tr>
+    {$qty=0}{$amount=0}{$goods=0}{$igst=0}{$sgst=0}{$cgst=0}{$cess=0}
+    {foreach item=x name=it from=$data}
+        <tr>
+            <td>{$x.hsncode}</td><td>{$x.name}</td><td>{$x.unit}</td><td align="right">{$x.qty|string_format:"%.0f"}</td>
+            <td align="right">{$x.amount|string_format:"%.2f"}</td>
+	    {if $smarty.request.option==3 || $smarty.request.option==5}<td>{$x.taxname}</td>{/if}
+	    <td align="right">{$x.goods_amount|string_format:"%.2f"}</td>
+            <td align="right">{$x.igst|string_format:"%.2f"}</td>
+            <td align="right">{$x.cgst|string_format:"%.2f"}</td>
+            <td align="right">{$x.sgst|string_format:"%.2f"}</td>
+            <td align="right">{$x.cessamt|string_format:"%.2f"}</td>
+            {$sgst=$sgst+$x.sgst}
+            {$cgst=$cgst+$x.cgst}
+            {$igst=$igst+$x.igst}
+            {$qty=$qty+$x.qty}
+            {$amount=$amount+$x.amount}
+            {$goods=$goods+$x.goods_amount}
+            {$cess=$cess+$x.cessamt}
+        </tr>
+    {/foreach}
+    <tr>
+       	<th colspan="3">Total :</th>
+       	<th align="right">{$qty|string_format:"%.0f"}</th>
+       	<th align="right">{$amount|string_format:"%.2f"}</th>
+	{if $smarty.request.option==3 || $smarty.request.option==5}<th>&nbsp;</th>{/if}
+       	<th align="right">{$goods|string_format:"%.2f"}</th>
+       	<th align="right">{$igst|string_format:"%.2f"}</th>
+       	<th align="right">{$cgst|string_format:"%.2f"}</th>
+       	<th align="right">{$sgst|string_format:"%.2f"}</th>
+       	<th align="right">{$cess|string_format:"%.2f"}</th>
+    </tr>
+</table>

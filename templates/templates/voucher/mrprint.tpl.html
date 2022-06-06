@@ -1,0 +1,45 @@
+<script language="javascript" type="text/javascript">
+    window.opener.location.reload();
+</script>
+<div style="float:right;"><button class="print">Print</button></div>
+<br><br>
+<div class="print_content">
+    <style>
+        table{ font-size:12px; color:#666666; }
+        table a{ background: transparent;  }
+        .btable{  border-collapse:collapse; table-layout:60%; vertical-align:top; margin-bottom:15px; border:1px solid #CCCCCC; }
+        .btable  th{ color: #666666;background-color: #cbcbcb; border:1px solid #666666; border-collapse:collapse; text-align:center;table-layout:auto;
+                     vertical-align:middle;
+        }
+    </style>
+    <table   align="center" class="btable">
+        <tr>
+            <th colspan="2"><b>Money Receipt</b></th>
+        </tr>
+        <tr>
+            <td colspan="2"><b>{$smarty.session.cname}</b>
+                <br>{$smarty.session.sdate|date_format:$ini.smarty_date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {$smarty.session.edate|date_format:$ini.smarty_date}
+            </td>
+        </tr>
+        <tr><td style="border-top:1px solid #CCCCCC; " colspan="2">&nbsp;</td></tr>
+        <tr>
+            <td><b>Party:</b>{$data.Party}<br><b>Address:</b>{$data.add1}<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {$data.add2}
+            </td>
+            <td><b>Mr No. :-</b>{$data.mrno}<br><b>Date:-</b>{$data.transdate}</td>
+        </tr>
+        <tr>
+            <td width="60%"><b>Description</b></td>
+            <td><b>Amount</b></td>
+        </tr>
+        <tr>
+            <td>{$data.remark}</td>
+            <td>{$data.amount}</td>
+        </tr>
+        <tr>
+            <td><b>Rupess:</b>{$data.w}</td>
+            <td><b>For Company:</b>  ____________________________</td>
+        </tr>
+    </table>
+</div>

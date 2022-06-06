@@ -1,0 +1,41 @@
+<table border="1" width="100%">
+    <tr>
+        <th width="280">Party</th>
+        {foreach item=i from=$month}
+        <th width="100">{$i}</th>
+        {/foreach}
+        <th>Total</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+    <tr>
+        <td>{$k}</td>
+        {$total=0}
+        {foreach item=i from=$month}
+        <td align="right">
+            {if isset($v[$i])}
+                {$v[$i].total|string_format:"%.2f"}
+                {$total = $total + $v[$i].total}
+            {else}
+                {0|string_format:"%.2f"}
+            {/if}
+        </td>
+        {/foreach}
+        <td width="100" align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+    {/foreach}
+    {$total=0}
+    <tr>
+        <td>Total</td>
+        {foreach item=i from=$month}
+        <td align="right">
+            {if isset($summary[$i])}
+                {$summary[$i].total|string_format:"%.2f"}
+                {$total = $total + $summary[$i].total}
+            {else}
+                {0|string_format:"%.2f"}
+            {/if}
+        </td>
+        {/foreach}
+        <td width="100" align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+</table>

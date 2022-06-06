@@ -1,0 +1,50 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".list_temp").change(function() {
+            $("form").submit();
+        })
+    });
+</script>
+<form action="index.php" method="get" id="product_list">
+    <table>
+        <tr>
+            <td valign="top">
+                <input type="hidden" name="module" value="product">
+                <input type="hidden" name="func" value="hsndetails">
+                Select Company:<select name="id_company" class="list_temp">
+                    <option value="0">Select Company</option>
+                    {html_options options=$company selected=$smarty.request.id_company}
+                </select>
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+<table border="1">
+    <thead>    
+        <tr>
+            <th>Name</th><th>Pack</th><th>MRP</th><th>HSN Code</th><th>Minimum Stock</th><th>Maximum Stock</th><th>Discounted Seller Price</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.pack} {$mod.unit}</td>
+        <td>{$mod.mrp}</td>
+        <td><input size='15' value='{$mod.hsncode}' onblur="saveproduct('hsncode', this.value, '{$mod.id_product}' )"></td>
+        <td><input size='15' value='{$mod.minimum_stock}' onblur="saveproduct('minimum_stock', this.value, '{$mod.id_product}' )"></td>
+        <td><input size='15' value='{$mod.maximum_stock}' onblur="saveproduct('maximum_stock', this.value, '{$mod.id_product}' )"></td>
+        <td><input size='15' value='{$mod.discounted_seller_price}' onblur="saveproduct('discounted_seller_price', this.value, '{$mod.id_product}' )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("comp");
+        tbl_handler();
+    });
+    function saveproduct(fld, fvalue, id) {
+        var url = "index.php?module=product&func=saveproduct&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url, function(res) { } );
+    }
+</script>

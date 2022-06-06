@@ -1,0 +1,38 @@
+<table border="1">
+    <tr>
+       	<th>Sl.No.</th>
+       	<th>Invno</th>
+       	<th>Date</th>
+        <th>Party</th>
+        <th>Address</th>
+        <th>Item</th>
+        <th>Quantity</th>
+       	{if $smarty.request.free}<th>Free</th>{/if}
+       	{if $smarty.request.disc}<th>Discount</th>{/if}
+        {if $smarty.request.spl}<th>SPL</th>{/if}
+        {if $smarty.request.cd}<th>CD</th>{/if}
+        {if $smarty.request.vatdisc}<th>After VAT Discount</th>{/if}
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0} {$cash=0}
+    {$total=0} {$credit=0} {$loop=1}
+    {while $row = mysql_fetch_assoc($data)}
+    <tr>
+        <td>{$loop}
+        {$loop=$loop+1}
+        </td>
+        <td>{$row.invno}</td>
+        <td>{$row.date|date_format:$smarty_date}</td>
+        <td>{$row.party_name}</td>
+        <td>{$row.party_address}&nbsp;{$row.party_address1}</td>
+        <td>{$row.name}</td>
+        <td align="right">{$row.qty}</td>
+        {if $smarty.request.free}<td align="right">{$row.free}</td>{/if}
+        {if $smarty.request.disc}<td align="right">{$row.discount_amount1}</td>{/if}
+        {if $smarty.request.spl}<td align="right">{$row.discount_amount2}</td>{/if}
+        {if $smarty.request.cd}<td align="right">{$row.discount_amount3}</td>{/if}
+        {if $smarty.request.vatdisc}<td align="right">{$row.discount_amount4}</td>{/if}
+        <td align="right">{$row.net_amount}</td>
+    </tr>
+    {/while}
+</table>

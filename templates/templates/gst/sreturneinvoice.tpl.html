@@ -1,0 +1,137 @@
+<script>
+    function downloadJson() {
+        var text=$("#json-input").text();
+        var filename="B2BsalesReturn_{$smarty.request.start_date}.json";
+        var a = document.createElement('a');
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,'+encodeURIComponent(text));
+        a.setAttribute('download', filename);
+        a.click()
+        return false;
+    }
+    function checkall(v) {
+        if (v) {
+            $('.checkbox').prop('checked', true);
+        } else {
+            $('.checkbox').removeAttr('checked');
+        }
+    }
+    function showdata(type) {
+        $("#json").attr('disabled','disabled');
+        $("#print").attr('disabled','disabled');
+        var val = [];
+        $('.checkbox:checked').each(function(i){
+            val[i] = $(this).val();
+        });
+        if(val==''){
+            alert('There is no record selected for B2B Report!');
+        } else {
+            $(".print_content").html('<h3 class="blink">Loading data please wait....</h3>');
+            let startdate = $("#startdate").val();
+            let enddate = $("#enddate").val();
+            let url='index.php?module=gst&func=sreturneinvoice1&submit='+type+'&start_date='+startdate+'&end_date='+enddate+'&id='+val+'&ce=0';
+            $.post(url, function(res) {
+                $("#"+type).removeAttr('disabled');
+                $(".print_content").html(res);
+            });
+        }
+    }
+</script>
+<fieldset>
+    <legend>B2B Sales Return E-Invoice</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" id="startdate" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" id="enddate" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <button type="submit" name="submit" value="print">Show Bills</button>
+                    {if $data}
+                        <input type="button" onclick="showdata('print');" value="ShowB2B Data">&nbsp;&nbsp;
+                        <input type="button" onclick="showdata('json');" value="ShowJson">&nbsp;&nbsp;
+                        <input type="button" id="print" class="excel" value="Download As Excel" />
+                        <input type="hidden" id="excelfile" value="B2BsalesInvoice" />
+                        <input type="button" id="json" onclick="downloadJson()" value="Download As Json" />
+                    {/if}
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div>
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    B2B Sales Return E-Invoice for {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {if $data}
+    <table id='report' border="1">
+        <tr>
+            <th><input checked="checked" type="checkbox" onclick="checkall(this.checked)"/>Select</th>
+            <th>Sl</th><th>Invno</th><th>Date</th>
+            <th>Party</th><th>Address</th><th>GSTIN</th><th>GST</th><th>Total</th><th>Ack</th><th>Ack Date</th>
+        </td>
+        </tr>
+        {$idx=1}
+        {foreach item=x name=it from=$data}
+        <tr class="red">
+            <td>
+                {if !$x.ack}
+                    <input class="checkbox" checked="checked" type="checkbox" name="id_sreturn[]" value="{$x.id_sreturn}" />
+                {/if}
+            </td>
+            <td>{$idx++}</td>
+            <td>{$x.slno}</td>
+            <td>{$x.date|date_format:'d-m-Y'}</td>
+            <td>{$x.name}</td>
+            <td>{$x.address1}</td>
+            <td>{$x.gstin}</td>
+            <td align="right">{$x.vat}</td>
+            <td align="right">{$x.total}</td>
+            <td align="right">{$x.ack}</td>
+            <td align="right">{$x.ackdate}</td>            
+        </tr>
+        {/foreach}
+    </table>
+    <div class="print_content"></div>
+    <script>
+        showdata("print");
+    </script>
+    {/if}
+    <style>
+        #json-input {
+            width: 100% !important;
+            height: 200px !important;
+        }
+        .blink {
+            animation: blinker 0.6s linear infinite;
+            color: #1c87c9;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+        @keyframes blinker {
+            50% {
+            opacity: 0;
+            }
+        }
+        .blink-one {
+            animation: blinker-one 1s linear infinite;
+        }
+        @keyframes blinker-one {
+            0% {
+            opacity: 0;
+            }
+        }
+        .blink-two {
+            animation: blinker-two 1.4s linear infinite;
+        }
+        @keyframes blinker-two {
+            100% {
+            opacity: 0;
+            }
+        }
+        .red {
+            background: #ebc0a3;
+        }
+    </style>
+</div>

@@ -1,0 +1,38 @@
+<h3>Order History</h3>
+{if $data}
+<table border="1">
+    <tr>
+       	<th>Sl.</th><th>Order#</th><th>Date</th><th>Total</th><th>Product</th><th>Qty</th><th>Free</th><th>Rate</th><th>Net</th>
+    </tr>
+    {$total=0}
+    {$prev=0}
+    {$sl=1}
+    {section name=x loop=$data}
+    <tr>
+        {if $prev!=$data[x].id_salesorder}
+            <td>{$sl}</td>
+            {$sl = $sl + 1}
+            <td>{$data[x].invno}</td>
+            <td>{$data[x].date|date_format:$smarty_date}</td>
+            <td align="right">{$data[x].total}</td>
+        {else}
+            <th colspan="4" class="noborder">&nbsp;</th>
+        {/if}
+        <td>{$data[x].name}</td>
+        <td align="right">{$data[x].qty|string_format:"%.0f"}</td>
+        <td align="right">{$data[x].free|string_format:"%.0f"}</td>
+        <td align="right">{$data[x].rate|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].net_amount|string_format:"%.2f"}</td>
+    </tr>
+    {$total = $total + $data[x].total}
+    {$prev=$data[x].id_salesorder}
+    {/section}
+    <tr>
+        <th colspan="3">Total</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+        <th colspan="5">&nbsp;</th>
+     </tr>
+</table>
+{else}
+    No Order History for this Party.
+{/if}

@@ -1,0 +1,59 @@
+<fieldset>
+    <legend><h3>GST Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="GST" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GST Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <tr>
+            <th>Sl</th><th>In Date</th><th>Out Date</th><th>No</th><th>Name</th>
+            <th>Rent</th><th>Days Stay</th><th>Taxable Value</th>
+            <th>GST</th><th>GST Amount</th><th>SGST</th><th>CGST</th><th>Total</th><th>Add Date</th><th>Modify Date</th>
+        </tr>
+        {$total=0}{$goods=0}{$gst=0}
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            <tr>
+            <td>{$s}{$s=$s+1}</td>			
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.depature_date|date_format:"%d-%m-%Y"}</td><td>{$x.no}</td><td>{$x.name}</td>
+                <td align="right">{$x.rent|string_format:"%.2f"}</td><td>{$x.daysstay}</td>
+                <td align="right">{$x.withtax|string_format:"%.2f"}</td><td align="right">{$tax[$x.gst]}</td>
+                <td align="right">{$x.gstamt|string_format:"%.2f"}</td><td align="right">{($x.gstamt/2)|string_format:"%.2f"}</td>
+                <td align="right">{($x.gstamt/2)|string_format:"%.2f"}</td>
+                <td align="right">{$x.total}</td>
+                <td>{$x.create_date|date_format:"%d-%m"}</td>
+                <td>{$x.modify_date|date_format:"%d-%m"}</td>
+                {$total=$total+$x.total}
+                {$gst=$gst+$x.gstamt}
+                {$goods=$goods+$x.withtax}
+            </tr>
+        {/foreach}
+        <tr>
+            <th colspan="7">Total :</th>
+            <th align="right">{$goods|string_format:"%.2f"}</th><th></th>
+            <th align="right">{$gst|string_format:"%.2f"}</th>
+            <th align="right">{($gst/2)|string_format:"%.2f"}</th>
+            <th align="right">{($gst/2)|string_format:"%.2f"}</th>
+            <th align="right">{$total|string_format:"%.2f"}</th>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</div>

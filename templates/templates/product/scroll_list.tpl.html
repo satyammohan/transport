@@ -1,0 +1,62 @@
+<style>
+    #loader {
+        border:1px solid #ccc;
+        padding:10px;
+        margin:10px 0 0 0;
+        text-align:center;
+    }
+    .contentpane{  }
+    .rowHolder{ border:1px solid #ccc;
+                padding:10px;
+                margin:10px 0 0 0;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function() {
+        function lastRecord() {
+            $('div#loader').html('<img src="images/loading.gif" alt="Loading...">');
+            $.getJSON("index.php?module=product&func=scroll_next&lastID=" + $(".contentpane table tr:last").attr("id"),
+                    function(data) {
+                        if (data != "") {
+                            htm = '';
+                            $.each(data, function(i, item) {
+                                htm += '<tr id="' + item.id_product + '">';
+                                htm += '<td>' + item.id_product + '</td>' + '<td>' + item.cname + '</td>' + '<td>' + item.code + '</td>' + '<td>' + item.name + '</td>' + '<td>' + ' ' + '</td>';
+                                htm += '</tr>';
+                            });
+                            $(".contentpane table tr:last").after(htm);
+                        }
+                        $('div#loader').empty();
+                    });
+        }
+        ;
+        $(window).scroll(function() {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                lastRecord();
+            }
+        });
+
+    });
+</script>
+
+<div class="contentpane">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>SL No.</th><th>Company</th><th>Code</th><th>Item</th><th>Manage</th>
+            </tr>
+        </thead>
+        {foreach from=$data item=mod}
+        <tbody>
+            <tr id="{$mod.id_product}">
+                <td>{$mod.id_product}</td>
+                <td>{$mod.cname}</td>
+                <td>{$mod.code}</td>
+                <td>{$mod.name}</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+        {/foreach}
+    </table>
+    <div id="loader"></div>
+</div>

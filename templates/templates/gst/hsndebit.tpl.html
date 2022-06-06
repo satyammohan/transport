@@ -1,0 +1,30 @@
+<fieldset>
+    <legend>HSN Debit Note Summary</legend>
+    <form method="post" action="index.php?module=gst&func=hsncredit">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Option : <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                    <input type="radio" name="option" value="3" {if isset($smarty.request.option) AND $smarty.request.option=="3"}checked="checked"{/if}/>Tax Summary
+                    <input type="radio" name="option" value="4" {if isset($smarty.request.option) AND $smarty.request.option=="4"}checked="checked"{/if}/>First 4 Digit
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="HSN Debit Note Summary" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    HSN Debit Note Summary Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {include file="gst/hsn1.tpl.html"}
+</div>

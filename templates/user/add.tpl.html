@@ -1,0 +1,59 @@
+<script type="text/javascript">
+    function user_form_valid() {
+        var url = "index.php?module=user&func=check_user&id={$data.id_user}";
+        var fvalid=$("#add_user").validate({
+            rules:{
+                'user[user]': {
+                    required: true,
+                    remote: { url:url, async:false }
+                },
+                'user[name]': { required: true },
+                'user[pass]': { required: true }
+            },
+            messages: { 
+                'user[user]':{
+                    required: "User Name is Required",
+                    remote:"User Name already exists"
+                },
+                'user[name]': { required: "Login Name is Required" },
+                'user[pass]': { required: "Password is Required" }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form id="add_user" method="post" action="index.php?module=user&func={if $data.id_user}update{else}insert{/if}" onsubmit="return user_form_valid();">
+    <fieldset>
+        <legend>{if $data.id_user}Edit{else}Add{/if} User</legend>
+        <table>
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="user[name]" id="name" value="{$data.name}" size="30" />
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Login Name:</b></td>
+                <td><input type="text" name="user[user]" id="user" value="{$data.user}" size="30" />
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>New Password:</b></td>
+                <td><input type="text" name="user[pass]" size="30" />
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Admin:</b></td>
+                <td><input type="text" name="user[is_admin]" value="{$data.is_admin}" size="10" />
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_user}" />
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

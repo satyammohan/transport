@@ -1,0 +1,64 @@
+<fieldset>
+    <legend>Voucher Listing</legend>
+    <form method="post" action="index.php?module=voucher&func=listing">
+        <table>
+            <tr>
+                <td>Start :</td>
+                <td><input type="text" name="start_date" size="6" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End :</td>
+                <td><input type="text" name="end_date" size="7" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Amount:
+                    <input type="text" name="start_amount" size="4" value='{if isset($smarty.request.start_amount)}{$smarty.request.start_amount}{/if}' />
+                    <input type="text" name="end_amount" size="5" value='{if isset($smarty.request.end_amount)}{$smarty.request.end_amount}{/if}' />
+                </td>
+                <td>Account :
+                    <select name="id_head">
+                        <option value="">Select</option>
+                        {html_options options=$head selected=$smarty.request.id_head}
+                    </select>
+                </td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<table border="1" id="dataTable">
+    <thead>
+    <tr><th colspan="8"><b>Voucher Listing</b></th>
+        <th><a class="voucher" href="index.php?module=voucher&func=edit"><div class="add_bg"></div></a></th>
+    </tr>
+    <tr>
+        <th>Date</th><th>Voucher No</th><th>Debit A/c</th><th>Credit A/c</th><th class="right">Amount</th><th>Remark</th><th>Ref.</th><th>Bill</th><th>&nbsp;</th>
+    </tr>
+    </thead>
+    {foreach item=v1 key=k1 from=$voucher}
+    <tr>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td>{$v1.no}</td>
+        <td>{$head[$v1.id_head_debit]}</td>
+        <td>{$head[$v1.id_head_credit]}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+        <td>{$v1.memo}</td>
+        <td>{$v1.ref1}</td>
+        <td>{$v1.cbill}{$v1.dbill}</td>
+        <td width="110px">
+            {if $v1.details}
+                <a href="index.php?module=voucher&func=deletebill&id={$v1.id_voucher}&ce=1" onclick="return confirm('Do you want to delete Billwise Details?');"><div title="Delete Voucher Bills">Bills</div></a>
+            {/if}
+            <a href="index.php?module=voucher&func=delete&id={$v1.id_voucher}&ce=1" onclick="return confirm('Do you want to delete?');"><div title="Delete Voucher" class="delete_bg">&nbsp;</div></a>
+            <a class="voucher" href="index.php?module=voucher&func=printvou&id={$v1.id_voucher}&ce=0" ><div title="Print Bill" class="report_bg">&nbsp;</div></a>&nbsp;
+            <a href="index.php?module=voucher&func=edit&id={$v1.id_voucher}"><div title="Edit Voucher" class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("voucher");
+        tbl_handler();
+    });
+</script>
+<fieldset>

@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_group").validate({
+            rules:{
+                'group[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=group&func=check_name&id={$data.id_group}", async:false }
+                }
+            },
+            messages: { 
+                'group[name]': {
+                    required: "<br/>This Field is Required",
+                    remote: "<br/>Name Already Exists!"
+                }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    $(document).ready(function() {
+        callauto("gname", "index.php?module=group&func=getparent&ce=0", "id_parent");
+    });
+</script>
+<form name="group" id="add_group" method="post" action="index.php?module=group&func={if $data.id_group}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_group}Edit{else}Add{/if} Group</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="group[name]" id="name" value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Parent:</b></td>
+                <td><input type="text"  id="gname" name="gname" value='{$data.gname}' />
+                    <input type="hidden" id="id_parent" name="group[id_parent]" value="{$data.id_parent}"  />
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_group}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

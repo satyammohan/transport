@@ -1,0 +1,94 @@
+<style>
+    #sortable1, #sortable2, #sortable3 { list-style-type: none; margin: 0; padding: 0; float: left; margin-right: 10px; background: #eee; padding: 5px; width: 173px;}
+    #sortable1 li, #sortable2 li, #sortable3 li { margin: 5px; padding: 5px; font-size:14px; width: 150px; }
+    #msgbox{
+        font-size:14px;
+        font-weight:bold;
+    }
+    .msgerror{
+        color: red;
+    }
+    label {
+        width: 100%;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        $('#lists input[type="checkbox"]:enabled').bind('change', function(e) {
+            var $this = $(this),
+                    $checkedBoxes = $('#lists').find('input:checkbox').filter(':checked').length,
+                    index = $('#lists input:checkbox').index($this),
+                    txt = jQuery.trim($this.parent().text());
+            val = $this.val();
+            if ($this.is(':checked')) {
+                var filterLink = $('<li class="ui-state-default" id=' + val + '>' + txt + '</li>');
+                $(filterLink).data('myIndex', index);
+                $('#filters > #sortable1').append(filterLink);
+            } else {
+                $('#filters > #sortable1').find('li').filter(function() {
+                    return $.data(this, 'myIndex') === index;
+                }).remove();
+            }
+        });
+        $("#sortable1").sortable({
+            connectWith: ".sorttrue",
+            dropOnEmpty: true,
+            update: function(event, ui) {
+                var result = $('#sortable1').sortable('toArray');
+                $("#fields").val(result)
+            }
+        });
+        $("#save").mouseover(function() {
+            var result = $('#sortable1').sortable('toArray');
+            $("#fields").val(result)
+        })
+        $("#save").click(function() {
+            var tname = $("#tname").val();
+            if ($("#tname").val() == '') {
+                $("#msgbox").html('Plz fill out This field').removeClass().addClass('msgerror').fadeTo(900, 1)
+            } else {
+                $("#msgbox").hide('slow')
+                $("form").submit();
+            }
+        })
+        $("form").bind("keypress", function(e) {
+            if (e.keyCode == 13)
+                return false;
+        });
+        $("#delete").click(function() {
+            $.post("index.php?module=product&func=deletetemp", { tname: $("#dtemp").val() }, function() {
+                alert('deleteed successfully');
+            })
+        })
+    });
+</script>
+<form id="plist" action="index.php?module=product&func=insert_template" method="post">
+    <table >
+        <tr>
+            <td><b>Choose Template:</b> <select id="dtemp">
+                    {html_options options=$template}
+                </select>
+            </td>
+            <td><input type="button" value="Delete Template"  name="delete"  id="delete"/></td>
+        </tr>
+        <tr>
+            <td valign="top">
+                <b> Select Columns:</b><br/>
+                <div style="overflow-y: scroll; width:250px; height: 350px; border: 1px solid #ccc;" id="lists">
+                    {html_checkboxes name='field[]' options=$field separator='<br />'}
+                </div>
+            </td>
+            <td valign="top">
+                <input type="hidden" name="fields" id="fields">
+                <b>Sort Columns:</b><br/>
+                <div id="filters">
+                    <ul id="sortable1" class='sorttrue'></ul>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td><b>Save Template As</b><br><input type="text" name="name" id="tname"  onkeyup="check()" onblur="check()"/><br><span id="msgbox"></span></td>
+            <td><br/><input type="button" value="Save"  name="listing"  id="save"/></td>
+        </tr>
+    </table>
+</form>

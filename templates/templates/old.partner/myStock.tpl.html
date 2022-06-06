@@ -1,0 +1,81 @@
+<style>
+    .bs {
+        width: 100%;
+        margin-top:10px;
+    }
+    .ns {
+        width:50px imp !important;
+    }
+    table {
+        font-size:13px;
+    }
+    .ui-table-columntoggle-btn {
+       display: none !important;
+    }
+</style>
+<script>
+    function show(id) {
+        $("#"+id).toggle();
+    }
+    function update(id, pid) {
+	mys = parseInt($("#s_"+pid).val() ? $("#s_"+pid).val() : 0);
+        if (mys<0) {
+            mys = 0;
+            $("#s_"+pid).val(0);
+        }
+        myo = parseInt($("#o_"+pid).html() ? $("#o_"+pid).html() : 0);
+        myp = parseInt($("#p_"+pid).html() ? $("#p_"+pid).html() : 0);
+        myc = myo*1 + myp*1 - mys*1;
+        $("#c_"+pid).html(myc);
+        mycomp = parseInt($("#"+id).html() ? $("#"+id).html() : 0);
+        mycomp = mycomp*1 - prevalue*1 + myc*1;
+        $("#"+id).html(mycomp);
+    }
+    function setprevalue(pid) {
+        myc = parseInt($("#c_"+pid).html() ? $("#c_"+pid).html() : 0);
+        prevalue = myc*1;
+    }
+    var prevalue=0;
+</script>
+<form method="get" action="index.php?module=partner&func=myStock{if $smarty.request.id_head}&id_head=79{/if}" >
+    <table>
+        <tr>
+            <td><b>{if $smarty.request.id_head}Current Stock of : {$head.0.name}{else}Update Sales for {/if}</b></td>
+            <td><input type="date" name="date" value="{$smarty.request.date}"></td>
+            <td><input data-mini="true" data-inline="true" type="submit" value="Go"></td>
+        </tr>
+    </table>
+</form>
+{$sl = 1}
+<form method="post" action="index.php?module=partner&func=saveTodaysSales">
+    {foreach from=$items item=mod key=k}
+        <button type="button" class="bs btn btn-primary dropdown-toggle" data-toggle="dropdown" onclick="show('c_{$sl}');">{$k}(<span id="q_{$sl}">0</span>)</button><br>
+        <table class='tbl' id="c_{$sl}" style="display: none;"  data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+        <tr><th>Name</th><th>Open</th><th>Purc</th><th>Sales</th><th>Close</th></tr>
+        {foreach from=$mod item=m}
+        <tr>
+            <td>{$m.name}</td>
+            <td><div id='o_{$m.id_product}'>{$m.o|string_format:'%.0f'}</div></td>
+            <td><div id='p_{$m.id_product}'>{$m.p|string_format:'%.0f'}</div></td>
+            {if $smarty.request.id_head}
+                <td><div id='s_{$m.id_product}'>{$m.s|string_format:'%.0f'}</div></td>
+            {else}
+                <td><input id='s_{$m.id_product}' name="item[{$m.id_product}]" type="number" class="ns" value="{$m.s|string_format:'%.0f'}" size="10"
+                    {if $m.s!=0} disabled="disabled" {else} onfocus="setprevalue('{$m.id_product}')" onblur="update('q_{$sl}', '{$m.id_product}')" {/if} ></td>
+            {/if}
+            <td><div id='c_{$m.id_product}'>{$m.c|string_format:'%.0f'}</div></td>
+            <script>
+                update('q_{$sl}', '{$m.id_product}');
+            </script>
+        </tr>
+        {/foreach}
+        </table>
+        {$sl = $sl + 1}
+    {/foreach}
+    {if !isset($smarty.request.id_head)}
+        {if $smarty.request.date>$maxdate}
+            <input type="hidden" name="date" value="{$smarty.request.date}">
+            <br><input type="submit" value="Save Stock Position">
+        {/if}
+    {/if}
+</form>

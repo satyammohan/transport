@@ -1,0 +1,96 @@
+<script type="text/javascript" src="{$source}jsmodule/account.js"></script>
+<script type="text/javascript" src="{$source}jsmodule/price.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#save").click(function () {
+            if (form_valid()) {
+                $("form").submit();
+            }
+        });
+        $("#debit").blur(function(){
+            getsalebills();
+        })
+        //$("#amt").blur(function(){
+//            $("#billamt").html('<tr><td><input type="text" name="billno[]" value=""</td><td><input type="text" name="bamt[]" id="bamt"></td></tr>');
+//            $("#billamt").show();
+//            $("#bamt").val($("#amt").val());
+//        })
+    })
+</script>
+<form name="add_voucher" id="add_voucher"  method="post" action="index.php?module=voucher&func={if $data.id_voucher}update{else}insert{/if}" >
+    <fieldset>
+        <legend>Journal</legend>
+        <table>
+            <tr>
+                <td>
+                    <table>
+                        <tr>
+                            <td><b>Date :</b></td>
+                            <td><input type="text" name="voucher[date]" id="date" class="dtpick" value="{if $data}{$data.date|date_format:$ini.smarty_date}{else}{$smarty.now|date_format:$ini.smarty_date}{/if}"/>
+                                <label for="code"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Journal No :</b></td>
+                            <td><input type="text" onchange="check(this.value, this.id, 'journal_add', 1);" name="vno" id="no" value='{if $data}{$data.no}{else}{$nextno+1}{/if}'/>
+                                <label for="vno"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Debit Account :</b></td>
+                            <td>
+                                <input type="text" name="debit" value='{if $data}{$head[$data.id_head_debit]}{/if}' id="debit" size="80"/>
+                                <input type="hidden" name="voucher[id_head_debit]" id="id_head_debit" value='{if $data}{$data.id_head_debit}{/if}'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Credit Account :</b></td>
+                            <td>
+                                <input type="text" name="credit" value='{if $data}{$head[$data.id_head_credit]}{/if}' id="credit" size="80"/>
+                                <input type="hidden" name="voucher[id_head_credit]" id="id_head_credit" value='{if $data}{$data.id_head_credit}{/if}'>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td><b>Amount :</b></td>
+                            <td><input type="text"  name="voucher[total]" id="amt" value='{$data.total|string_format:"%.2f"}'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Remark :</b></td>
+                            <td><textarea  name="voucher[memo]" cols="50" rows="5">{$data.memo}</textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table border="1" cellspacing="0" id="billamt" align="center" {if $data } style="display:block;" {else} style="display:none;" {/if}>
+                                       <tr><th>Bill No</th><th>Amount</th></tr>
+                                        {if isset($bill)}
+                                        {foreach item=v1 key=k1 from=$bill}
+                                            <tr><td>{if $v1.cbill}<input type="text"  name="billno[]"  value="{$v1.cbill}">{else}&nbsp;{/if}</td>
+                                            <td><input type="text"  name="bamt[]" id="bamt" value="{$v1.total}"></td></tr>
+                                        {/foreach}
+                                        {else}
+                                            <tr><td><input type="text"  name="billno[]"  value=""</td>
+                                            <td><input type="text"  name="bamt[]" id="bamt"></td></tr>
+                                        {/if}
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="2">
+                                <input type="hidden" id="hide" name="id" value="{$data.id_voucher}" />
+                                <input type="button" value="Save"  id="save" />
+                                <input type="reset" value="Reset" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td valign="top" width="20px"></td>
+                <td valign="top">
+                    <center><b>Bill Details</b><br>(Click on the Bill Number to Select)</center>
+                    <table border="1" cellspacing="0" id="billdetail" style="width: 100%; font-size: 12px"></table>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+

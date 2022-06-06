@@ -1,0 +1,49 @@
+{if isset($smarty.request.minimal) && $smarty.request.minimal=="on"}
+    {$min=1}
+{else}
+    {$min=0}
+{/if}
+<table border="1" id="report">
+    <tr>
+        {if $min==0}
+            <th>Area</th>
+            <th>Company</th>
+            <th>Representative</th>
+        {/if}
+        <th>Party</th>
+        <th>Address</th>
+        <th>Total OS</th>
+        <th>Bill No.</th>
+        <th>Date</th>
+        <th align="right">Amount</th>
+        <th>Days</th>
+    </tr>
+    {$total=0}
+    {section name=x loop=$data}
+    {$head = $data[x].id_head}
+    <tr>
+        {if $min==0}
+            <td>{$area[$data[x].id_area]}</td>
+            <td>{$data[x].cname}</td>
+            <td>{$represent[$data[x].id_represent]}</td>
+        {/if}
+        <td>{$data[x].name}</td>
+        <td>{$data[x].address1}</td>
+        <td align="right">{if $os[$head]==0}&nbsp;{else}{$os[$head]|string_format:"%.2f"}{/if}{$os[$head]=0}</td>
+        <td>{$data[x].invno}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td align="right">{$data[x].balance|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].days}</td>
+    </tr>
+    {$total = $total + $data[x].balance}
+    {/section}
+    <tr>
+        {if $min==0}
+            <th colspan="5">Total : </th>
+        {else}
+            <th colspan="2">Total : </th>
+        {/if}
+        <th align="right">{$total|string_format:"%.2f"}</th>
+        <td colspan="4">&nbsp;</td>
+    </tr>
+</table>

@@ -1,0 +1,36 @@
+
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <td colspan="14" align="right"><a class="voucher"   href="index.php?module=head&func=edit"><img src="img/apps/Add.png"> </a></td>
+        </tr>
+        <tr>
+            <th>Name</th><th>Group</th><th>Address1</th><th>Address2</th><th>Address3</th><th>Tin No</th><th>Tin Date</th><th>Phone</th><th>Mobile</th><th>Area</th><th>Transport</th><th>Opening Balance Type</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>	
+        <td>{get_name key=$mod.id_group list=$group}</td>
+        <td>{$mod.address1}</td>			
+        <td>{$mod.address2}</td>			
+        <td>{$mod.address3}</td>			
+        <td>{$mod.tin_no}</td>
+        <td>{$mod.tin_date}</td>
+        <td>{$mod.phone}</td>
+        <td>{$mod.mobile}</td>
+        <td>{get_name key=$mod.id_area list=$area}</td>
+        <td>{if $mod.id_transport==0}Not taken{else}{get_name key=$mod.id_transport list=$transport}{/if}</td>
+
+        <td>{if $mod.otype==0}Debit{else}Credit{/if}</td>
+        <td><a class="voucher" href="index.php?module=head&func=edit&id={$mod.id}"><img src="img/apps/Edit.png" width="25" height="25" title="edit"></a>
+            <a href="index.php?module=head&func=delete&id={$mod.id}&ce=0" onclick="return confirm('Do you want to delete?');"><img src="img/apps/Delete.png" width="25" height="25" title="delete"></a></td>
+
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        tbl_handler();
+    });
+</script>

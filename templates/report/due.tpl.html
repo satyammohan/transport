@@ -1,0 +1,70 @@
+<fieldset>
+    <legend><h3>Due Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>AS On :</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="Due" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Due Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <tr>
+            <th>Sl</th><th>Ref No.</th><th>GRC</th><th>Bill No.</th><th>Date</th><th>Name</th><th>Room</th><th>Type</th><th>Days</th><th>Room</th><th>Food</th><th>Other</th><th>MR</th><th>Online Due</th><th>Offline Due</th><th>Total Due</th>
+        </tr>
+        {$total=0}{$foodtotal=0}{$othertotal=0}{$mrtotal=0}{$ndue=0}{$fdue=0}{$due=0}
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            {if $x.due!=0}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.no}</td>
+                <td>{$x.grcno}</td>
+                <td>{$x.billno}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.name}</td>
+                <td>{$x.roomnumber}</td>
+		<td>{$x.type}</td>
+                <td align="right">{$x.daysstay}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+                <td align="right">{$x.foodtotal|string_format:"%.2f"}</td>
+                <td align="right">{$x.othertotal|string_format:"%.2f"}</td>
+                <td align="right">{$x.mrtotal|string_format:"%.2f"}</td>
+                <td align="right">{if $x.type=="Online"}{$x.due|string_format:"%.2f"}{else}0.00{/if}</td>
+                <td align="right">{if $x.type!="Online"}{$x.due|string_format:"%.2f"}{else}0.00{/if}</td>
+                <td align="right">{$x.due|string_format:"%.2f"}</td>
+                {$total=$total+$x.total}
+                {$foodtotal=$foodtotal+$x.foodtotal}
+                {$othertotal=$othertotal+$x.othertotal}
+                {$mrtotal=$mrtotal+$x.mrtotal}
+                {$due=$due+$x.due}
+		{if $x.type=="Online"}
+                	{$ndue=$ndue+$x.due}
+		{else}
+	                {$fdue=$fdue+$x.due}
+                {/if}
+            </tr>
+            {/if}
+        {/foreach}
+        <tr>
+            <th colspan="9">Total :</th>
+            <td align="right"><b>{$total|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$foodtotal|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$othertotal|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$mrtotal|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$ndue|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$fdue|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$due|string_format:"%.2f"}</b></td>
+        </tr>
+    </table>
+</div>

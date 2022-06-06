@@ -1,0 +1,23 @@
+<script type="text/javascript" src="{$source}js/jquery.json2.js"></script>
+<script type="text/javascript" src="{$source}js/jquery.jstorage.js"></script>
+
+This template is used for update the local Database for offline Order Processing. 
+
+<div id="head"></div>
+
+
+
+<script type="text/javascript">
+  heads = $.parseJSON($.jStorage.get("head"));
+  for(i in heads) {
+    $("#head").append(i+"------"+heads[i]+"<br>");
+  }
+  companys = $.parseJSON($.jStorage.get("company"));
+  for(i in companys) {
+    $("#head").append(i+"------"+companys[i]+"<br>");
+  }
+  products = $.parseJSON($.jStorage.get("product"));
+  for(i in products) {
+    $("#head").append(i+"------"+products[i]+"<br>");
+  }
+</script>

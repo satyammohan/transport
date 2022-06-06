@@ -1,0 +1,92 @@
+<script type="text/javascript">
+    function advanced() {
+        var opt = $("input[name='party_select']:checked").val();
+        if (opt == 2) {
+            $("#list_party").show();
+        } else {
+            $("#list_party").hide();
+        }
+    }
+    $(document).ready(function () {
+        advanced();
+        $("input[name='party_select']").click(function () {
+            advanced();
+        })
+        $(".middle").click(function () {
+            var listArr = $(this).attr("name").split("_");
+            var list1 = listArr[0];
+            var list2 = listArr[1];
+            $("#" + list1 + " option:selected").each(function (i, selected) {
+                $("#" + list2).append('<option value="' + selected.value + '" selected="selected">' + selected.text + '</option>');
+                $(this).remove();
+            });
+        });
+    });
+</script>
+<fieldset>
+    <legend>Ltr/Kg Report Purchase</legend>
+    <form method="post" action="index.php?module=preport&func=ltrkg">
+        <table>
+            <tr>
+                <td valign="top">Start Date :</td>
+                <td valign="top"><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td valign="top">End Date :</td>
+                <td valign="top"><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td valign="top">
+                    <input type="radio" name="party_select" value="1" {if isset($smarty.request.party_select) AND $smarty.request.party_select=="1"}checked="checked"{else}{if !isset($smarty.request.party_select)}checked="checked"{/if}{/if}/>All Party
+                    <input type="radio" name="party_select" value="2" {if isset($smarty.request.party_select) AND $smarty.request.party_select=="2"}checked="checked"{/if} />Select Party
+                </td>
+               <td><!--select table-->
+                    <table id="list_party">
+                        <tr>
+                            <td valign="top">
+                                <select name="party1[]" id="party1" multiple="multiple" style="width:200px;">
+                                    {html_options options=$party selected=$smarty.request.party1}
+                                </select>
+                            </td>
+                            <td><input name="party1_party2" value=">>" type="button" class="middle"><br>
+                                <input name="party2_party1" value="<<" type="button" class="middle">
+                            </td>
+                            <td>
+                                <select name="party2[]" id="party2"  multiple="multiple" style="width:200px;">
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                 <td colspan="4" align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">Company :</td>
+                <td valign="top" colspan="4">
+                    <select name="company">
+                        <option value=" ">All</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Ltr/Kg Report Purchase Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data }
+    {include file="preport/ltrkg1.tpl.html"}
+    {else}
+    <b>No Record Found!</b>
+    {/if}
+</div>
+<script type="text/javascript">
+  {if isset($smarty.request.debug)}
+    $("#report").find("b").parent().parent().addClass('donotremove');
+    $("#report").find("th").parent().addClass('donotremove');
+    $("#report tbody tr").not('.donotremove').remove();
+  {/if}
+</script>

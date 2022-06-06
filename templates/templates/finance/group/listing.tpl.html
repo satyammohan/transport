@@ -1,0 +1,36 @@
+<div class="content"><table  border="1">
+        <thead>
+            <tr> 
+                <th colspan="3">
+                    <select  id="list_status" onchange="update_listing('group', this.value);">
+                        {html_options options=$ini.status_all selected=$smarty.request.status}
+                    </select>
+                </th>
+                <th><a class="group" href="index.php?module=group&func=edit&ce=0">
+                        <div class="add_bg"></div></a></th>
+            </tr>
+            <tr>
+                <th>Name</th><th>Parent Name</th><th>Status</th><th>&nbsp;</th>
+            </tr>
+        </thead>
+        {foreach from=$group item=mod}
+        <tr>
+            <td>{$mod.name}</td>
+            <td>{if $mod.id_parent==0}&nbsp {else}{get_name key=$mod.id_parent list=$parent}{/if}</td>
+            <td ><select  onchange="update_status('group', '{$mod.id}', this.value,$('#list_status').val());">
+                    {html_options options=$ini.status selected=$mod.status}
+                </select></td>
+            <td><a class="group" href="index.php?module=group&func=edit&id={$mod.id}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+                <a href="index.php?module=group&func=delete&id={$mod.id}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a></td>
+        </tr>
+        {/foreach}
+    </table>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("group");
+        tbl_handler();
+
+    });
+
+</script>

@@ -1,0 +1,38 @@
+{$gvattot=0}
+{$gtotal=0}
+<table border="1">
+    {foreach item=v key=k from=$data}
+    <tr><th colspan="7">Zone : {$zone[$k]}</th></tr>
+    <tr>
+        <th>Inv No</th><th>Date</th><th>Party</th><th>Address</th><th>Area</th><th>Vat</th><th>Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0} 
+    {foreach item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$v1.invno}</td>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td>{$v1.party_name}</td>
+        <td>{$v1.party_address}&nbsp;&nbsp;&nbsp;{$v1.party_address1}</td>
+        <td>{$v1.aname}</td>
+        <td align="right">{$v1.vat|string_format:"%.2f"}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$vattot = $vattot + $v1.vat}
+    {$total = $total + $v1.total}
+    {/foreach}
+    <tr>
+        <td colspan="5" class="right">Zone Total</td>
+        <td align="right">{$vattot|string_format:"%.2f"}</td>
+        <td align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+    <tr><td colspan="7">&nbsp;</td></tr>
+    {$gtotal = $gtotal + $total}
+    {$gvattot = $gvattot + $vattot}
+    {/foreach}
+    <tr>
+        <th colspan="5">Grand Total :</th>
+        <td align="right"><b>{$gvattot|string_format:"%.2f"}</b></td>
+        <td align="right"><b>{$gtotal|string_format:"%.2f"}</b></td>
+    </tr>
+</table>

@@ -1,0 +1,39 @@
+<fieldset>
+    <legend>B2B Sales</legend>
+    <form method="post" action="index.php?module=gst&func=b2b">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Show Company No :<input type="checkbox" name="compbill" {if isset($smarty.request.compbill)}checked="checked"{/if}></td>
+                <td><b>
+                    <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />All
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>HAVING GST NO.
+                    <input type="radio" name="option" value="3" {if isset($smarty.request.option) AND $smarty.request.option=="3"}checked="checked"{/if} />WITHOUT GST NO.
+               <br>
+                    <input type="radio" name="taxtype" value="1" {if isset($smarty.request.taxtype) AND $smarty.request.taxtype=="1"}checked="checked"{else}{if !isset($smarty.request.taxtype)}checked="checked"{/if}{/if} />All Tax
+                    <input type="radio" name="taxtype" value="2" {if isset($smarty.request.taxtype) AND $smarty.request.taxtype=="2"}checked="checked"{/if}/>0 Tax
+                    <input type="radio" name="taxtype" value="3" {if isset($smarty.request.taxtype) AND $smarty.request.taxtype=="3"}checked="checked"{/if} />Non 0 Tax
+		    </b>
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="B2B" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    B2B Sales Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {if isset($smarty.request.option) AND $smarty.request.option=="1"}ALL BILLS{/if}
+    {if isset($smarty.request.option) AND $smarty.request.option=="2"}SALE BILLS HAVING PARTY'S GST NO.{/if}
+    {if isset($smarty.request.option) AND $smarty.request.option=="3"}SALE BILLS WITHOUT PARTY'S GST NO.{/if}
+    {include file="gst/b2b1.tpl.html"}
+</div>

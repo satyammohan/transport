@@ -1,0 +1,31 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function(){ 
+            $("#name").focus();
+            $("#name").val('');
+            $("#pass").val('');
+         }, 1000);
+    });
+</script>
+<form method="post" action="index.php?module=partner&func=login">
+    <table data-role="table" class="ui-responsive">
+        <thead>
+            <tr><td colspan="2"><h4>Log in</h4></td></tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Username :</td>
+            <td><input id="name" required name="user[uname]"  type="text" placeholder="Enter your Username"/></td>
+        </tr>
+        <tr>
+            <td>Password :</td>
+            <td><input id="pass" required name="user[pass]"  type="password" placeholder="Enter your Password" /></td>
+        </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"><input class="ui-btn" type="submit" value="Login" /></td>
+            </tr>
+        </tfoot>
+    </table>
+</form>

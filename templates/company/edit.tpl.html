@@ -1,0 +1,66 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_comp").validate({
+            rules:{
+                'comp[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=company&func=check_name&id={$data.id_company}", async:false }
+                },
+                'comp[code]': {
+                    required: true,
+                    remote: { url:"index.php?module=company&func=check_code&id={$data.id_company}", async:false }
+                }
+              
+            },
+            messages: { 
+                'comp[name]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>Company Name already exists"
+                },
+                'comp[code]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>Code is not Available",  
+                    min:"<br/>Code Size must be of 10 "
+                }
+           
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form name="comp" id="add_comp" method="post" action="index.php?module=company&func={if $data.id_company}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_company}Edit{else}Add{/if} Company</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="comp[name]"  value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Code:</b></td>
+                <td><input type="text" name="comp[code]"  value="{$data.code}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Description:</b></td>
+                <td><textarea  name="comp[description]">{$data.description}</textarea>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Address:</b></td>
+                <td><textarea  name="comp[address]">{$data.address}</textarea>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_company}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

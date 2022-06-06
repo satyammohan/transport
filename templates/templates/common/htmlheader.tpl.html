@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="EN" lang="EN" dir="ltr">
+    <head>
+        <meta charset="UTF-8">
+	<link rel="shortcut icon" href="http://www.webaccounts.in/images/entryphoto.jpg" type="image/x-icon">
+            {$smarty_date=$ini.smarty_date scope="global"}
+            {$source = "" scope="global"}
+            <script language="javascript" type="text/javascript">
+                var js_date = "{$ini.js_date}";
+                var sdate = "{$smarty.session.sdate|date_format:$smarty_date}";
+                var edate = "{$smarty.session.edate|date_format:$smarty_date}";
+            </script>
+            <script type="text/javascript" src="{$source}js/jquery-1.8.3.js"></script>
+            <script type="text/javascript" src="{$source}js/jqprint.js"></script>
+<script>
+  (function(i,s,o,g,r,a,m) { i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() { 
+  (i[r].q=i[r].q||[]).push(arguments) } ,i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  } )(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81196035-1', 'auto');
+  ga('send', 'pageview');
+
+</script>

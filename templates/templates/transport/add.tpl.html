@@ -1,0 +1,61 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_trans").validate({
+            rules:{
+                'transport[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=transport&func=check_name&id={$data.id_transport}", async:false }
+                }
+                  
+            },
+            messages: { 
+                'transport[name]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>Transport Name already exists"
+                }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form name="trans" id="add_trans" method="post" action="index.php?module=transport&func={if $data.id_transport}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_transport}Edit{else}Add{/if} Transport</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="transport[name]" id="name" value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Contact Person:</b></td>
+                <td><input type="text" name="transport[contact_person]" id="name" value="{$data.contact_person}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Pan Details:</b></td>
+                <td><input type="text" name="transport[panno]" id="name" value="{$data.panno}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Contact Number:</b></td>
+                <td><input type="text" name="transport[contact_no]" id="name" value="{$data.contact_no}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Address:</b></td>
+                <td><textarea name="transport[address]" >{$data.address}</textarea>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_transport}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

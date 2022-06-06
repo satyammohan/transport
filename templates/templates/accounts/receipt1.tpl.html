@@ -1,0 +1,33 @@
+<table border="1">
+    <tr>
+        <th>Debit</th>
+       	<th align="right">Amount</th>
+        <th>Credit</th>
+       	<th align="right">Amount</th>
+    </tr>
+    {$dtotal=0}
+    {$ctotal=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$data[x].dname}</td>
+        <td align="right">{if $data[x].dtotal}{$data[x].dtotal|string_format:"%.2f"}{else}&nbsp;{/if}</td>
+        <td>{$data[x].cname}</td>
+        <td align="right">{if $data[x].ctotal}{$data[x].ctotal|string_format:"%.2f"}{else}&nbsp;{/if}</td>
+    </tr>
+    {$dtotal = $dtotal + $data[x].dtotal}
+    {$ctotal = $ctotal + $data[x].ctotal}
+    {/section}
+    <tr>
+        <th>Debit Total</th>
+        <th align="right">{$dtotal|string_format:"%.2f"}</th>
+        <th>Credit Total</th>
+        <th align="right">{$ctotal|string_format:"%.2f"}</th>
+    </tr>
+    <tr>
+        <th>Balance</th>
+        <th align="right">{abs($ctotal-$dtotal)|string_format:"%.2f"} {if ($dtotal-$ctotal)<0}CR{else}DB{/if}</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+</table>
+

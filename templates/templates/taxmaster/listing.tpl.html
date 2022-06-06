@@ -1,0 +1,33 @@
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th colspan="4">
+                <select id="list_status" onchange="update_listing('taxmaster', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a class="tax" href="index.php?module=taxmaster&func=edit&ce=0"><div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>ID</th><th>Name</th><th>Tax Amount</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$tax item=mod}
+    <tr>
+        <td>{$mod.id_taxmaster}</td>			
+        <td>{$mod.name}</td>			
+        <td>{$mod.tax_per}</td>
+        <td><select onchange="update_status('taxmaster', '{$mod.id_taxmaster}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td><a class="tax" href="index.php?module=taxmaster&func=edit&id={$mod.id_taxmaster}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+            <a href="index.php?module=taxmaster&func=delete&id={$mod.id_taxmaster}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+                    $(document).ready(function() {
+                        fancy_handler("tax");
+                        tbl_handler();
+                    });
+</script>

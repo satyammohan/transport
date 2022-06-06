@@ -1,0 +1,43 @@
+<table border="1">
+    <tr>
+        <th>Sl.No.</th>
+        <th>Representative Name</th>
+        <th>Debit</th>
+        <th>Credit</th>
+        <th align="right">Amount</th>
+    </tr>
+    {$stotal=0}
+    {$total=0}
+    {$slno=1}
+	{$name=''}
+    {section name=x loop=$data}
+    <tr>
+        {if $data[x].name!=$name}
+			{$slno=1}
+			{if $stotal!=0}
+				<th colspan="4">Representative Total</th>
+				<th align="right">{$stotal|string_format:"%.2f"}</th></tr><tr>
+			{/if}
+			{$stotal = 0}
+		{else}
+			{$slno=$slno+1}
+        {/if}
+        {$name=$data[x].name}
+        <td>{$slno}</td>
+        <td>{$data[x].name}</td>
+        <td>{$data[x].dname}</td>
+        <td>{$data[x].cname}</td>
+        <td align="right">{$data[x].total|string_format:"%.2f"}</td>
+    </tr>
+    {$total = $total + $data[x].total}
+    {$stotal = $stotal + $data[x].total}
+    {/section}
+	{if $stotal!=0}
+		<tr><th colspan="4">Representative Total</th>
+		<th align="right">{$stotal|string_format:"%.2f"}</th></tr>
+	{/if}
+    <tr>
+		<th colspan="4">Report Total</th>
+		<th align="right">{$total|string_format:"%.2f"}</th></tr><tr>
+    </tr>
+</table>

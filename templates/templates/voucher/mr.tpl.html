@@ -1,0 +1,168 @@
+<script type="text/javascript" src="jsmodule/account.js"></script>
+<script type="text/javascript" src="jsmodule/price.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#date").datepicker({
+            dateFormat:js_date,
+            minDate:"{$smarty.session.sdate|date_format:$ini.smarty_date}",
+            maxDate:"{$smarty.session.edate|date_format:$ini.smarty_date}"
+        });
+        $("#amt").priceField();
+        $("#voucher_no").focus();
+        $("#head").blur(function(){
+            var id_head=$("#id_head").val();
+            $.getJSON("index.php?module=voucher&func=billdetail&ce=0&id="+id_head,function(data){
+                htm="<tr><th>BillNo</th><th>Date</th><th>Representative</th><th>Total Amount</th><th>Pending</th></tr>";
+                $.each(data, function(i,item)
+                {
+                    part3=parseInt(parseInt(i)+1);
+                    htm+='<tr>';
+                    htm+='<td><a href="#" id="'+item.invno+'" onclick="assignval(\''+item.invno+'\', '+item.pending+')" >'+item.invno+'</a></td>'+'<td>'+item.date+'</td>'+'<td>'+item.salesman+'</td>'+'<td>'+item.total+'</td>'+'<td>'+item.pending+'</td>';
+                    htm+='</tr>';
+                });
+                $("#billdetail").html(htm) ;
+            })
+
+        })
+        $("#amt").blur(function(){
+            $("#billamt").show();
+            $("#bamt").val($("#amt").val());
+
+        })
+        
+        $("#sub").click(function(){
+            var id=$("#hide").val();
+            if(id==''){
+                act = "insertmr";
+            } else {
+                act = "update";
+            }
+            document.add_voucher.action='index.php?module=voucher&func='+act;
+            if (form_valid()) {
+                $("form").submit();
+            }
+        });
+        $("#print").click(function(){ 
+            var id=$("#hide").val();
+            if(id==''){
+                act = "insertmr";
+            } else {
+                act = "update";
+            }
+            document.add_voucher.action='index.php?module=voucher&ce=0&func='+act;
+            document.add_voucher.target = '_blank';
+            if (form_valid()) {
+                $("form").submit();
+            }
+        });
+        
+    })
+   
+   
+    function assignval(billno, amt){
+        actamt=$("#billamt tr:last-child td:last-child input").val();
+        if (actamt>amt){
+            newamt=parseFloat(parseFloat(actamt)-parseFloat(amt)).toFixed(2);
+            $("#billamt tr:last-child td:last-child input").val(amt);
+            $("#billamt tr:last-child td:first-child").html('<input type="text"  name="billno[]" value="'+billno+'">');
+            $("#billamt tr:last").after('<tr><td>&nbsp;</td><td><input type="text"  name="bamt[]" value="'+newamt+'"></td></tr>')
+          
+        }else{
+            $("#billamt tr:last-child td:last-child input").val(actamt); 
+            $("#billamt tr:last-child td:first-child").html('<input type="text"  name="billno[]" value="'+billno+'">');
+        }
+
+    }
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_voucher").validate({
+            rules:{
+                'vno'                 : { required: true },
+                'voucher[date]' : { required: true },
+                'party'               : { required: true },
+                'voucher[credit]'     : { required: true },
+                'voucher[total]'     : { required: true }
+            },
+            messages: {
+                'vno'                 : { required: "<br/>This Field is Required" },
+                'voucher[date]' : { required: "<br/>This Field is Required" },
+                'party'               : { required: "<br/>This Field is Required" },
+                'voucher[credit]'     : { required: "<br/>This Field is Required" },
+                'voucher[total]'     : { required: "<br/>This Field is Required" }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    
+</script>
+<table align="center">
+    <tr><td>
+            <form name="add_voucher" id="add_voucher"  method="post" action="" >
+                <fieldset>
+                    <legend>Money Receipt</legend>
+                    <table>
+                        <tr>
+                            <td><b>Mr No:</b></td>
+                            <td><input type="text" onchange="check(this.value,this.id,'mr',1);" name="vno" id="voucher_no" value='{if $data}{$data.mrno}{else}{$nextno+1}{/if}'/>
+                                <label for="vno"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Transaction Date:</b></td>
+                            <td><input type="text" name="voucher[date]" id="date" value="{if $data}{$data.date|date_format:$ini.smarty_date}{else}{$smarty.now|date_format:$ini.smarty_date}{/if}"/>
+                                <label for="code"></label>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td><b>Account Type:</b></td>
+                            <td>
+                                <select id="actype" name="voucher[account_type]">
+                                    {html_options options=$ini.account_type selected=1}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Account head:</b></td>
+                            <td>
+                                <input type="text" name="party" value='{if $data}{$data.hname}{else}{/if}' id="head"/>
+                                <br><input type="text" name="add1" id="add1"  value="{$data.add1},{$data.add2}" readonly="readonly" tabindex="-1" size="30">
+                                <input type="hidden" name="voucher[credit]" id="id_head" value='{if $data}{$data.credit}{else}{/if}'>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td><b>Amount:</b></td>
+                            <td><input type="text"  name="voucher[total]" id="amt" value='{$data.total|string_format:"%.2f"}'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Remark:</b></td>
+                            <td><textarea  name="voucher[memo]">{$data.memo}</textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table border="1" id="billamt" align="center" {if $data } style="display:block;" {else} style="display:none;" {/if}>
+                                       <tr><th>Bill No</th><th>Amount</th></tr>
+                                    <tr><td>{if $data }<input type="text"  name="voucher[billno]"  value="{$data.billno}">{else}&nbsp;{/if}</td><td><input type="text"  name="bamt[]" id="bamt" value="{$data.total}"></td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="2">
+                                <input type="hidden" id="hide" name="id" value="{$data.id}">
+                                <input type="button" value="Save"  id="sub"/>
+                                <input type="button" value="Save&print"  id="print"/>
+                                <input type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </form>
+        </td>
+        <td valign="top" width="500">
+            <table  border="1" id="billdetail">
+
+            </table>
+        </td>
+    </tr>
+</table>

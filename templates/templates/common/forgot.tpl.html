@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>register</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/css" href="{$source}css/style.css">
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+        <script type="text/javascript" src="http://jzaefferer.github.com/jquery-validation/jquery.validate.js"></script>
+
+        <script type="text/javascript">
+            
+            
+            $(document).ready(function(){
+                $('#uname').keyup(function(){
+                    var userexists=0;
+                    var qry=  $("#uname").serialize();
+                    $.post("check.php", qry, function(html) {
+                        if(html == 'error') {
+                            $("#load").html("<img src='images/fbloader.gif'>");
+                            $("#load").html("<img src='images/checkmark.png'><font color='green'>recover your password</font>"); 
+                            userexists=1;
+                        }else {
+                            $("#load").html("<img src='fbloader.gif'>");  
+                            $("#load").html("<img src='images/close.png'> <font color='red'>Not a valid user</font>"); 
+                            userexists=0;
+                        }
+                    });            
+                });
+            });
+
+        </script>
+
+    </head>
+    <body>
+        <div id="container_demo" >
+            <div id="wrapperl">
+                 <div id="login" class="animate form">
+                <form id="forgot_form" method="post" action="index.php?module=user&func=forgot">
+                    <p> 
+                        <label for="uname" class="uname" data-icon="u">Your username</label>
+                        <input id="uname" name="user[uname]"  type="text" placeholder="mysuperusername690" />
+                    </p>
+                    <div id="load" style="position: absolute;left:2%;top: 50% "></div>
+                    <p class="signin button"> 
+                        <input type="submit" value="recover"/> 
+                    </p>
+                </form>
+            </div>
+                 </div>
+        </div>
+    </body>
+</html>

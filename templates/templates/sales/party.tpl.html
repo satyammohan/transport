@@ -1,0 +1,93 @@
+<div style="float:right;"><button id="print">Print</button></div>
+<div id="divToPrint">
+    <style>
+        table{
+            font-size:12px;
+            color:#666666;
+        }
+        table a{
+            background: transparent;
+        }
+        .btable{
+            border-collapse:collapse;
+            table-layout:auto;
+            vertical-align:top;
+            margin-bottom:15px;
+            border:1px solid #CCCCCC;
+        }
+
+        .btable thead th{
+            color: #666666;
+            background-color: #cbcbcb;
+            border:1px solid #666666;
+            border-collapse:collapse;
+            text-align:center;
+            table-layout:auto;
+            vertical-align:middle;
+        }
+        .btable thead td{
+            color: #666666;
+            background-color: #7F99A9;
+            border:1px solid #CCCCCC;
+            border-collapse:collapse;
+
+            table-layout:auto;
+            vertical-align:middle;
+        }
+        .btable tbody td{
+            vertical-align:top;
+            border-collapse:collapse;
+            border-left:1px solid #CCCCCC;
+            border-right:1px solid #CCCCCC;
+            color: #666666;
+        }
+
+        .btable thead th, .btable tbody td{
+            padding:5px;
+            border-collapse:collapse;
+        }
+
+        .btable tbody tr.light{
+            color:#666666;
+            background-color:#F7F7F7;
+        }
+
+        .btable tbody tr.dark{
+            color:#666666;
+            background-color:#E8E8E8;
+        }
+    </style>
+    <table class="btable" align="center">
+        <thead>
+            <tr><th colspan="16">Party Sales History [{$sdata.0.item}]</th></tr>
+            <tr>
+                <th>Party Name</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th>
+                <th>Discount</th><th>Spl.Discount</th><th>C.D.</th><th>Goods Value</th><th>Vat %</th>
+                <th>VAT</th><th>Discount</th><th>Net Amount</th><th>Net Rate</th>
+                <th>Date</th><th>Invno</th>
+            </tr>
+        </thead>
+        {foreach from=$sdata item=mod}
+        <tbody>
+            <tr>
+                <td>{get_name key=$mod.id_head list=$head}</td>
+                <td>{$mod.rate}</td>			
+                <td>{$mod.qty}</td>			
+                <td>{$mod.free}</td>
+                <td>{$mod.amount}</td>
+                <td>{$mod.discount_amount1}</td>
+                <td>{$mod.discount_amount2}</td>
+                <td>{$mod.discount_amount3}</td>
+                <td>{$mod.goods_amount}</td>
+                <td>{$mod.tax_per}</td>
+                <td>{$mod.tax_amount}</td>
+                <td>{$mod.discount_amount4}</td>
+                <td>{$mod.net_amount}</td>
+                <td>{$mod.net_amount/$mod.qty}</td>
+                <td>{$mod.date|date_format:$ini.smarty_date}</td>
+                <td>{$mod.invno}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>

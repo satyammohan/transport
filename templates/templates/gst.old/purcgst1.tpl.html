@@ -1,0 +1,103 @@
+<table id='report' border="1">
+    <tr>
+       	<th>Sl.</th><th>Invno</th><th>InvDate</th><th>Recv.Date</th><th>Party</th><th>Address</th><th>GSTIN</th>
+        {foreach item=t from=$tax}
+            <th>Goods Value<br>{$t.name}</th>
+            <th>CGST <br>{$t.tax_per/2|string_format:"%.2f"}%</th>
+            <th>SGST <br>{$t.tax_per/2|string_format:"%.2f"}%</th>
+        {/foreach}
+        {foreach item=t from=$tax}
+            <th>IGST Goods Value<br>{$t.name}</th>
+            <th>IGST <br>{$t.name}</th>
+        {/foreach}
+       	<th>Total Goods Amount</th><th>Total GST</th><th>Total Cess</th><th>Others</th><th align="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$cesstot=0}
+    {$total=0}
+    {$totalamt=0}
+    {$other=0}
+    {foreach item=x name=it from=$data}
+        <tr>
+            <td>{$smarty.foreach.it.iteration}</td>
+            <td>{$x.no}</td>
+            <td>{$x.bill_date|date_format:'d-M-Y'}</td>
+            <td>{$x.date|date_format:'d-M-Y'}</td>
+            <td>{if $x.party_name}{$x.party_name}{else}{$x.hname}{/if}</td>
+            <td>{if $x.party_address}{$x.party_address}{else}{$x.hadd1}{/if}&nbsp;
+                {if $x.party_address1}{$x.party_address1}{else}{$x.hadd2}{/if}</td>
+            <td>{$x.gstin}</td>
+{$id = $x["id_$file"]}
+            {foreach item=t from=$tax key=k}
+                <td align="right">
+                    {if isset($detail[$id][$k].goods_amount) and {!$x.local OR $x.local=='0'}} 
+                        {$detail[$id][$k].goods_amount} 
+                        {$tax[$k][0]['gm'] = $tax[$k][0]['gm'] + $detail[$id][$k].goods_amount}
+                        {$tax[$k][0]['vm'] = $tax[$k][0]['vm'] + $detail[$id][$k].tax_amount}
+                    {else}
+                        0.00
+                    {/if}
+                </td>
+                <td align="right">
+                    {if isset($detail[$id][$k].tax_amount) and {!$x.local OR $x.local=='0'}}
+                        {$detail[$id][$k].tax_amount/2|string_format:"%.2f"}
+                    {else}
+                        0.00
+                    {/if}
+                </td>
+                <td align="right">
+                    {if isset($detail[$id][$k].tax_amount)  and {!$x.local OR $x.local=='0'}}
+                        {$detail[$id][$k].tax_amount/2|string_format:"%.2f"}
+                    {else}
+                        0.00
+                    {/if}
+                </td>
+            {/foreach}
+            {foreach item=t from=$tax key=k}
+                <td align="right">
+                    {if isset($detail[$id][$k].goods_amount) and {$x.local=='1'}} 
+                        {$detail[$id][$k].goods_amount} 
+                        {$tax[$k][1]['gm'] = $tax[$k][1]['gm'] + $detail[$id][$k].goods_amount}
+                        {$tax[$k][1]['vm'] = $tax[$k][1]['vm'] + $detail[$id][$k].tax_amount}
+                    {else}
+                        0.00
+                    {/if}
+                </td>
+                <td align="right">
+                    {if isset($detail[$id][$k].tax_amount) and {$x.local=='1'}}
+                        {$detail[$id][$k].tax_amount|string_format:"%.2f"}
+                    {else}
+                        0.00
+                    {/if}
+                </td>
+            {/foreach}
+            <td align="right">{$x.totalamt-$x.discount}</td>
+            <td align="right">{$x.vat}</td>
+            <td align="right">{$x.totalcess}</td>
+            <td align="right">{($x.add-$x.less+$x.round+$x.packing)|string_format:"%.2f"}</td>
+            <td align="right">{$x.total}</td>
+        </tr>
+        {$other = $other + ($x.add-$x.less+$x.round+$x.packing)}
+        {$totalamt = $totalamt + $x.totalamt - $x.discount}
+        {$vattot = $vattot + $x.vat}
+        {$cesstot = $cesstot + $x.totalcess}
+        {$total = $total + $x.total}
+    {/foreach}
+    <tr>
+        <th colspan="7">Total</th>
+        {foreach item=t from=$tax key=k}
+            <th align="right">{$tax[$k][0]['gm']|string_format:"%.2f"}</th>
+            <th align="right">{$tax[$k][0]['vm']/2|string_format:"%.2f"}</th>
+            <th align="right">{$tax[$k][0]['vm']/2|string_format:"%.2f"}</th>
+        {/foreach}
+        {foreach item=t from=$tax key=k}
+            <th align="right">{$tax[$k][1]['gm']|string_format:"%.2f"}</th>
+            <th align="right">{$tax[$k][1]['vm']|string_format:"%.2f"}</th>
+        {/foreach}
+       	<th align="right">{$totalamt|string_format:"%.2f"}</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$cesstot|string_format:"%.2f"}</th>
+       	<th align="right">{$other|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

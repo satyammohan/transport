@@ -1,0 +1,36 @@
+<h2>Debtors Opening Balance</h2>
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Address</th><th>Last Bill Date</th><th>Opening Balance</th><th>Bill Details</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}<br>{$mod.address2}</td>
+        <td>{$os[$mod.id_head]['date']|date_format:$smarty_date}</td>
+        <td><input class="ra"  size='15' value='{$mod.opening_balance}' onblur="savehead('opening_balance', this.value, '{$mod.id_head}' )">
+            <select onchange="savehead('otype', this.value, '{$mod.id_head}')">
+                {html_options  options=$ini.balance_type selected=$mod.otype } 
+            </select>
+        </td>
+        <td align="right">
+            {$os[$mod.id_head]['total']|string_format:"%.2f"} &nbsp; <a class="modal" href="index.php?module=head&func=obchange&ce=0&id={$mod.id_head}">Modify</a>
+        </td>
+        <!---<td><select onchange="update_status('head', '{$mod.id_head}', this.value, 1);">
+                {html_options options=$ini.status selected=$mod.status}
+            </select>
+        </td>-->
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    function savehead(fld, fvalue, id) {
+        var url = "index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+    $(document).ready(function() {
+        fancy_handler("modal");
+    });
+</script>

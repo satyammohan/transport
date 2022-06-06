@@ -1,0 +1,42 @@
+<table id='report' border="1">
+    <tr style='color:'>
+       	<th>GSTIN/UIN of Recipient</th><th>Party Name</th><th>Invoice Number</th><th>Invoice date</th><th>Invoice Value</th><th>Place Of Supply</th><th>Reverse Charge</th>
+        <th>Invoice Type</th><th>E-Commerce GSTIN</th><th>Rate</th><th>Taxable Value</th><th>Cess Amount</th>    
+    </tr>
+    {$total=0}
+    {$taxamt=0}
+    {$id_sale=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>{$x.gstin}</td>
+        <td>{$x.party_name}</td>
+        <td>{if isset($smarty.request.compbill)}{if $x.challan_no}{$x.challan_no}{else}{$x.invno}{/if}{else}{$x.invno}{/if}</td>
+        <td>{$x.date|date_format:'d-M-Y'}</td>
+        <td align="right">{$x.total}</td>
+        <td>{if $x.state}{$x.state}{else}21-Odisha{/if}</td>
+        <td>N</td>
+        <td>Regular</td>
+        <td>&nbsp;</td>
+        <td align="right">{$x.tax_per}</td>
+        <td align="right">{$x.tax_amount}</td>
+        <td align="right">{$x.cessamt}</td>
+        {$taxamt=$taxamt+$x.tax_amount}
+        {$cess=$cess+$x.cessamt}
+        {if $id_sale!=$x.id_sale}
+            {$total=$total+$x.total}
+        {/if}
+        {$id_sale=$x.id_sale}
+    </tr>
+    {/foreach}
+    <tr>
+       	<th colspan="4">Total :</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+       	<th align="right">{$taxamt|string_format:"%.2f"}</th>
+       	<th align="right">{$cess|string_format:"%.2f"}</th>
+    </tr>
+</table>

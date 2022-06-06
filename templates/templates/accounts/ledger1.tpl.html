@@ -1,0 +1,75 @@
+<table border="1" id="report">
+    <tr>
+       	<th>Sl.No.</th>
+       	<th>Date</th>
+        <th>Party</th>
+        <th>Debit</th>
+        <th>Credit</th>
+       	<th align="right">Balance</th>
+        <th>Ref.No.</th>
+        <th>Remark</th>
+    </tr>
+    {$debit=0} {$total=0} {$credit=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{if $data[x].dhead==$smarty.request.id}{$partyname=$head[$data[x].chead]}{else}{$partyname=$head[$data[x].dhead]}{/if}
+        {if $data[x].date}
+            {$partyname}
+        {else}
+            Opening Balance
+            {if $data[x].total<0}
+                {$data[x].dhead=0}
+                {$data[x].chead=$smarty.request.id}
+                {$data[x].total = -$data[x].total}
+            {/if}
+        {/if}
+        </td>
+        <td align="right">{if $data[x].dhead==$smarty.request.id}
+            {$data[x].total|string_format:"%.2f"}
+            {$debit=$debit+$data[x].total}
+            {$total=$total+$data[x].total}
+            {else}&nbsp;{/if}</td>
+        <td align="right">{if $data[x].chead==$smarty.request.id}
+            {$data[x].total|string_format:"%.2f"}
+            {$credit=$credit+$data[x].total}
+            {$total=$total-$data[x].total}
+            {else}&nbsp;{/if}</td>
+        <td align="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+        <td>{$data[x].refno}</td>
+        <td>{$data[x].memo}</td>
+    </tr>
+    {if $smarty.request.itemdetails}
+    {$det = $detail[$data[x].refno]}
+    {if $det}
+    <tr>
+        <td colspan="100">
+            <table width="100%">
+                {foreach item=di  key = k from=$det}
+                <tr>
+                    <td width="15px">&nbsp;</td>
+                    <td width="300px">{$di.name}</td>
+                    <td align="right">{$di.qty}</td>
+                    <td align="right">{$di.free}</td>
+                    <td align="right">{$di.rate|string_format:"%.2f"}</td>
+                    <td align="right">{$di.tax_per}</td>
+                    <td align="right">{$di.cess|string_format:"%.2f"}</td>
+                    <td align="right">{$di.net_amount|string_format:"%.2f"}</td>
+                </tr>
+                {/foreach}
+            </table>
+        </td> 
+    </tr>
+    {/if}
+    {/if}
+    {/section}
+    <tr>
+        <td colspan="3">Total</td>
+        <td align="right">{$debit|string_format:"%.2f"}</td>
+        <td align="right">{$credit|string_format:"%.2f"}</td>
+        <td align="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+    </tr>
+</table>

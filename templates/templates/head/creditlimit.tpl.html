@@ -1,0 +1,57 @@
+<fieldset>
+    <legend>Debtor Creditlimit</legend>
+    <form method="post" action="index.php?module=head&func=creditlimit">
+        <table>
+            <tr>
+                <td>Representative:
+                    <select name="represent">
+                        <option value=" ">All</option>
+                        {html_options options=$salesman selected=$smarty.request.represent}
+                    </select>
+                </td>
+                <td>Show only Parties whose Ledger balance not matching with OS Bill Details :<input type="checkbox" name="mismatch" {if isset($smarty.request.mismatch)}checked="checked"{/if}></td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Address</th><th>Phone</br>E-mail</th><th>Balance</th><th>Credit Limit</th><th>Credit Days</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}<br>
+            {$mod.address2}<br>
+            {$mod.address3}<br>{$mod.state}</td>
+        <td>{$mod.phone|trim}</br>{$mod.mobile|trim}</br>{$mod.email|trim}</td>
+        <td>
+			Ledger OB:{$mod.opening_balance|string_format:"%.2f"}</br>
+			{if ($mod.opening_balance!=$mod.billamt)} ** {else} {/if}
+			<font color={if ($mod.opening_balance!=$mod.billamt)} 'red' {else} ''{/if}>Bills:{$mod.billamt|string_format:"%.2f"}</font>
+			<b><a target='blank' class="headlist" href="index.php?module=head&func=obchange&id={$mod.id_head}"><font size=-1>OB Details</font></a></b>
+			</br>
+			Current:{$mod.balance|string_format:"%.2f"}</br>		
+			<a target='new' href='/index.php?module=head&func=showdetail&id={$mod.id_head}'>Show Details</a>
+		</td>
+        <td><input size='10' value='{$mod.credit_limit}' onblur="savecredit('credit_limit', this.value, {$mod.id_head} )"></td>
+        <td><input size='10' value='{$mod.credit_days}' onblur="savecredit('credit_days', this.value, {$mod.id_head} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function savecredit(fld, fvalue, id) {
+        $.post("index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id);
+    }
+</script>

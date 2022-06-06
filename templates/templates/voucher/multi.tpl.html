@@ -1,0 +1,57 @@
+<script type="text/javascript" src="{$source}jsmodule/multi.js"></script>
+<script type="text/javascript" src="{$source}jsmodule/price.js"></script>
+<form name="add_voucher" id="add_voucher" method="post" action="index.php?module=voucher&func=insertmulti">
+    <fieldset>
+        <legend>Add Multi Debit/Credit Voucher</legend>
+        <table>
+            <tr>
+                <td><b>Date :</b><input type="text" name="date" class="dtpick"  value="{if $data}{$data.date|date_format:$ini.smarty_date}{else}{$smarty.now|date_format:$ini.smarty_date}{/if}" /></td>
+                <td style="text-align: right;">
+                    <b>Voucher No :</b><input type="text" name="vno" id="no" onchange="check(this.value, this.id, 'multi', 1);" value='{if $data}{$data.no}{else}{$nextno+1}{/if}' />
+                    <label for="vno"></label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table width="100%">
+                        <tr>
+                            <th>&nbsp;</th><th style="text-align: left;" colspan="2">Particulars</th><th>Debit</th><th>Credit</th><th>CHQ/DD/MR</th>
+                        </tr>
+                        <tbody id="mtable">
+                            <tr>
+                                <td><a onclick="removeRow(this);" href="#" tabindex="-1"><img src="{$source}images/close.png" /></a>
+                                    <input type="hidden" name="voucher[id][]" id="id__1">
+                                </td>
+                                <td><select onchange="changeamt(this.id, this.value);" name="voucher[type][]" id="type__1">
+                                        <option value="0" selected>By</option>
+                                        <option value="1">To</option>
+                                    </select></td>
+                                <td><input type="text" id="account__1" size="70" /></td>
+                                <td><input type="text" name="voucher[amtd][]" id="amtd__1" class="amt ra" onblur="getValues();"></td>
+                                <td><input type="text" name="voucher[amtc][]" id="amtc__1" disable class="amt ra" onblur="getValues();"></td>
+                                <td><input type="text" name="voucher[ref1][]" id="ref1__1" disable onblur="rowadd(this, 'mtable');"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td class="ra" colspan="3">Total : </td>
+                                <td><input type="text" tabindex="-1" id="totalamtd" class="ra" disable></td>
+                                <td><input type="text" tabindex="-1" id="totalamtc" class="ra" disable></td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </td>
+            <tr>
+                <td colspan="4"><b><br>Narration :</b><textarea name="memo" style="width: 800px!important;" cols="180" rows="5">{$data.memo}</textarea></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_voucher}" />
+                    <input type="button" value="Save" id="save" />
+                    <input type="reset" value="Reset" />
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

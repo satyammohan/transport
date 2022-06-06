@@ -1,0 +1,24 @@
+<h2>Message for Debtors</h2>
+<br />
+<table id="dataTable" border="1">
+    <thead>
+        <tr><th>Name</th><th>Address</th><th>Phone</br>E-mail</th><th>Message</th></tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}<br>{$mod.address2}<br>{$mod.address3}<br>{$mod.state}</td>
+        <td>{$mod.phone|trim}</br>{$mod.mobile|trim}</br>{$mod.email|trim}</td>
+        <td><input size='50' value='{$mod.message}' onblur="save('message', this.value, {$mod.id_head} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function save(fld, fvalue, id) {
+        $.post("index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id);
+    }
+</script>
+

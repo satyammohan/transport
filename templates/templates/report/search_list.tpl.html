@@ -1,0 +1,27 @@
+<div style="float:right;"><button id="print">Print</button></div>
+<div id="divToPrint">
+    <table border="1"  >
+       <thead>
+        <tr>
+            <th>Name</th><th>Group</th><th>Address1</th><th>Address2</th><th>Address3</th><th>Tin No</th><th>Tin Date</th><th>Phone</th><th>Mobile</th><th>Area</th><th>Transport</th><th>Opening Balance </th><th>Opening Balance Type</th>
+        </tr>
+        </thead>
+        {foreach from=$sdata item=ch  }
+        <tr>
+            <td>{$ch.name}</td>	
+            <td>{get_name key=$ch.id_group list=$group}&nbsp;</td>
+            <td>{$ch.address1}&nbsp;</td>			
+            <td>{$ch.address2}&nbsp;</td>			
+            <td>{$ch.address3}&nbsp;</td>			
+            <td>{$ch.tin_no}&nbsp;</td>
+            <td>{$ch.tin_date|date_format:$smarty_date}&nbsp;</td>
+            <td>{$ch.phone}&nbsp;</td>
+            <td>{$ch.mobile}&nbsp;</td>
+            <td>{get_name key=$ch.id_area list=$area}&nbsp</td>
+            <td>{if $ch.id_transport==0}&nbsp;{else}{get_name key=$ch.id_transport list=$transport}{/if}</td>
+            <td>{if $ch.obal==0}&nbsp;{else}{$ch.obal}{/if}</td>
+            <td>{if $ch.otype==0}Debit{else}Credit{/if}</td>
+        </tr>
+        {/foreach}
+    </table>
+</div>

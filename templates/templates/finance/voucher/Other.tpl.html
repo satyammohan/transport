@@ -1,0 +1,89 @@
+<script>
+   $(document).ready(function(){
+        $("#trans_date").datepicker({
+            dateFormat:'dd/mm/yy'
+        });
+    })
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_voucher").validate({
+            rules:{
+                'voucher[mr_no]': {
+                    required: true,
+                    remote: { url:"index.php?module=voucher&func=check_no&id={$data.id}", async:false }
+                },
+                'voucher[t_date]': {
+                    required: true
+                },
+                'voucher[debit]': {
+                    required: true
+                },
+                'voucher[credit]': {
+                    required: true
+                },
+                'voucher[amount]': {
+                    required: true
+                }
+            },
+            messages: { 
+                'voucher[mr_no]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[t_date]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[debit]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[credit]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[amount]': {
+                    required: "<br/>This Field is Required"
+                }	
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>  
+<form name="voucher"  style="display:none" id="other" method="post" action="index.php?module=voucher&func=insert" onsubmit="return form_valid();">
+            <table>
+                <tr>
+                    <td><b>Voucher No:</b></td>
+                    <td><input type="text" name="voucher[mr_no]" id="name" value="{$data.mr_no}"/>
+                        <label for="mr_no"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Transaction Date:</b></td>
+                    <td><input type="text" name="voucher[trans_date]" id="name" value="{$data.trans_date}"/>
+                        <label for="code"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Debit:</b></td> 
+                    <td><input type="text" name="voucher['debit']" value="debit">
+                        <label for="name"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Credit:</b></td>
+                    <td>
+                        <input type="text" name="voucher[credit]"  value="{$data.name}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Amount:</b></td>
+                    <td><input type="text"  name="voucher[amount]" value='{$data.address1}'></td>
+                </tr>
+                <tr>
+                    <td><b>Remark:</b></td>
+                    <td><input type="text"  name="voucher[remark]" value='{$data.address2}'></td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <input type="hidden" id="hide" name="id" value="{$data.id}">
+                        <input type="submit" id="submit" value="Submit" />
+                        <input type="reset" name="res" value="Reset"/>
+                    </td>
+                </tr>
+            </table>
+        </form>

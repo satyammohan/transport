@@ -1,0 +1,47 @@
+<table id='report' border="1">
+    <tr>
+       	<th>Date</th><th>Invoice Number</th><th>Amount</th><th>Discount</th><th>Taxable Value</th><th>Cess Amount</th>    
+       	<th>Tax Amount</th><th>Net Amount</th><th>GST</th><th>Other/TCS</th><th>Total</th><th>Tax not Matching</th><th>Total not Matching</th>
+    </tr>
+    {$c1=0}{$c2=0}{$c3=0}{$c4=0}{$c5=0}{$c6=0}{$c7=0}{$c8=0}{$c9=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>{$x.date|date_format:'d-M-Y'}</td>
+        <td><a target="new" href="/index.php?module=sales&func=edit&id={$x.id_sale}">{$x.invno}</a></td>
+        <td align="right">{$x.amount|string_format:"%.2f"}</td>
+        <td align="right">{($x.d1+$x.d2+$x.d3+$x.d4)|string_format:"%.2f"}</td>
+        <td align="right">{$x.goods_amount|string_format:"%.2f"}</td>
+        <td align="right">{$x.cessamt|string_format:"%.2f"}</td>
+        <td align="right">{$x.tax_amount|string_format:"%.2f"}</td>
+        <td align="right">{$x.net_amount|string_format:"%.2f"}</td>
+        <td align="right">{$x.vat|string_format:"%.2f"}</td>
+        <td align="right">{$x.other|string_format:"%.2f"}</td>
+        <td align="right">{$x.total|string_format:"%.2f"}</td>
+        <td>{if $x.tax_amount!=$x.vat}<b>{($x.vat-$x.tax_amount)|string_format:"%.2f"}</b>{else}&nbsp;{/if}</td>
+        <td>{if $x.net_amount+$x.other!=$x.total}<b>{($x.total-($x.net_amount+$x.other))|string_format:"%.2f"}</b>{else}&nbsp;{/if}</td>
+        {$c1 = $c1 + $x.amount}
+        {$c2 = $c2 + ($x.d1+$x.d2+$x.d3+$x.d4)}
+        {$c3 = $c3 + $x.goods_amount}
+        {$c4 = $c4 + $x.cessamt}
+        {$c5 = $c5 + $x.tax_amount}
+        {$c6 = $c6 + $x.net_amount}
+        {$c7 = $c7 + $x.vat}
+        {$c8 = $c8 + $x.other}
+        {$c9 = $c9 + $x.total}
+    </tr>
+    {/foreach}
+    <tr>
+        <th colspan="2">Total</th>
+        <th align="right">{$c1|string_format:"%.2f"}</th>
+        <th align="right">{$c2|string_format:"%.2f"}</th>
+        <th align="right">{$c3|string_format:"%.2f"}</th>
+        <th align="right">{$c4|string_format:"%.2f"}</th>
+        <th align="right">{$c5|string_format:"%.2f"}</th>
+        <th align="right">{$c6|string_format:"%.2f"}</th>
+        <th align="right">{$c7|string_format:"%.2f"}</th>
+        <th align="right">{$c8|string_format:"%.2f"}</th>
+        <th align="right">{$c9|string_format:"%.2f"}</th>
+        <th>{if $c5!=$c7}<b>{($c7-$c5)|string_format:"%.2f"}</b>{else}&nbsp;{/if}</th>
+        <th>{if $c6+$c8!=$c9}<b>{($c9-($c6+$c8))|string_format:"%.2f"}</b>{else}&nbsp;{/if}</th>
+    </tr>
+</table>

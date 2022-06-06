@@ -1,0 +1,19 @@
+<h4>ASM/RSM Login Details</h4>
+<table border="1">
+    <tr><th>Name</th><th>IP</th><th>Last Login</th><th>Last Logout</th><th>Status</th></tr>
+    {foreach from=$user item=m key=k}
+        <tr>
+            <td>{$m.name}</td>
+            <td>{$m.ip}</td>
+            <td>{$m.logintime|date_format:"%d-%m-%Y %H:%M:%S"}</td>
+            <td>{$m.logouttime|date_format:"%d-%m-%Y %H:%M:%S"}</td>
+            <td class="{$m.status}">{$m.status}</td>
+        </tr>
+    {/foreach}
+</table>
+<style>
+    .Online {
+        background-color: green;
+        color: white;
+    }
+</style>

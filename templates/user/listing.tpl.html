@@ -1,0 +1,31 @@
+<h2>User Management</h2>
+<table id="dataTable">
+    <thead>
+        <tr> 
+            <th colspan="5">
+                <select  id="list_status" onchange="update_listing('user', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a class="user" href="index.php?module=user&func=edit&ce=0"><div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Admin</th><th>User Name</th><th>Login</th><th>Password</th><th>Status</th><th>Manage</th>
+        </tr>
+    </thead>
+    {foreach from=$user item=mod}
+    <tr>
+        <td>{if $mod.is_admin}Administrator{else}User{/if}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.user}</td>
+        <td>{$mod.pass}</td>
+        <td><select  onchange="update_status('user', '{$mod.id_user}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select>
+        </td>
+        <td><a href="index.php?module=user&func=delete&id={$mod.id_user}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+            <a class="user" href="index.php?module=user&func=edit&id={$mod.id_user}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>

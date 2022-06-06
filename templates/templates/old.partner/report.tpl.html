@@ -1,0 +1,65 @@
+<style>
+    .ui-table-columntoggle-btn {
+        display: none;
+    }
+</style>
+<b>Sales Statement : </b>
+<form method="post" action="index.php?module=partner&func=report">
+    <table width="100%">
+        <tr>
+            <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+            <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+            <td><label><input type="checkbox"  value="1" name="item" {if $smarty.request.item==1}checked="checked"{/if}>Item</label></td>
+            <td><input data-mini="true" type="submit" value="Go" /></td>
+        </tr>
+    </table>
+</form>
+<!-- <input type="text" name="searchP"  id="searchP" value="" data-type="search" placeholder="Search"/> -->
+<table data-filter="true" data-input="#searchP" data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th>Party</th>
+            <th data-priority="2">Addresss</th>
+            {if $smarty.request.item}
+                <th>Product</th><th class="right" data-priority="1">Rate</th><th class="right">Qty</th><th class="right">Free</th>
+            {else}
+                <th>Date</th><th>Invno</th><th class="right" data-priority="1">Taxes</th><th class="right">Total</th>
+            {/if}
+        </tr>
+    </thead>
+    <tbody>
+    {$cnt=0} {$tax=0} {$total=0}
+    {foreach from=$sales item=m}
+        <tr>
+            <td>{$m.name}</td>
+            <td>{$m.address1}</td>
+            {if $smarty.request.item}
+                <td>{$m.pname}</td>
+                <td class="right">{$m.rate}</td>
+                <td class="right">{$m.qty|string_format:'%.0f'}</td>
+                <td class="right">{$m.free|string_format:'%.0f'}</td>
+            {else}
+                <td>{$m.date|date_format:$smarty_date}</td>
+                <td>{$m.invno}</td>
+                <td class="right">{$m.tax}</td>
+                <td class="right">{$m.total}</td>
+                {$cnt=$cnt+1}
+                {$tax=$tax+$m.tax}
+                {$total=$total+$m.total}
+            {/if}
+        </tr>
+    {/foreach}
+    </tbody>
+    <tfoot>
+        <tr>
+            {if $smarty.request.item}
+            {else}
+                <th colspan="4">Total : </th>
+                <td class="right">{$tax|string_format:'%.2f'}</td>
+                <td class="right">{$total|string_format:'%.2f'}</td>
+            {/if}
+        </tr>
+    </tfoot>
+
+</table>
+

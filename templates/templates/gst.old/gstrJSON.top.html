@@ -1,0 +1,27 @@
+<fieldset>
+    <legend>GSTR Sales JSON</legend>
+    <form method="post" action="index.php?module=gst&func=gstrJSON">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td>
+                    <select name="formonth" id="formonth">
+                        {html_options options=$period selected=$current}
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GSTR Sales JSON : {$current}<br><br><br>
+    <div style="border: 1px solid black; width: 90%; margin-left: 5%;">
+        {$data}
+    </div>
+</div>
+

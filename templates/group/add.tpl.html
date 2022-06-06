@@ -1,0 +1,25 @@
+<form method="post" action="index.php?module=group&func={if $data.id_group}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_group}Edit{else}Add{/if} Group</legend>
+        <table>
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" required class="form-control" name="group[name]" id="name" value="{$data.name}" size="40"/>
+            </tr>
+            <tr>
+                <td><b>Parent:</b></td>
+                <td><select name="group[id_parent]" required class="form-control">
+                        {html_options options=$group selected=$data.id_parent} 
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_group}">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+                    <input class="btn btn-danger" type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

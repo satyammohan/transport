@@ -1,0 +1,63 @@
+<input type="button" class="print" value="Print" />
+<div class="print_content">
+    <table width="100%" border="1">
+        <tr>
+            <th colspan="3"><font size="+2">Voucher</font></th>
+        </tr>
+        <tr>
+            <td valign="top" width="82%" colspan="2">
+                <font size="+1"><b>{$smarty.session.companyname}</b></font><br>
+                <font size="-1">{$smarty.session.address} {$smarty.session.state}<br>
+                E-mail : {$smarty.session.email}<br>
+                PHONE : {$smarty.session.phone}<br>
+                GSTIN : {$smarty.session.gstin}<br>
+                ADHAR : {$smarty.session.adhar}
+                {if $smarty.session.flicence}<br>FSSAI : {$smarty.session.flicence}{/if}
+                {if $smarty.session.dlicence}<br>Drug Licence : {$smarty.session.dlicence}{/if}
+                </font>
+            </td>
+            <td valign="top">
+                Voucher No : <b>{$data.0.no}</b><br><br>
+                Date : <b>{$data.0.date|date_format:$ini.smarty_date}</b><br>
+            </td>
+        </tr>
+        <tr>
+            <th>Debit A/C</th>
+            <th>Credit A/C</th>
+            <th>Amount</th>
+        </tr>
+        <tr>
+            <td width='41%' valign="top">
+                {$data.0.name}<br>{$data.0.address1}<br>{$data.0.address2}<br>{$data.0.gstin}
+            </td>
+            <td width='41%' valign="top">
+                {$data.0.sname}<br>{$data.0.saddress1}<br>{$data.0.saddress2}<br>{$data.0.sgstin}
+            </td>
+            <td valign="top">{$data.0.total}
+                {for $l=1 to 10}<br>{/for}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3">Remark : {$data.0.memo}</td>
+        </tr>
+        
+        <tr>
+            <td colspan="3">Rupees :</b>{$data.0.w}<br></td>
+        </tr>
+        <tr>
+            <td colspan="12">
+                <table width="100%">
+                    <tr>
+                        <td width="80%">
+                            <font size="-3">&nbsp;</font>
+                        </td>
+                        <td>
+                            <font size="-2">{$smarty.session.config.SALEBILLFOOTERRIGHT}</font>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </table>
+</div>

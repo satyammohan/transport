@@ -1,0 +1,64 @@
+{foreach from=$sale item=ch}
+<table width="100%" border="1">
+    <tr>
+        <td>Party : <b>{$ch.party_name}</b><br>
+            {if $ch.address1}
+                {$ch.address1}, {$ch.address2}&nbsp;{$ch.address3}<br>
+            {else}
+                {$ch.party_address}&nbsp;{$ch.party_address1}<br>
+            {/if}
+            GSTIN : {$ch.gstin}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Bill No : <b>{$ch.invno}</b><br>
+            Date : <b>{$ch.date|date_format:$ini.smarty_date}</b><br>
+            Goods Value : {$ch.totalamt|string_format:"%.2f"}<br>
+            Total GST : {$ch.vat|string_format:"%.2f"}<br>
+            CESS Amt : {$ch.totalcess|string_format:"%.2f"}<br>
+            Bill Total : {$ch.total|string_format:"%.2f"}
+        </td>
+    </tr>
+    <form method="post" action="index.php?module=sales&func=savewaybill">
+        <tr>
+            <td colspan="10">
+                <table width="100%">
+                    <tr>
+                        <td>Reference No. :</td>
+                        <td><input name="sales[transport_id]" value="{$ch.transport_id}"></td>
+                    </tr>
+                    <tr>
+                        <td>Transport Name :</td>
+                        <td><input name="sales[transport_name]" value="{$ch.transport_name}"></td>
+                    </tr>
+                    <tr>
+                        <td>Transport Mode :</td>
+                        <td>
+                            <select name="sales[transport_mode]" id="id_represent">
+                                {html_options options=$ini.transport_mode selected=$ch.transport_mode}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Distance :</td><td><input name="sales[distance]" value="{if $ch.distance}{$ch.distance}{else}{$ch.pdistance}{/if}"></td>
+                    </tr>
+                    <tr>
+                        <td>Vehicle Number :</td><td><input name="sales[vehicle_number]" value="{$ch.vehicle_number}"></td>
+                    </tr>
+                    <tr>
+                        <td>Type :</td><td><input name="sales[transport_type]" value="Regular"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td align="center" colspan="10">
+                <input type="hidden" name="id" value="{$ch.id_sale}">
+                <input type="submit" id="submit" value="Submit" />
+                <input type="reset" name="res" value="Reset"/>
+            </td>
+        </tr>
+    </form>
+</table>
+{/foreach}

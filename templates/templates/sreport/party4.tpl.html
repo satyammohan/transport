@@ -1,0 +1,65 @@
+{$gtotal=0}
+{$gvat=0}
+<table id="report" border="1">
+    <thead>
+    <tr class="total">
+        <th>Party Name</th>
+        <th>Address</th>
+        <th>Inv No</th>
+        <th>Date</th>
+        <th class="right">GST/Tax</th>
+        <th class="right">Total</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach item=v key=k from=$data}
+    {$vattot=0}
+    {$total=0} 
+    {foreach item=v1 key=k1 from=$v}
+        <tr>
+            <td>{$v1.party}</td>
+            <td>{$v1.party_address}&nbsp;&nbsp;&nbsp;{$v1.party_address1}</td>
+            <td>{$v1.invno}</td>
+            <td>{$v1.date|date_format:$smarty_date}</td>
+            <td align="right">{$v1.vat|string_format:"%.2f"}</td>
+            <td align="right">{$v1.total|string_format:"%.2f"}</td>
+        </tr>
+        {$det = $detail[$v1.id_sale]}
+        <tr>
+            <td colspan="100">
+                <table width="90%">
+                    {foreach item=di  key=k from=$det}
+                    <tr>
+                        <td width="50px">&nbsp;</td>
+                        <td width="300px">{$di.name}</td>
+                        <td width="80px">{$di.batch_no}</td>
+                        <td width="60px" align="right">{$di.qty|string_format:"%.0f"}</td>
+                        <td width="60px" align="right">{$di.free|string_format:"%.0f"}</td>
+                        <td width="70px" align="right">{$di.rate|string_format:"%.2f"}</td>
+                        <td width="70px" align="right">{$di.goods_amount}</td>
+                    </tr>
+                    {/foreach}
+                </table>
+            </td>
+        </tr>
+        {$vattot = $vattot + $v1.vat}
+        {$total = $total + $v1.total}
+    {/foreach}
+    <tr class='subtotal'>
+        <td align="right" colspan="4">Party Total : </td>
+        <th align="right">{$vattot|string_format:"%.2f"}</th>
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+    {$gtotal = $gtotal + $total}
+    {$gvat = $gvat + $vattot}
+    {/foreach}
+    <tr class="total">
+        <th colspan="4" class="right">Grand Total</th>
+        <th align="right">{$gvat|string_format:"%.2f"}</th>
+        <th align="right">{$gtotal|string_format:"%.2f"}</th>
+    </tr>
+    </tbody>
+</table>
+
+
+

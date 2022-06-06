@@ -1,0 +1,46 @@
+{include file='common/htmlheader.tpl.html'}
+    <script type="text/javascript" src="{$source}js/jquery.ui.js"></script>
+    <script type="text/javascript" src="{$source}js/fancybox/jquery.fancybox.js"></script>
+    <script type="text/javascript" src="{$source}js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="{$source}js/jquery.dataTables.columnFilter.js"></script>
+    <script type="text/javascript" src="{$source}js/jquery.dataTables.pagination.js"></script>
+    <script type="text/javascript" src="{$source}js/jq-alerts/jquery.alerts.js"></script>
+    <script type="text/javascript" src="{$source}js/jquery.validate.js"></script>
+    <script type="text/javascript" src="{$source}js/jquery.tokenize.js"></script>
+    <script type="text/javascript" src="{$source}js/table2excel.js"></script>
+    <script type="text/javascript" src="{$source}js/common.js?time=3"></script>
+    <script type="text/javascript" src="{$source}js/jquery.multi-select.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="{$source}js/jquery-ui.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="{$source}js/fancybox/jquery.fancybox.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/demo_table_jui.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}js/jq-alerts/jquery.alerts.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/style.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/animate-custom.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}styles/layout.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/jquery.tokenize.css" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/common.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="{$source}css/multi-select.css"/>
+    </head>
+    <body>
+        <div class="container">
+            {include file="common/header.tpl.html"}
+            <div class="err_msg"><b>{$smarty.session.msg}</b></div>
+            <div class="content">
+                {if $smarty.request.module}
+                    {$lmenu = $smarty.request.module|cat:"/menu.tpl.html"}
+                    {if file_exists("$source/templates/$lmenu")}
+                        {include file=$lmenu}
+                    {/if}
+                {/if}
+                    {include file=$page}
+            </div>
+        </div>
+        {include file="common/footer.tpl.html"}
+    </body>
+</html>
+<title>Inventory Control System
+    {if isset($smarty.session.companyname)}
+    :: &nbsp;{$smarty.session.companyname}&nbsp;({$smarty.session.sdate|date_format:$smarty_date}-{$smarty.session.edate|date_format:$smarty_date})
+    {/if}
+</title>

@@ -1,0 +1,25 @@
+{if $head}
+<font size=-1>
+<h3>Special Days</h3>
+<table border="0">
+    <thead>    
+        <tr>
+            <th>Sl.No.</th><th>Name</th><th>Address1</th><th>Date of Birth</th>
+            <th>Anniversary</th><th>Contact</th><th>Phone</th><th>Email</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod name=itr}
+        <tr>
+            <td>{$smarty.foreach.itr.iteration}</td>	
+            <td>{$mod.name}</td>
+            <td>{$mod.address1}<br>{$mod.address2}<br>{$mod.address3}</td>
+            <td>{$mod.dob|date_format:$smarty_date}</td>
+            <td>{$mod.doa|date_format:$smarty_date}</td>
+            <td>{$mod.contact_person}</td>
+            <td>{$mod.phone}</td>
+            <td>{$mod.email}</td>
+        </tr>
+    {/foreach}
+</table>
+</font>
+{/if}

@@ -1,0 +1,29 @@
+<h3>Area Master<hr></h3>
+<table id="dataTable" class="table table-striped table-bordered" width="100%">
+    <thead>
+        <tr> 
+            <th colspan="4">
+                 <select  id="list_status" onchange="update_listing('area', this.value);">
+                     {html_options options=$ini.status_all selected=$smarty.request.status}
+                 </select>
+            </th>
+            <th><a title="Add Area" href="index.php?module=area&func=edit"><i class="fa fa-plus fa-2x"></i></a></th>
+        </tr>
+        <tr>
+            <th>Area Name</th><th>Distance</th><th>Freight</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$area item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.distance}</td>
+        <td>{$mod.freight}</td>
+        <td ><select onchange="update_status('area', '{$mod.id_area}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td>
+            <a title="Edit Area" href="index.php?module=area&func=edit&id={$mod.id_area}"><i class="fa fa-edit fa-2x"></i></a>
+            <a title="Delete Area" href="index.php?module=area&func=delete&id={$mod.id_area}" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
+    </tr>
+    {/foreach}
+</table>

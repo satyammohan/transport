@@ -1,0 +1,64 @@
+<table id="dataTable">
+    <thead>    
+        <tr>
+            <td colspan="12" valign="top">
+                <form action="index.php?module=debitnote&func=listing" method="post">
+                    <fieldset><legend>Filter Debit Note List</legend>
+                        <p><span>
+                                {$rec = $tpldata|count - 1}
+                                Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{$tpldata.$rec.date|date_format:$smarty_date}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{$tpldata.0.date|date_format:$smarty_date}' /></span>
+                            <span>
+                                Company:
+                                <select name="company">
+                                    <option>All</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span>
+                                Sale Type:
+                                <select name="saletype">
+                                    <option value="">All</option>
+                                    {html_options options=$ini.sale_type selected=$smarty.request.saletype}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Saletype</th><th>No</th><th>Date</th><th>Party</th><th>Address</th>
+			<th>Ref No. & Date</th><th>Inv No. & Date</th><th>GST</th><th>Bill Amount</th>
+            <th>
+                Manage<a title="Add Sale Bill" href="index.php?module=debitnote&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$tpldata item=mod}
+    <tr>
+        <td>{$ini.sale_type[$mod.saletype]}</td>
+        <td>{$mod.no}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td><a href="?module=accounts&func=ledger&id={$mod.id_head}&option=1&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank">{$mod.name}</a></td>
+        <td>{$mod.address1}</td>
+        <td>{$mod.reference}&nbsp;{$mod.refdate|date_format:$smarty_date}</td>
+        <td>{$mod.billno}&nbsp;{$mod.billdate|date_format:$smarty_date}</td>
+        <td align="right">{$mod.vat}</td>
+        <td align="right">{$mod.total}</td>
+        <td width="150px">
+	    <a href="index.php?module=debitnote&func=delete&id={$mod.id_debitnote}&ce=0" onclick="return confirm('Do you want to delete?');"><div title="Delete" class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=debitnote&func=prsale&id={$mod.id_debitnote}&ce=0" class="debitnote"><div title="Print Bill" class="report_bg">&nbsp;</div></a>&nbsp;
+            <a href="index.php?module=debitnote&func=edit&id={$mod.id_debitnote}"><div title="Edit" class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("debitnote");
+        tbl_handler();
+    });
+</script>

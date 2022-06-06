@@ -1,0 +1,36 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Sl.No.</th><th>Area</th><th>Representative Name</th><th>User</th><th>Pass</th><th>Name</th><th>Address1</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod name=itr}
+    <tr>
+        <td>{$smarty.foreach.itr.iteration}</td>
+        <td>
+            <select onchange="savearea({$mod.id_head}, this.value)">
+                {html_options options=$area selected=$mod.id_area}
+            </select>
+        </td>
+        <td>
+            {$mod.represent}
+        </td>
+        <td>{$mod.partyuser}</td>
+        <td>{$mod.partypass}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1} {$mod.address2} {$mod.address3}<br>{$mod.contact_person}<br>{$mod.phone}</td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+        console.clear();
+    });
+    function savearea(id_head, id_area) {
+        console.log(id_head, id_area)
+        $.post("index.php?module=head&func=saverepresent&id_head=" + id_head + "&id_area=" + id_area, function(data, status){
+            console.log("Data: " + data + "Status: "+status);
+        });
+    }
+</script>

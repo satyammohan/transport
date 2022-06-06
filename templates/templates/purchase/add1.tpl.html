@@ -1,0 +1,257 @@
+<style>
+    .ui-autocomplete {
+        max-height: 200px;
+        overflow-y: auto;
+        /* prevent horizontal scrollbar */
+        overflow-x: hidden;
+        /* add padding to account for vertical scrollbar */
+        padding-right: 20px;
+        font-size:10px;
+    }
+    .err{
+        border-color:red;
+    }
+    #msgbox{
+        font-size:14px;
+        font-weight:bold;
+    }
+    .msgerror{
+        color: red;
+    }
+    /* IE 6 doesn't support max-height
+* we use height instead, but this forces the menu to always be this tall
+    */
+    * html .ui-autocomplete {
+        height: 200px;
+        font-size:10px;
+    }
+</style>
+<script type="text/javascript" src="jsmodule/purchase.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        {foreach item=items from=$data}
+        {foreach item=cur key=k from=$items}
+        var ele = "{$k}__"+start;
+        if ($("#"+ele))
+            $("#"+ele).val('{$cur}');
+        {/foreach}
+        addRow('mtable');
+        {/foreach}
+    });
+</script>
+<form  method="post" action="" name="purchase" id="purchase" autocomplete="off">
+    <fieldset>
+        <legend>{if $sdata.id_purchase}Edit {else}Add {/if} Purchase</legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr><td colspan="2">
+                    <table width="100%">
+                        <tr>
+                            <td width="25%"><b>SL No</b></td>
+                            <td><b>Date</b></td>
+                            <td><b>Bill No</b></td>
+                            <td><b>Bill Date</b></td>
+                        </tr>
+                        <tr>_purchase
+                            <td><input type="text" name="purchase[no]" size="8" value="{if $sdata.id_purchase } {$sdata.no} {else} {$no} {/if}"  id="slno"/></td>
+                            <td><input type="text" name='purchase[date]' class="dtpick"   value="{$sdata.date|date_format:$smarty_date}" id="pdate"/></td>
+                            <td><input type="text" name="purchase[bill_no]"  value="{$sdata.bill_no}"/></td>
+                            <td><input type="text" name="purchase[bill_date]" class="dtpick"  value="{$sdata.bill_date|date_format:$smarty_date}"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Company Name</b></td>
+                            <td><b>Party</b></td>
+                            <td><b>Area</b></td>
+                            <td><b>Representative</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select name="purchase[id_company]" id="id_company">
+                                    <option value="">All Company</option>
+                                    {html_options options=$company}
+                                </select></td>
+                            <td><input type="text" name="purchase[party_name]"  id="party" size="20"  value="{$sdata.party_name}"/>
+                                <br><span id="valid_party"></span>
+                                <input type="hidden" name="purchase[id_head]" value="{$sdata.id_head}" id="id_head"/>
+                            </td>
+                            <td><select name="purchase[id_area]" id="id_area">
+                                    {html_options options=$area selected=$sdata.id_area}
+                                </select></td>
+                            <td><select name="purchase[id_represent]">
+                                    {html_options options=$salesman selected=$sdata.id_represent}
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                {if $sdata}{$select=$sdata.cash} {else} {$select=2} {/if}
+                                {html_radios name='sales[cash]' options=$ini.tran_type selected=$select}
+                            </td>
+                            <td colspan="3">
+                                <table id="partydetail">
+                                    <tr><td><b>Address1</b></td><td><b>Address2</b></td><td><b>Vat No</b></td></tr>
+                                    <tr>
+                                        <td><input type="text" name="purchase[party_address]" style="border:none;" id="paddr" value="{$sdata.party_address}"></td>
+                                        <td><input type="text" name="purchase[party_address1]"  style="border:none;" id="paddr2" value="{$sdata.party_address1}"></td>
+                                    <input type="hidden" name="purchase[party_vattype]" value="{$sdata.party_vattype}" id="vattype"/>
+                                    <td valign="top"><input type="text" name="purchase[party_vatno]"  style="border:none;"  value="{$sdata.party_vatno}" id="vatno"/></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        </td></tr>
+        <tr><td colspan="2">
+                <table width="100%" class="btable">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Items</th><th>Batch</th><th>Rate</th><th>Quantity</th><th>Amount</th><th>Discount</th><th>Spl.Disc.</th><th>Tax(%)</th><th>Discount</th><th>Free</th><th>Item history</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mtable">
+                        <tr class="tabRow">
+                            <td><a onclick="removeRow(this);" href="#" tabindex="-1" ><img src="images/close.png" /></a></td>
+                            <td><input type="text" name="items[]" id="item__1" size="20"  onblur="getValues(); getbatch(this.id);" required="required"/>
+                                <input type="hidden" name="id_product[]" id="id_product__1" />
+                                <input type="hidden" name="balance[]" id="balance__1" />
+                                <input type="hidden" name="id_tax[]" id="id_tax__1" />
+                                <input type="hidden" name="disamt1[]" id="disamt1__1" />
+                                <input type="hidden" name="disamt2[]" id="discamt2__1" />
+                                <input type="hidden" name="disamt3[]" id="discamt3__1" />
+                            </td>
+                            <td><input type="text" name="batch_name[]" id="batch_name__1" size="6"/><br>
+                                <input type="hidden" name="id_batch[]" id="id_batch__1" />
+                                <input type="text" name="exp_date[]" id="exp_date__1" size="6"/>
+                            </td>
+                            <td><input type="text" size="4" name="rate[]" id="rate__1"  tabindex="-1" class="ra"/></td>
+                            <td><input type="text" size="2" name="quantity[]" onblur="getValues(); getdiscount();" id="qty__1" required="required" class="ra"/></td>
+                            <td><input type="text" size="4" name="amount[]" readonly="readonly" id="amount__1" class="ra"/></td>
+                            <td><input type="text" size="2" name="dis1[]" onblur="getValues()" id="dis1__1" class="ra"/>
+                                <select name="distype1[]" onchange="getValues()" id="distype1__1" class="select">
+                                    {html_options options=$ini.discount}
+                                </select>
+                            </td>
+                            <td><input type="text" size="2" name="dis2[]" onblur="getValues()" id="dis2__1" class="ra"/>
+                                <select name="distype2[]" onchange="getValues()"  id="distype2__1" class="select">
+                                    {html_options options=$ini.discount}
+                                </select>
+                            </td>
+                            <td><input type="text" size="2" name="tax[]"  onblur="getValues()" id="tax__1"  readonly="readonly" class="ra"/>
+                                <input type="hidden" name="taxon[]"  id="taxon__1"/>
+                                <input type="text"  name="taxamt[]" id="taxamt__1" readonly="readonly" size="4" class="ra" />
+                            </td>
+                            <td><input type="text" size="2" name="dis3[]" id="dis3__1" onblur="getValues()" class="ra" />
+                                <select name="distype3[]" onchange="getValues()" id="distype3__1" class="select">
+                                    {html_options options=$ini.discount}
+                                </select>
+                            </td>
+                            <td ><input type="text" size="2" name="free[]" id="free__1" onblur="rowadd(this,'mtable')" class="ra"/></td>
+                            <td width="60px">
+                                <a href="#" id="history__1" onclick="showid(this.id);"  title="Purchase History"><img src="images/report1.png" alt="Sale" width="15" height="15"></a>
+                                <a href="#" id="phistory__1" onclick="showparty(this.id);" title="Party History" ><img src="images/report1.png" alt="Sale" width="15" height="15"></a>
+                                <a href="#" id="purhistory__1" onclick="purchase(this.id);"  title="Purchase History"><img src="images/report1.png" alt="Sale" width="15" height="15"></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td></tr>
+        <tr>
+            <td valign="top" width="70%" align="left">
+                <label><input type="checkbox" name="transport" value="transport" id="tran"   onclick="doInputs(this,this.value)" {if $sdata.lr_no!=''} checked="checked" {/if}/>Transport</label><br>
+                <table id="transport" {if $sdata.lr_no==''} style="display: none" {/if}>
+                       <tr>
+                        <th>LR No<br><input type="text" name="purchase[lr_no]"  size="10" value="{$sdata.lr_no}" id="lrno"/></th>
+                        <th>LR Date<br><input type="text" name="purchase[lr_date]" class="dtpick"  size="10" value="{$sdata.lr_date|date_format:$smarty_date}"/></th>
+                        <th>TR MR Date<br><input type="text" name="purchase[trmr_date]"  size="10" value="{$sdata.trmr_date|date_format:$smarty_date}" class="dtpick"/></th>
+                        <th>Transport<br><select name="purchase[id_transport]" >
+                                {html_options options=$transport selected=$sdata.id_transport}
+                            </select></th>
+                        <th>Transport No<br><input type="text" name="purchase[transport_no]"  size="10" value="{$sdata.transport_no}"/></th>
+                    </tr>
+                    <tr>
+                        <th>Gate<br><input type="text" name="purchase[gate]"  size="10" value="{$sdata.gate}" id="lrno"/></th>
+                        <th>Vehicle No<br><input type="text" name="purchase[vehicle_no]"   size="10" value="{$sdata.vehicle_no}"/></th>
+                        <th>Bales<br><input type="text" name="purchase[bales]"  size="10" value="{$sdata.bales}" /></th>
+                        <th>Freight<br><input type="text" name="purchase[freight]"  size="10" value="{$sdata.freight}"/></th>
+                    </tr>
+                </table>
+                <br />
+                <label><input type="checkbox" name="entrytax" value="entrytax"  id="enttax"  onclick="doInputs(this,this.value)" {if $sdata.ent_no!=''} checked="checked" {/if}/>Entry Tax</label>
+                <br/>
+                <table id="entrytax" {if $sdata.ent_no==''} style="display: none" {/if} >
+                       <tr>
+                        <th>Entry No<br><input type="text" name="purchase[ent_no]"  size="10" value="{$sdata.ent_no}"/></th>
+                        <th>Date<br><input type="text" name="purchase[ent_date]"  size="10" class="dtpick" value="{$sdata.ent_date|date_format:$smarty_date}"/></th>
+                        <th>Amount<br><input type="text" name="purchase[ent_amount]" size="10" class="ra"  value="{$sdata.ent_amount}"/></th>
+                    </tr>
+                </table>
+                <br />
+                <label><input type="checkbox" name="form" value="frm1"  id="frm" onclick="doInputs(this,this.value)" {if $sdata.frm_type!=''} checked="checked" {/if}/>Form</label>
+                <br/>
+                <table id="frm1"  {if $sdata.frm_type==''} style="display: none" {/if}>
+                       <tr>
+                        <th>Form Type<br>
+                            <select name="purchase[id_form]" id="id_form">
+                                <option value="">-Select Form-</option>
+                                {html_options options=$frm selected=$sdata.id_form}
+                            </select></th>
+                    <input type="hidden" name="purchase[frm_type]" id="frm_type" value="{$sdata.frm_type}"/>
+                    <th>Form No<br><input type="text" name="purchase[frm_no]"  size="20"  maxlength="15" value="{$sdata.frm_no}"/></th>
+                    <th>Form Date<br><input type="text" name="purchase[frm_date]"  size="20" class="dtpick"  value="{$sdata.frm_date|date_format:$smarty_date}"/></th>
+                    <th>Form Amount<br><input type="text" name="purchase[frm_amount]" size="10" class="ra" id="frm_amt"  value="{$sdata.frm_amount}"/></th>
+        </tr>
+        </table>
+        <br/>
+        <label><input type="checkbox" name="waybill" value="wbill"  id="wb" onclick="doInputs(this,this.value)" {if $sdata.waybill_no!=''} checked="checked" {/if}/>Waybill</label>
+        <table id="wbill"  {if $sdata.waybill_no==''} style="display: none" {/if}>
+               <tr>
+                <th>Waybill No<br><input type="text" name="purchase[waybill_no]"  size="10" value="{$sdata.waybill_no}"/></th>
+                <th>Waybill Date<br><input type="text" name="purchase[waybill_date]"  size="20" value="{$sdata.waybill_date|date_format:$smarty_date}"  class="dtpick"/></th>
+                <th>Waybill Amount<br><input type="text" name="purchase[waybill_amount]" size="10" class="ra"  value="{$sdata.waybill_amount}"/></th>
+            </tr>
+        </table>
+        </td>
+        <td valign="top">
+            <table>
+                <tr>
+                    <td  align="right" ><b>Discount:</b></td>
+                    <td><input type="text" name="purchase[discount]" id="tdiscount" class="ra" value="{$sdata.discount}"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Vat:</b></td>
+                    <td><input type="text" name="purchase[vat]" id="vat" class="ra" value="{$sdata.vat}"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Add:</b></td>
+                    <td><input type="text" name="purchase[add]" id="add" class="ra" value="{$sdata.add}" onblur="getValues()"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Less:</b></td>
+                    <td><input type="text" name="purchase[less]" id="less" class="ra" value="{$sdata.less}" onblur="getValues()"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Packing & Forwarding:</b></td>
+                    <td><input type="text" name="purchase[packing]" id="pfrd" class="ra" value="{$sdata.packing}" onblur="getValues()"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Round off:</b></td>
+                    <td><input type="text" name="purchase[round]" id="roundof" class="ra" value="{$sdata.round}"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Total:</b></td>
+                    <td><input type="text" name="purchase[total]" id="total" class="ra" value="{$sdata.total}"/></td>
+                </tr>
+                <tr>
+                    <td  align="right"><b>Description:</b></td>
+                    <td><textarea name="purchase[memo]" cols="60" rows="2">{$sdata.memo}</textarea></td>
+                </tr>
+            </table>
+        </td>
+        </tr>
+        <tr>
+        <input type="hidden" name="id" value="{$sdata.id}" id="purchase_id"/>
+        <td align="center" colspan="2"><input type="button" value="Save" id="sub" style=" cursor: pointer" name="save"/>
+            <input type="button" value="Save&Print" id="print" style=" cursor: pointer" name="print"/>
+        </td>
+        </tr>
+        </table>
+    </fieldset>
+</form>

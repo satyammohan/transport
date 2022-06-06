@@ -1,0 +1,61 @@
+<div class="print_content">
+	{$smarty.session.cname} {$smarty.session.fyear}<br>
+	Represeativewise Party Statement for the Period : Till {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+	<br /><br />
+	<table border="1">
+		<tr>
+			<th>Representative</th><th>Sl.No.</th><th>Party</th><th>Address</th><th>Debit</th><th>Credit</th><th>Balance</th>
+		</tr>
+		{$debit=0}{$credit=0}{$balance=0}{$gdebit=0}{$gcredit=0}{$gbalance=0}
+		{$next=0}
+		{$prev = ""}
+		{section name=x loop=$data}
+		<tr>
+			{if $prev!=$data[x].rname}
+				{if $next!=0}
+					<tr>
+						<th colspan='4'>Total:</th>
+						<th align="right">{abs($debit)|string_format:"%.2f"}</th>
+						<th align="right">{$credit|string_format:"%.2f"}</th>
+						<th align="right">{abs($balance)|string_format:"%.2f"} {if $balance<0}Cr{else}Db{/if}</th>
+					</tr>
+					<tr><th colspan='7'>&nbsp;</th></tr>
+					{$debit=0}{$credit=0}{$balance=0}
+				{/if}
+				{$rname=$data[x].rname}
+				{$next=0}				
+			{else}
+				{$rname=''}
+			{/if}
+			<td>{$rname}</td>
+			{$next=$next+1}
+			<td align="right">{$next}</td>
+			<td>{$data[x].name}</td>
+			<td>{$data[x].address1}</td>
+			<td align="right">{abs($data[x].debit)|string_format:"%.2f"}</td>
+			<td align="right">{$data[x].credit|string_format:"%.2f"}</td>
+			<td align="right">{abs($data[x].balance)|string_format:"%.2f"} {if $data[x].balance<0}Cr{else}Db{/if}</td>
+			{$debit = $debit + $data[x].debit}
+			{$credit = $credit + $data[x].credit}
+			{$balance = $balance + $data[x].balance}
+			{$gdebit = $gdebit + $data[x].debit}
+			{$gcredit = $gcredit + $data[x].credit}
+			{$gbalance = $gbalance + $data[x].balance}
+		</tr>
+		{$prev = $data[x].rname}
+		{/section}
+		<tr>
+			<th colspan='4'>Total:</th>
+			<th align="right">{abs($debit)|string_format:"%.2f"}</th>
+			<th align="right">{$credit|string_format:"%.2f"}</th>
+			<th align="right">{abs($balance)|string_format:"%.2f"} {if $balance<0}Cr{else}Db{/if}</th>
+		</tr>
+		<tr>
+			<th colspan='4'>Grand Total:</th>
+			<th align="right">{abs($gdebit)|string_format:"%.2f"}</th>
+			<th align="right">{$gcredit|string_format:"%.2f"}</th>
+			<th align="right">{abs($gbalance)|string_format:"%.2f"} {if $gbalance<0}Cr{else}Db{/if}</th>
+		</tr>
+	</table>
+</div>
+<br><br>

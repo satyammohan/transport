@@ -1,0 +1,44 @@
+<form>
+    <input type="text" name="searchP"  id="searchP" value="" data-type="search" placeholder="Search Party"/>
+</form>
+<table data-filter="true" data-input="#searchP" class="ui-responsive">
+    <thead>
+        <tr>
+            <th>Sl</th><th>Name</th><th>Contact</th>
+        </tr>
+    </thead>
+    <tbody>
+    {foreach from=$parties item=mod name=itr}
+        <tr>
+            <td valign="top">{$smarty.foreach.itr.iteration}</td>
+            <td>{$mod.name}<br>
+                <font size="-2">
+                    {if $mod.dealer==0}Distributor/Retailer{else if $mod.dealer==0}Super-Distributor{else}Modern Trade{/if}<br>
+                    {$mod.address1}<br>{$mod.address2}<br>{if $mod.address3}{$mod.address3}<br>{/if}
+                </font>
+                <font size="-1">
+                    <a href="index.php?module=partner&func=myStock&id_head={$mod.id_head}">Stock</a>&nbsp;&nbsp;&nbsp;
+                    <a href="index.php?module=partner&func=ledger&id={$mod.id_head}">Ledger</a>
+                </font>
+            </td>
+            <td class="align-top"><font size="-2">
+                {$mod.contact_person}<br>
+                {$ph = str_replace(" ", "/", $mod.phone)}
+                {$ph = str_replace(",", "", $ph)}
+                {assign var="phones" value="/"|explode:$ph}
+                {foreach from=$phones item=p}
+                    {if $p}
+                        <a href='tel:{$p}'>{$p}</a>
+                        <a href='https://api.WhatsApp.com/send?phone={$p}'>
+                            <i class="fa fa-whatsapp fa-2x" style="color:green"></i>
+                        </a>
+                        <br>
+                    {/if}
+                {/foreach}
+                {$mod.email}
+                </font>
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

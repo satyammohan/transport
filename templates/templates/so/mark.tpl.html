@@ -1,0 +1,44 @@
+<h2>Map SO to Party</h2>
+<table id="dataTable" border="1">
+    <thead>
+        <tr><th>Sl</th><th>Name</th><th>Address</th><th>Address1</th><th>Area</th><th>SO</th><th>Last Year</th><th>This Year</th><th>Action</th></tr>
+    </thead>
+    {$sl = 1}
+    {foreach from=$list item=mod}
+    <tr>
+        <td>{$sl++}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}</td>
+        <td>{$mod.address2}</td>
+        <td>{$mod.id_represent}<select id="area_{$mod.id_head}" onchange="showsave('{$mod.id_head}')">
+                <option value="">Select</option>
+                {html_options options=$area selected=$mod.id_area}
+            </select>
+        </td>
+        <td><select id="so_{$mod.id_head}" onchange="showsave('{$mod.id_head}')">
+                <option value="">Select</option>
+                {html_options options=$so selected=$mod.id_so}
+            </select>
+        </td>
+        <td><input type="text" size="10" id="last_{$mod.id_head}" onchange="showsave('{$mod.id_head}')" value="{$mod.lastyear_target}"></td>
+        <td><input type="text" size="10" id="this_{$mod.id_head}" onchange="showsave('{$mod.id_head}')" value="{$mod.thisyear_target}"></td>
+        <td><input type="button" id="b_{$mod.id_head}" style="display:none" class="btn btn-primary" onclick="update_so('{$mod.id_head}');" value="Save"></td>
+    </tr>
+    {/foreach}
+</table>
+<script>
+    function update_so(id) {
+        let id_area = $("#area_"+id).val();
+        let id_so = $("#so_"+id).val();
+        let thisy = $("#this_"+id).val();
+        let lasty = $("#last_"+id).val();
+        url = "index.php?module=so&func=update_so&id_head=" + id + "&id_area=" + id_area + "&id_so=" + id_so + "&this=" + thisy + "&last="+lasty;
+        $.post(url, function (res) {
+            console.log("Updated:", res);
+            $("#b_"+id).hide();
+        });
+    }
+    function showsave(id) {
+        $("#b_"+id).show();
+    }
+</script>

@@ -1,0 +1,107 @@
+<script type="text/javascript">
+    function bindgroup(obj) {
+        $('#ajaxgroup').remove();
+        if (obj != 0) {
+            html = "<select name='groupids[]' id='ajaxgroup' multiple='multiple'></select>";
+            $('#showgroup').html(html);
+            $('#ajaxgroup').tokenize({
+                nbDropdownElements: 30,
+                newElements: false,
+                maxElements: 50,
+                datas: "index.php?module=sreport&func=getgroup&group=" + obj
+            });
+        } else {
+            $('#showgroup').html("<select name='groupids[]' id='ajaxgroup' multiple='multiple' style='display: none'></select>");
+        }
+    }
+    function dosubmit() {
+        url = "index.php?module=sreport&func=companyrep&ce=1";
+        data = $("#ajaxform").serialize();
+        $.post(url, data, function(msg) {
+            html = "Companywise Sales Period " + $("#startdate").val() + " - " + $("#enddate").val() + "<br /><br />";
+            $("#print_data").html(html + msg);
+        });
+        return false;
+    }
+    $(document).ready(function() {
+        $("#startdate").focus();
+        $('#ajaxitem').tokenize({
+            nbDropdownElements: 30,
+            newElements: false,
+            maxElements: 50,
+            searchMinLength: 2,
+            datas: "index.php?module=sreport&func=getproducts"
+        });
+    });
+</script>    
+<fieldset>
+    <legend>Company-wise Sales</legend>
+    <form method="post" id="ajaxform" onsubmit="return dosubmit();">
+        <table>
+            <tr>
+                <td colspan="5">Start Date :<input type="text" id="startdate" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                    End Date :<input type="text" id="enddate" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' />
+                    Company:
+                    <select name="company">
+                        <option value=" ">All</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td rowspan="2" style="vertical-align: top">Item :
+                    <select name="itemids[]" id="ajaxitem" multiple="multiple" ></select>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="5">Columns :
+                    <input type="checkbox" name="disc"    {if isset($smarty.request.disc)}checked="checked"{/if} />Discount
+                           <input type="checkbox" name="spl"     {if isset($smarty.request.spl)}checked="checked"{/if} />Spl Discount
+                           <input type="checkbox" name="cash"    {if isset($smarty.request.cash)}checked="checked"{/if} />Cash Discount
+                           <input type="checkbox" name="vdisc"   {if isset($smarty.request.vdisc)}checked="checked"{/if} />Discount after VAT
+                           <input type="checkbox" name="vat"     {if isset($smarty.request.vat)}checked="checked"{/if} />VAT
+                           <input type="checkbox" name="address" {if isset($smarty.request.address)}checked="checked"{/if} />Address
+                </td>
+            </tr>
+            <tr>
+                <td>Option : <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Item
+                    <input type="radio" name="option" value="3" {if isset($smarty.request.option) AND $smarty.request.option=="3"}checked="checked"{/if}/>Company
+                </td>
+                <td>Tax Type :
+                    <select name="taxbill">
+                        <option value="">All</option>
+                        {html_options options=$ini.tax_type selected=$smarty.request.taxbill}
+                    </select>
+                </td>
+                <td>Sale Type :
+                    <select name="tran_type">
+                        <option value="">All</option>
+                        {html_options options=$ini.tran_type selected=$smarty.request.tran_type}
+                    </select>
+                </td>
+                <td>Group :
+                    <select name="group" onchange="bindgroup(this.value);">
+                        <option value=""  {if isset($smarty.request.group) AND $smarty.request.group==""}selected="true"{else}{if !isset($smarty.request.group)}selected="true"{/if}{/if}>None</option>
+                        <option value="1" {if isset($smarty.request.group) AND $smarty.request.group=="1"}selected="true"{/if}>Area</option>
+                        <option value="2" {if isset($smarty.request.group) AND $smarty.request.group=="2"}selected="true"{/if}>Representative</option>
+                        <option value="3" {if isset($smarty.request.group) AND $smarty.request.group=="3"}selected="true"{/if}>Party</option>
+                    </select>
+                </td>
+                <td rowspan="2" colspan="2" style="vertical-align: top">
+                    <div id="showgroup"><select name='groupids[]' id='ajaxgroup' multiple='multiple' style="display: none"></select></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    <div id="print_data"></div>
+</div>

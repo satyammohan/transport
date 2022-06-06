@@ -1,0 +1,35 @@
+<fieldset>
+    <legend>Approved Sales Order</legend>
+    <form method="post" action="index.php?module=salesorder&func=aorder">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpickno" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Representative:
+                    <select name="represent">
+                        <option>All</option>
+                        {html_options options=$salesman selected=$smarty.request.represent}
+                    </select>
+                </td>
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Approved Sales Order Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data}
+        {include file="salesorder/aorder1.tpl.html"}
+    {else}
+        <b>No Record Found!</b>
+    {/if}
+</div>

@@ -1,0 +1,23 @@
+<table border="1" id="report">
+    <tr>
+        <!--<th>Area</th><th>Company</th>-->
+        <th>Party</th><th>Address</th><th>Total OS</th>
+    </tr>
+    {$total=0}
+    {foreach item=x from=$data}
+        {if $x.totalos!=0}
+        <tr>
+            <!--<td>{$x.aname}</td><td>{$x.cname}</td>-->
+            <td>{$x.name}</td>
+            <td>{$x.address1}</td>
+            <td align="right">{$x.totalos|string_format:"%.2f"}</td>
+        </tr>
+        {$total = $total + $x.totalos}
+        {/if}
+    {/foreach}
+    <tr>
+        <td colspan="2">Total</td>
+        <td align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+</table>
+

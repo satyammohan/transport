@@ -1,0 +1,54 @@
+<script type="text/javascript">
+    $(function(){
+        $('#id_sale').click(function(){
+            var val = [];
+            $(':checkbox:checked').each(function(i){
+                val[i] = $(this).val();
+            });
+            if(val==''){
+                alert('There is no record selected for Report!');
+            }else{
+                //window.open('index.php?module=sales&func=prsale&id='+val+'&ce=0','_new','scrollbars=yes,resizable=yes,width=720,height=450,top=50,left=250');
+                this.href='index.php?module=sales&func=prsale&id='+val+'&ce=0';
+            }
+        });
+    });
+</script>    
+<h3>Challan cum Consignment Note<hr></h3>
+<table id="dataTable" class="table table-striped table-bordered" width="100%">
+    <thead>    
+        <tr>
+            <td colspan="18" valign="top">
+                <form method="post">
+                    Start Date:<input type="date" name="start_date" value='{$sdata.$rec.date|date_format:$smarty_date}' />
+                    End Date:<input type="date" name="end_date" value='{$sdata.0.date|date_format:$smarty_date}' />
+                    <input type="submit" value="Go" />
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Sl.</th><th>No.</th><th>Date</th><th>Items</th><th>Party</th><th>Truck Number.</th>
+            <th>
+                Manage
+                <a title="Add Challan" href="index.php?module=challan&func=edit"></a>                
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <!--<td>{$ini.tax_type[$mod.taxbill]}</td>-->
+        <td>{if $mod.ack}*{else}--{/if}</td>
+    	<td>{$mod.no}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td>{$mod.items}</td>
+        <td>{$mod.party_name}</td>
+        <td>{$mod.truck}</td>
+        <td>
+            <a href="index.php?module=sales&func=delete&id={$mod.id_sale}&ce=0" onclick="return confirm('Do you want to delete?');"><div title="Delete" class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=sales&func=prsale&id={$mod.id_sale}&ce=0"><div title="Print Bill" class="report_bg">&nbsp;</div></a>&nbsp;
+            <a href="index.php?module=sales&func=edit&id={$mod.id_sale}"><div title="Edit" class="edit_bg">&nbsp;</div></a>
+            <input class="checkbox" type="checkbox" name="id_sale[]" value="{$mod.id_sale}" />
+        </td>
+    </tr>
+    {/foreach}
+</table>

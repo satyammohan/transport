@@ -1,0 +1,28 @@
+<div class="header">
+    <div id="logo">
+            <h1><a accesskey="H" href="index.php">Inventory Control</a></h1></div>
+        <div id="head_center">
+            {if isset($smarty.session.cname)}
+            <p>
+                {$smarty.session.cname}
+                <br/>
+                {$smarty.session.sdate|date_format:$smarty_date}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  {$smarty.session.edate|date_format:$smarty_date}
+            </p>
+            {/if}
+        </div>
+        <div id="head_right">
+            {if isset($smarty.session.id_user)}
+            <a accesskey="4" href="index.php?module=user&func=logout"><img src="{$source}images/logout1.png" width="50" id="signin" alt="Logout" title="Logout"/></a>
+            Logged as :: {$smarty.session.user}
+            {else}
+            <a href="index.php?page=login"><img src="{$source}images/signin1.png" id="signin"  width="50" alt="Sign In" title="Sign In"/></a>
+            {/if}
+        </div>
+     <!-- end .header -->
+</div>
+<!-- menu--####################################################################################################### -->
+{if isset($smarty.session.id_user) && isset($smarty.session.id_info)}
+<div class="menu">
+    {include file="user/menu.tpl.html"}
+</div>
+{/if}

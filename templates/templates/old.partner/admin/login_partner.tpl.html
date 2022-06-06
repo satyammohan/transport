@@ -1,0 +1,24 @@
+<h4>Party Login Details</h4>
+{$sl=1}
+<table border="1">
+    <tr><td>Sl</td><th>Party Name</th><th>Address</th><th>IP</th><th>Last Login</th><th>Last Logout</th><th>Status</th></tr>
+    {foreach from=$user item=m key=k}
+        <tr>
+            <td>{$sl}</td>
+            <td>{$m.name}</td>
+            <td>{$m.address1}</td>
+            <td>{$m.ip}</td>
+            <td>{$m.logintime|date_format:"%d-%m-%Y %H:%M:%S"}</td>
+            <td>{$m.logouttime|date_format:"%d-%m-%Y %H:%M:%S"}</td>
+            <td class="{$m.status}">{$m.status}</td>
+	{$sl = $sl +1}
+        </tr>
+    {/foreach}
+</table>
+<br>
+<style>
+    .Online {
+        background-color: green;
+        color: white;
+    }
+</style>

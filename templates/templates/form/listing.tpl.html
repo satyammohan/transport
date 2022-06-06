@@ -1,0 +1,33 @@
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th colspan="2">
+                <select id="list_status" onchange="update_listing('form', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a class="frm" href="index.php?module=form&func=edit&ce=0">
+                    <div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Name</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$frm item=mod}
+    <tr>
+        <td>{$mod.name}</td>			
+       
+       <td> <select onchange="update_status('form', '{$mod.id}', this.value,$('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td><a class="frm" href="index.php?module=form&func=edit&id={$mod.id_form}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+            <a href="index.php?module=form&func=delete&id={$mod.id_form}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("frm");
+        tbl_handler();
+    });
+</script>

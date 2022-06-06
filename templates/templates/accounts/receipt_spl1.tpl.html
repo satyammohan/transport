@@ -1,0 +1,75 @@
+{$c1=0}
+<table border="1">
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td>
+        {foreach item=x key = k from=$acs}
+            <th colspan="2">{$acs[$k]}</th>
+        {/foreach}
+    </tr>
+    <tr>
+        <th>Account Head</th><th>Address</th>
+        {foreach item=x key = k from=$acs}
+            <th>Receipt</th><th>Payment</th>
+        {/foreach}
+    </tr>
+    <tr>
+        <td colspan="2">OPENING BALANCE</td>
+        {section name=x loop=$opening}
+            {$id = $opening[x].id_head}
+            <td align="right">{if $opening[x].total>=0}
+                    {$opening[x].total|string_format:"%.2f"}
+                    {$c1[$id][0] = $c1[$id][0] + $opening[x].total}
+                {/if}
+            </td>
+            <td align="right">{if $opening[x].total<0}
+                    {ABS($opening[x].total)|string_format:"%.2f"}
+                    {$c1[$id][1] = $c1[$id][1] + abs($opening[x].total)}
+                {/if}
+            </td>
+        {/section}
+    </tr>
+    {section name=x loop=$data}
+    <tr>
+        <td>{$data[x].name}</td>
+        <td>{$data[x].address}</td>
+        {$l=0}
+        {section name=op loop=$opening}
+            {$id = $opening[op].id_head}
+            <td align="right">
+                {if $data[x].id_head==$id AND $data[x].id_head==$data[x].dhead}
+                    {$data[x].total|string_format:"%.2f"}
+                    {$c1[$id][0] = $c1[$id][0] + $data[x].total}
+                {else}
+                    &nbsp;
+                {/if}
+                {$c}
+            </td>
+            {$l=$l+1}
+            <td align="right">
+                {if $data[x].id_head==$id AND $data[x].id_head==$data[x].chead}
+                    {$data[x].total|string_format:"%.2f"}
+                    {$c1[$id][1] = $c1[$id][1] + $data[x].total}
+                {else}
+                    &nbsp;
+                {/if}
+            </td>
+        {/section}
+    </tr>
+    {/section}    
+    <tr>
+        <td colspan="2">Total</td>
+        {section name=op loop=$opening}
+            {$op = $opening[op].id_head}
+            <td align="right">{$c1[$op][0]|string_format:"%.2f"}</td>
+            <td align="right">{$c1[$op][1]|string_format:"%.2f"}</td>
+        {/section}
+    </tr>
+    <tr>
+        <td colspan="2">Closing Balance</td>
+        {section name=op loop=$opening}
+            {$op = $opening[op].id_head}
+            <td align="right">{($c1[$op][0]-$c1[$op][1])|string_format:"%.2f"}</td>
+            <td align="right">&nbsp;</td>
+        {/section}
+    </tr>
+</table>

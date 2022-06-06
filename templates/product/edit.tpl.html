@@ -1,0 +1,29 @@
+<form method="post" action="index.php?module=product&func={if $data.id_product}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_product}Edit{else}Add{/if} Product</legend>
+        <table>
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" class="form-control" name="product[name]" id="name" value="{$data.name}" size="40"/>
+            </tr>
+            <tr>
+                <td><b>Convertion:</b></td>
+                <td><input type="text" class="form-control" name="product[convert]" id="name" value="{$data.convert}" size="40"/>
+            </tr>
+            <tr>
+                <td><b>Status:</b></td>
+                <td><select name="product[status]" class="form-control">
+                        {html_options selected={$data.status} options=$ini.status}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_product}">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+                    <input class="btn btn-danger" type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

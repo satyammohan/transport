@@ -1,0 +1,86 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.js"></script>
+<script>
+    function reload(type) {
+        let url = "index.php?module=partner&func=approveOrder";
+        let cond = "";
+        if (type) {
+            cond = "&approve="+type;
+        }
+        $(location).attr('href', url+cond);
+    }
+    function approve(id, dt, tm) {
+        bootbox.confirm("Want to approve this Order?", function(result) { 
+            if (result) {
+                bootbox.confirm("Is this a Actual order to Approve?", function(demoorder) { 
+                    let cond = "&type=0";
+                    if (demoorder) {
+                        cond = "&type=1";
+                    }
+                    let url = "index.php?module=partner&func=approvethisOrder&id_head="+id+"&date="+dt+"&time="+tm+cond;
+                    $.post(url, function(res) { 
+                        //location.reload(); 
+                    });
+                });
+            }
+        });
+    }
+    function editOrder(id, dt, tm) {
+        bootbox.confirm("Edit this Order?", function(result) { 
+            if (result) {
+                let url = "index.php?module=partner&func=editthisOrder&id_head="+id+"&date="+dt+"&time="+tm;
+                $(location).attr('href', url);
+            }
+        });
+    }
+</script>
+<lable for="type"><b>Approve Order</b> Show :</lable><select onchange="reload(this.value)" name="type" data-inline="true">
+    <option value="" {if !isset($smarty.request.approve)}selected=selected{/if}>All</option>
+    <option value="1" {if $smarty.request.approve=="1"}selected=selected{/if}>Approved</option>
+    <option value="0" {if $smarty.request.approve=="0"}selected=selected{/if}>Pending</option>
+</select>
+{if $order}
+<table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <tr>
+       	<th>Approved On</th>
+        <th>Order Date</th>
+        <th class="float-right">Amount</th>
+        <th>Party Name</th>
+        <th>Address</th>
+        <th data-priority="1">Company</th>
+        <th>Product</th>
+        <th>Ord.Qty</th>
+        <th data-priority="2">App.Qty</th>
+    </tr>
+    {$prev=0}
+    {$prevc=""}
+    {section name=x loop=$order}
+    <tr>
+        {if $prev!=$order[x].time}
+            <td>
+                {if $order[x].approve}
+                    {$order[x].approve_time|date_format:"%d-%m-%y"}
+                {else}
+                    <a href="#" onclick="approve('{$order[x].id_head}', '{$order[x].date}', '{$order[x].time}')"><i class="fa fa-check-circle fa-2x" aria-hidden="true"></i></a>&nbsp;
+                    <a href="#" onclick="editOrder('{$order[x].id_head}', '{$order[x].date}', '{$order[x].time}')"><i class="fa fa-edit fa-2x" aria-hidden="true"></i></a>
+                {/if}
+            </td>
+            <td>{$order[x].date|date_format:"%d-%m"}-{$order[x].time}</td>
+            {$time = "{$order[x].id_head}{$order[x].date}{$order[x].time}"}
+            <td class="float-right">{$value[$time]|string_format:"%.2f"}</td>
+            <td>{$order[x].pname}</td>
+            <td>{$order[x].address1}</td>
+        {else}
+            <th colspan="5" class="noborder">&nbsp;</th>
+        {/if}
+        <td>{$order[x].cname}</td>
+        <td>{$order[x].name}</td>
+        <td align="right">{$order[x].qty|string_format:"%.0f"}</td>
+        <td align="right">{$order[x].approve_qty|string_format:"%.0f"}</td>
+    </tr>
+    {$prev=$order[x].time}
+    {$prevc=$order[x].cname}
+    {/section}
+</table>
+{else}
+    <br>No Orders.
+{/if}

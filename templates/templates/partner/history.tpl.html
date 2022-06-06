@@ -1,0 +1,34 @@
+{include file='report.tpl.html'}
+<b>Order History <a href="index.php?module=partner&func=markorder&ce=0">::</a> </b>
+<table data-filter="true" data-input="#searchP" data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th>SO</th><th>Party</th><th>#</th><th><i class="fa fa-check" aria-hidden="true"></i></th><th><i class="fa fa-times"></i></th><th><i class="fa fa-clock-o"></i></th>
+        </tr>
+    </thead>
+    <tbody>
+    {foreach from=$orders item=m}
+        <tr>
+            <td>
+                {if $smarty.request.id_so}
+                    {$m.sname|strstr:' ':true}
+                {else}
+                    <a href="index.php?module=partner&func=history&id_so={$m.id_so}">{$m.sname|strstr:' ':true}</a>
+                {/if}
+            </td>
+            <td>
+                {if $smarty.request.id}
+                    {$m.name}
+                {else}
+                    <a href="index.php?module=partner&func=historyd&id={$m.id_head}">{$m.name|substr:0:20}</a>
+                {/if}
+            </td>
+            <td>{$m.orders}</td>
+            <td>{if $m.approve!=0}{$m.approve}{/if}</td>
+            <td>{if $m.cancel!=0}{$m.cancel}{/if}</td>
+            {$p=$m.orders-$m.approve-$m.cancel}
+            <td>{if $p!=0}{$p}{/if}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

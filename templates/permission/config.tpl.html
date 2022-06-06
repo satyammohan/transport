@@ -1,0 +1,33 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        tbl_handler();
+    });
+    function saveconfig(id, cid, cval) {
+        var url = "set=" + escape(cval);
+        $.post("index.php?module=permission&func=saveconfig&id=" + id + "&cid=" + cid, url, function(res) {  });
+    }
+</script>
+<h2>Site General Configuration</h2>
+<table id="dataTable">
+    <thead>
+        <tr>
+            <th>Name</th><th>Description</th><th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach from=$config item=v key=k}
+        {$id = $v['id_config']}
+        {$cid = $v['name']}
+        <tr>
+            <td>{$v['name']}</td>
+            <td>{$v['description']}</td>
+            <td>{if strlen($v['value'])>20}
+                <textarea  style="width:600px;height:100px" onblur="saveconfig('{$id}', '{$cid}', this.value);">{$v['value']}</textarea>
+                {else}
+                <input type="text" value="{$v['value']}" onblur="saveconfig('{$id}', '{$cid}', this.value);">
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>

@@ -1,0 +1,30 @@
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th>Month-Year</th><th>Code</th><th>Name</th><th>Function</th><th>Designation</th>
+            <th>Location</th><th>Basic</th><th>Net</th><th>Gross</th><th>Total Salary</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td>{$mod.month}-{$mod.year}</td>
+        <td>{$mod.no}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.function}</td>
+        <td>{$mod.designation}</td>
+        <td>{$mod.location}</td>
+        <td>{$mod.basic}</td>
+        <td>{$mod.net}</td>
+        <td>{$mod.gross}</td>
+        <td>{$mod.total}</td>
+        <td><a class="reps" href="index.php?module=salary&func=getslip&id={$mod.id_salary}&ce=0"><div class="report_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        fancy_handler("reps");
+        tbl_handler();
+    });
+</script>

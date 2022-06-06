@@ -1,0 +1,82 @@
+<fieldset>
+    <legend><h3>Management Room Details<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="Room" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Management Room Details Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <tr>
+            <th>Sl</th><th>No</th><th>Arr.Date</th><th>Arr.Time</th><th>Depature Date</th><th>Depature Time</th><th>Grcno</th><th>Name</th><th>Others</th><th>Mobile</th><th>Person</th><th>Adult</th><th>Child</th><th>Company</th><th>Gstin</th><th>Adv.Book No</th><th>DOB</th><th>Address</th><th>City</th><th>Arrived from</th><th>District</th><th>State</th><th>Country</th><th>Email</th><th>Id_proof</th><th>Purpose</th><th>Destination</th><th>Forword Address</th><th>Booking Type</th><th>Booking_no</th><th>Refer</th><th>Daysstay</th><th>Remarks</th><th>BillInst.</th><th>Room</th><th>Rent</th><th>Discount</th><th>Gst</th><th>Total</th>
+        </tr>
+        {$total=0}{$gstamt=0}{$discount=0}
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.no}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.time}</td>
+                <td>{$x.depature_date|date_format:"%d-%m-%Y"}}</td>
+                <td>{$x.depature_time}</td>
+                <td>{$x.grcno}</td>
+                <td>{$x.name}</td>
+                <td>{$x.oname}</td>
+                <td>{$x.mobile}</td>
+                <td>{$x.person}</td><td>{$x.adult}</td><td>{$x.child}</td>
+                <td>{$x.company}</td>
+                <td>{$x.gstin}</td>
+                <td>{$x.ano}</td>
+                <td>{$x.dob}</td>
+                <td>{$x.address}</td>
+                <td>{$x.city}</td>
+                <td>{$x.arrivedfrom}</td>
+                <td>{$x.district}</td>
+                <td>{$x.state}</td>
+                <td>{$x.country}</td>
+                <td>{$x.email}</td>
+                <td>{$x.id_proof}</td>
+                <td>{$x.purpose}</td>
+                <td>{$x.destination}</td>
+                <td>{$x.faddress}</td>
+                <td>{$x.type}</td>
+                <td>{$x.booking_no}</td>
+                <td>{$x.refer}</td>
+                <td>{$x.daysstay}</td>
+                <td>{$x.remarks}</td>
+                <td>{$x.billinst}</td>
+                <td>{$x.roomnumber}</td>
+    
+                <td align="right">{$x.rentday}</td>
+                <td align="right">{$x.discount}</td>
+                <td align="right">{$x.gstamt}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+
+                {$gstamt=$gstamt+$x.gstamt}
+                {$discount=$discount+$x.discount}
+                {$total=$total+$x.total}
+            </tr>
+            {/foreach}
+        <tr>
+            <th colspan="36">Total :</th>
+            <td align="right"><b>{$discount|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$gstamt|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$total|string_format:"%.2f"}</b></td>
+        </tr>
+    </table>
+</div>

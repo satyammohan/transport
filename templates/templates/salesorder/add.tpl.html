@@ -1,0 +1,164 @@
+{$jsurl = "{$source}jsmodule/salesorder.js?{$smarty.now}"}
+<script>
+    var taxrates = {$taxrates};
+</script>
+<script type="text/javascript" src="{$jsurl}"></script>
+{include file='common/generaljs.tpl.html'}
+<div id="salemessage"></div>
+<form  method="post" action="" name="sales" id="sales" autocomplete="off">
+    <fieldset>
+        <legend>{if $sdata.id_salesorder}Edit{else}Add{/if} Sales Order</legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td colspan="2">
+                    <table width="100%">
+                        <tr>
+                            <td width="25%"><b>Serial No</b></td>
+                            <td><b>Date</b></td>
+                            <td><b>Ref. No</b></td>
+                            <td><b>Ref. Date</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+				<input type="hidden" name="salesorder[scheme]" value="{$smarty.request.scheme}" />
+				<input type="text" name="salesorder[invno]" size="12" value="{if $sdata.invno}{$sdata.invno}{else}{$invno}{/if}"  {if $sdata.id_salesorder==''} id="inv" {/if}/><br><span id="msgbox"></span>
+			    </td>
+                            <td>
+                                {if isset($sdata.date)}
+                                    {$date=$sdata.date}
+                                {else}
+                                    {$date=$smarty.now}
+                                {/if}
+                                <input type="text" name='salesorder[date]' class="dtpick"   value="{$date|date_format:$smarty_date}"/>
+                                <select name="salesorder[id_series]">{html_options options=$series selected=$sdata.id_series}</select>				
+                            </td>
+                            <td><input type="text" name="salesorder[challan_no]"  value="{$sdata.challan_no}"/></td>
+                            <td><input type="text" name="salesorder[challan_date]" class="dtpick"  value="{$sdata.challan_date|date_format:$smarty_date}"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Company Name</b></td>
+                            <td><b>Party</b></td>
+                            <td><b>Area</b></td>
+                            <td><b>Representative</b></td>
+                        </tr>
+                        <tr>
+                            <td><select name="salesorder[id_company]" id="id_company">
+                                    <option value="">All Company</option>
+                                    {html_options options=$company selected=$sdata.id_company}
+                                </select></td>
+                            <td><input type="text" name="party_name"  id="party" size="50"  value="{$sdata.party_name}"/>
+                                <input type="button" onclick="checkbalance();" value="Check">
+                                <br><span id="valid_party"></span>
+                                <input type="hidden" name="salesorder[id_head]" value="{$sdata.id_head}" id="id_head"/>
+                            </td>
+                            <td><select name="salesorder[id_area]" id="id_area" onblur="changerep(this.id)">
+                                    {html_options options=$area selected=$sdata.id_area}
+                                </select></td>
+                            <td><select name="salesorder[id_represent]" id="id_represent">
+                                    {html_options options=$salesman selected=$sdata.id_represent}
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td colspan="3">
+                                <table id="partydetail">
+                                    <tr><td><b>Address1</b></td><td><b>Address2</b></td><td><b>Vat No</b></td></tr>
+                                    <tr>
+                                        <td><input type="text" name="party_address" style="border:none;" id="paddr" value="{$sdata.party_address}"></td>
+                                        <td><input type="text" name="party_address1"  style="border:none;" id="paddr2" value="{$sdata.party_address1}"></td>
+                                    <input type="hidden" name="party_vattype" value="{$sdata.party_vattype}" id="vattype"/>
+                                    <td valign="top"><input type="text" name="party_vatno"  style="border:none;"  value="{$sdata.party_vatno}" id="vatno"/>
+                                    <input type="hidden" id="dealer" /></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>  
+        </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="height:210px; overflow:auto;">
+		    <table width="100%" class="btable">
+			<thead>
+			    <tr>
+                                <th>&nbsp;</th><th>Item Details</th><th>Batch</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th><th>GST %</th><th>GST Amt</th><th>Cess %</th><th>Cess Amt</th>
+			    </tr>
+			</thead>
+			<tbody id="mtable">
+			    <tr class="tabRow">
+                                <td><a onclick="removeRow(this);" href="#" tabindex="-1" ><img src="{$source}images/close.png" /></a></td>
+                                <td>
+				    <input class="drop" type="text" name="items[]" id="item__1" style="width:300px" size="35" onblur="getValues();getbatch(this.id);" required="required"/>
+                                    Stock : <input type="text" readonly="readonly" tabindex="-1" size="3" id="balance__1" />
+				    <input type="hidden" name="id_product[]" id="id_product__1" />
+				    <input type="hidden" name="discount_amount1[]" id="discount_amount1__1" />
+				    <input type="hidden" name="discount_amount2[]" id="discount_amount2__1" />
+				    <input type="hidden" name="discount_amount3[]" id="discount_amount3__1" />
+				    <input type="hidden" name="discount_amount4[]" id="discount_amount4__1" />
+				</td>
+				<td><input type="text" name="batch_no[]" id="batch_no__1" size="6" />
+				    <input type="hidden" name="id_batch[]" id="id_batch__1" />
+				    <input type="text" name="exp_date[]" id="exp_date__1" size="6" />
+				</td>
+				<td><input type="text" size="6" name="rate[]" id="rate__1"  tabindex="-1" class="ra" /></td>
+				<td><input type="text" size="6" name="quantity[]" id="qty__1" required="required" class="ra" onblur="getValues();"/></td>
+				<td><input type="text" size="6" name="free[]" id="free__1" class="ra"/></td>
+				<td><input type="text" size="6" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="ra"/></td>
+				<td>
+                                    <select name="id_taxmaster[]" id="id_taxmaster__1" onchange="getTaxRates(this.id);getValues()"  class="select">
+					{html_options options=$tax}
+				    </select>
+                                    <input type="hidden" name="tax_per[]" id="tax_per__1"  />
+				</td>
+                                
+                                <td>
+				    <input type="hidden" name="goods_amount[]" id="goods_amount__1" />
+				    <input type="text"  name="tax_amount[]" tabindex="-1" id="taxamt__1" readonly="readonly" size="4" class="ra" />
+				</td>
+				<td>
+                                    <input type="text" size="6" name="cess[]" id="cess__1" onblur="getValues();rowadd(this, 'mtable');" class="ra" />
+				</td>
+				<td>
+				    <input type="text"  name="cessamt[]" tabindex="-1" id="cessamt__1" readonly="readonly" size="4" class="ra" />
+				</td>
+			    </tr>
+			</tbody>
+		    </table>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td  align="right"><b>Total:</b></td>
+                <td><input type="text" name="salesorder[totalamt]" id="totalamt" class="ra" value="{$sdata.totalamt}"/></td>
+            </tr>
+            <tr>
+                <td  align="right"><b>GST:</b></td>
+                <td><input type="text" name="salesorder[vat]" id="vat" class="ra" value="{$sdata.vat}"/></td>
+            </tr>
+            <tr>
+                <td  align="right"><b>CESS Amount:</b></td>
+                <td><input type="text" name="salesorder[totalcess]" id="totalcess" class="ra" value="{$sdata.totalcess}"/></td>
+            </tr>
+            <tr>
+                <td  align="right"><b>Total:</b></td>
+                <td><input type="text" name="salesorder[total]" id="total" class="ra" value="{$sdata.total}"/></td>
+            </tr>
+            <tr>
+                <td  align="right"><b>Description:</b></td>
+                <td><textarea name="salesorder[memo]" cols="200" rows="3">{$sdata.memo}</textarea></td>
+            </tr>
+            <tr>
+                <td align="right">&nbsp;</td>
+                <td><b><div id="balance"></div></b></td>
+            </tr>
+
+            <tr>
+                <td align="center" colspan="3"><input type="button" value="Save" id="sub" style="cursor: pointer" name="save"/>
+                    <input type="hidden" name="id" value="{$sdata.id_salesorder}" id="sale_id" />
+                    <input type="button" value="Save & Print" id="print" style=" cursor: pointer" name="print"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

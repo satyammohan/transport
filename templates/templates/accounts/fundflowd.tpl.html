@@ -1,0 +1,20 @@
+<table border="1" width="100%">
+    <tr>
+        <th>Sl.</th><th>Name</th><th align="right">Amount</th>
+    </tr>
+        {$sl=0}
+        {$total=0}
+        {section name=x loop=$fundflowd}
+        <tr>
+            <td>{$sl=$sl+1}{$sl}</a></td>
+            <td>{$fundflowd[x].name}</a></td>
+            <td align="right">{$fundflowd[x].total|string_format:"%.2f"}</td>
+        </tr>
+        {$total = $total + $fundflowd[x].total}
+    {/section}
+    <tr>
+        <th colspan="2">Total :</th>
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>
+<br><br><br><br>

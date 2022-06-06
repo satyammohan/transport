@@ -1,0 +1,40 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_frm").validate({
+            rules:{
+                'frm[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=form&func=check_name&id={$data.id_form}", async:false }
+                }
+            },
+            messages: { 
+                'frm[name]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>This Form Name already exists"
+                }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form name="frm" id="add_frm" method="post" action="index.php?module=form&func={if $data.id_form}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_form}Edit{else}Add{/if} Form Details</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="frm[name]"  value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_form}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

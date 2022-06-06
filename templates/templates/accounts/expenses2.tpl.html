@@ -1,0 +1,22 @@
+<table border="1">
+    <tr>
+       	<th>Sl.No.</th>
+        <th>Debit</th>
+        <th>Credit</th>
+       	<th align="right">Amount</th>
+    </tr>
+    {$total=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].dname}</td>
+        <td>{$data[x].cname}</td>
+        <td align="right">{$data[x].total|string_format:"%.2f"}</td>
+    </tr>
+    {$total = $total + $data[x].total}
+    {/section}
+    <tr>
+        <td colspan="3">Total</td>
+        <td align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+</table>

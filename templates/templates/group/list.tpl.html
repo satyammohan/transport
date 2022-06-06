@@ -1,0 +1,36 @@
+<link rel="stylesheet" href="{$source}js/jqwidgets/styles/jqx.base.css" type="text/css" />
+<script type="text/javascript" src="{$source}js/scripts/gettheme.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxcore.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxdata.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxbuttons.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxscrollbar.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxpanel.js"></script>
+<script type="text/javascript" src="{$source}js/jqwidgets/jqxtree.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function () {
+		$.post("index.php?module=group&func=getgroup",function(msg){
+			var data=msg;
+			var theme = getTheme();
+			var source =
+			{
+				datatype: "json",
+				datafields: [
+					{ name: 'id' },
+					{ name: 'id_parent' },
+					{ name: 'name' }
+				],
+				id: 'id',
+				localdata: data
+			};
+			var dataAdapter = new $.jqx.dataAdapter(source);
+			dataAdapter.dataBind();
+			var records = dataAdapter.getRecordsHierarchy('id', 'id_parent', 'items', [{ name: 'name', map: 'label'}]);
+			$('#jqxWidget').jqxTree({ source: records, width: '300px', theme: theme });
+		})
+	});
+</script>
+<div id='content'>
+    <p><b>Group List</b></p>
+    <div id='jqxWidget'></div>
+</div>

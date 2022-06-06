@@ -1,0 +1,42 @@
+{if !isset($smarty.request.noinvoice)}
+{$gtotal=0}
+{foreach item=v key=k from=$data}
+Representative: <b>{$salesman[$k]}</b>
+<table border="1" width="60%">
+    <tr>
+        <th width="50">Inv No</th>
+        <th width="100">Date</th>
+        <th width="300">Party</th>
+        <th width="250">Address</th>
+        <th width="100" class="right">Tax</th>
+        <th width="100" class="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0} 
+    {foreach item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$v1.invno}</td>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td>{$v1.party_name}</td>
+        <td>{$v1.party_address}&nbsp;&nbsp;&nbsp;{$v1.party_address1}</td>
+        <td align="right">{($v1.vat+$v1.totalcess+$v1.tcsamt)|string_format:"%.2f"}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$vattot = $vattot + ($v1.vat+$v1.totalcess+$v1.tcsamt)}
+    {$total = $total + $v1.total}
+    {/foreach}
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th class="right"> Total</th>
+        <th align="right">{$vattot|string_format:"%.2f"}</th>
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>
+{$gtotal = $gtotal + $total}
+{/foreach}
+<div style="width:59.7%; height:20px; text-align: right; font-size: 14px;border:2px solid;">
+    <b><span style="margin-right: 55px;">Grandtotal:</span> {$gtotal}</b>
+</div>
+{/if}

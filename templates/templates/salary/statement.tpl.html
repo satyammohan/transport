@@ -1,0 +1,90 @@
+<fieldset>
+    <legend>Employee Details</legend>
+    <form method="post" action="index.php?module=salary&func=statement">
+        <table>
+            <tr>
+                <td valign="top">Employee Name : <select name="id">
+                    <option value="">Select Employee</option>
+                    {html_options options=$employee selected=$smarty.request.id}</select></td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+
+{if $data}
+Employee : <b>{$data[0].name}</b>({$data[0].no})&nbsp;Designation : <b>{$data[0].designation}, {$data[0].location}</b><br>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Month</th><th>Basic</th><th>DA</th><th>HRA</th><th>Medical Allow.</th><th>Convency</th><th>Telephone</th>
+            <th>ESIC 1.75%</th><th>EPF 12.00%</th><th>Pro. Tax</th><th>TDS</th><th>Prev. Adv.</th>
+            <th>Adv.taken in</th><th>Total Adv.</th><th>Deduction Amount</th><th>Adv. Deduct</th>
+            <th>Gross Earning</th><th>Gross Deducations</th><th>Net Amount</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td align="right">{$mod.month}-{substr($mod.year,2,2)}</td>
+        <td align="right">{$mod.basic|string_format:"%.2f"}</td><td align="right">{$mod.da|string_format:"%.2f"}</td>
+        <td align="right">{$mod.hra|string_format:"%.2f"}</td><td align="right">{$mod.medical|string_format:"%.2f"}</td>
+        <td align="right">{$mod.convecy|string_format:"%.2f"}</td><td align="right">{$mod.telephone|string_format:"%.2f"}</td>
+        <td align="right">{$mod.esic|string_format:"%.2f"}</td>
+        <td align="right">{$mod.pf|string_format:"%.2f"}</td>
+        <td align="right">{$mod.pt|string_format:"%.2f"}</td>
+        <td align="right">{$mod.tds|string_format:"%.2f"}</td>
+        <td align="right">{$mod.padvance|string_format:"%.2f"}</td>
+        <td align="right">{$mod.advance|string_format:"%.2f"}</td>
+        <td align="right">{($mod.padvance+$mod.advance)|string_format:"%.2f"}</td>
+        <td align="right">{$mod.deduct_adv|string_format:"%.2f"}</td>
+        <td align="right">{($mod.padvance+$mod.advance-$mod.deduct_adv)|string_format:"%.2f"}</td>
+        <td align="right">{$mod.net|string_format:"%.2f"}</td>
+        <td align="right">{($mod.net-$mod.total)|string_format:"%.2f"}</td>
+        <td align="right">{$mod.total|string_format:"%.2f"}</td>
+        {$c1 = $c1 + $mod.basic}
+        {$c2 = $c2 + $mod.da}
+        {$c3 = $c3 + $mod.hra}
+        {$c4 = $c4 + $mod.medical}
+        {$c5 = $c5 + $mod.convecy}
+        {$c6 = $c6 + $mod.telephone}
+        {$c7 = $c7 + $mod.esic}
+        {$c8 = $c8 + $mod.pf}
+        {$c9 = $c9 + $mod.pt}
+        {$c10 = $c10 + $mod.tds}
+        {$c11 = $c11 + $mod.padvance}
+        {$c12 = $c12 + $mod.advance}
+        {$c13 = $c13 + ($mod.padvance+$mod.advance)}
+        {$c14 = $c14 + $mod.deduct_adv}
+        {$c15 = $c15 + ($mod.padvance+$mod.advance-$mod.deduct_adv)}
+        {$c16 = $c16 + $mod.net}
+        {$c17 = $c17 + ($mod.net-$mod.total)}
+        {$c18 = $c18 + $mod.total}
+    </tr>
+    {/foreach}
+    <tr>
+        <th>Total</th>
+        <th align="right">{$c1|string_format:"%.2f"}</th>
+        <th align="right">{$c2|string_format:"%.2f"}</th>
+        <th align="right">{$c3|string_format:"%.2f"}</th>
+        <th align="right">{$c4|string_format:"%.2f"}</th>
+        <th align="right">{$c5|string_format:"%.2f"}</th>
+        <th align="right">{$c6|string_format:"%.2f"}</th>
+        <th align="right">{$c7|string_format:"%.2f"}</th>
+        <th align="right">{$c8|string_format:"%.2f"}</th>
+        <th align="right">{$c9|string_format:"%.2f"}</th>
+        <th align="right">{$c10|string_format:"%.2f"}</th>
+        <th align="right">{0|string_format:"%.2f"}</th>
+        <th align="right">{$c12|string_format:"%.2f"}</th>
+        <th align="right">{0|string_format:"%.2f"}</th>
+        <th align="right">{$c14|string_format:"%.2f"}</th>
+        <th align="right">{0|string_format:"%.2f"}</th>
+        <th align="right">{$c16|string_format:"%.2f"}</th>
+        <th align="right">{$c17|string_format:"%.2f"}</th>
+        <th align="right">{$c18|string_format:"%.2f"}</th>
+    </tr>
+</table>
+<br><br>
+{/if}

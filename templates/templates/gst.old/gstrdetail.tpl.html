@@ -1,0 +1,9 @@
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GSTR - Detail Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    <table id='report' border="1">
+        <tr>
+            <th>GST %</th><th>Taxable Amount</th><th>CGST Amount</th><th>SGST Amount</th><th>IGST Amount</th><th>Cess Amount</th>
+        </tr>
+    </table>
+</div>

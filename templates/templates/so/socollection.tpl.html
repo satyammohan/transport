@@ -1,0 +1,98 @@
+<fieldset>
+    <legend>Sales Team Collection</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start :</td>
+                <td><input type="text" name="start_date" size="8" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End :</td>
+                <td><input type="text" name="end_date" size="8" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Option :</td>
+                <td><input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Daily
+                    <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if} />Weekly
+                    <input type="radio" name="option" value="3" {if isset($smarty.request.option) AND $smarty.request.option=="3"}checked="checked"{/if} />Monthly
+                </td>
+                <td>Group :</td>
+                <td><input type="radio" name="group" value="1" {if isset($smarty.request.group) AND $smarty.request.group=="1"}checked="checked"{else}{if !isset($smarty.request.group)}checked="checked"{/if}{/if} />Party
+                    <input type="radio" name="group" value="2" {if isset($smarty.request.group) AND $smarty.request.group=="2"}checked="checked"{/if} />SO
+                    <input type="radio" name="group" value="3" {if isset($smarty.request.group) AND $smarty.request.group=="3"}checked="checked"{/if} />ASM
+                </td>
+                <td>
+                    <input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="SoRegister" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Sales Team Collection Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    <table border="1" id="report">
+        <thead>
+        <tr>
+            <th>Sl.</th><th>RSM</th>
+            <th>ASM</th>
+            {if $smarty.request.group=="1" || $smarty.request.group=="2"}
+            <th>SO</th>
+            {/if}
+            {if $smarty.request.group=="1"}
+            <th>Party Name</th>
+            {/if}
+            {for $lo=0 to $maxdays-1}<th>{$header.$lo}</th>{/for}<th>Total</th>
+        </tr>
+        </thead>
+        {$sl=1}
+        {$div=100000}
+        {$div=1}
+        {foreach from=$data item=x}
+        <tr>
+            <td align="right">{$sl++}</td>
+            <td>{$x.det.rname}</td>
+            <td>{$x.det.aname}</td>
+            {if $smarty.request.group=="1" || $smarty.request.group=="2"}
+            <td>{$x.det.soname}</td>
+            {/if}
+            {if $smarty.request.group=="1"}
+            <td>{$x.det.name}</td>
+            {/if}
+            {$total=0}
+            {for $l=0 to $maxdays-1}
+                <td align="right">
+                    {$my = $header.$l}
+                    {if $x.$my}
+                        {($x.$my/$div)|string_format:"%.2f"}
+                        {$total = $total + $x.$my}
+                        {$dtotal[$my] = $dtotal[$my] + $x.$my}
+                    {else}
+                        &nbsp;
+                    {/if}
+                </td>
+            {/for}
+            <th align="right">{($total/$div)|string_format:"%.2f"}</th>
+        </tr>
+        {/foreach}
+        <tr>
+            <th colspan="{6-$smarty.request.group}">Total</th>
+            {$total=0}
+            {for $l=0 to $maxdays-1}
+                <th align="right">
+                    {$my = $header.$l}
+                    {if $dtotal.$my}
+                        {($dtotal.$my/$div)|string_format:"%.2f"}
+                    {else}
+                        0.00
+                    {/if}
+                </th>
+                {$total = $total + $dtotal[$my]}
+            {/for}
+            <th align="right">{($total/$div)|string_format:"%.2f"}</th>
+        </tr>
+    </table>
+</div>
+

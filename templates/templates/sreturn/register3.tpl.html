@@ -1,0 +1,43 @@
+    <table border="1">
+        <thead>
+        <tr>
+            <th>Sl.No.</th>
+            <th>Month</th>
+            <th>Year</th>
+            <th align="right">Goods Value</th>
+            <th align="right">GST</th>
+            <th align="right">Cess</th>
+            <th align="right">Total</th>
+            <th>No of Bills</th>
+        </tr>
+	</thead>
+        {$amt=0} {$vat=0} {$cess=0} {$total=0} {$bills=0}
+        {section name=x loop=$data}
+        <tr>
+            <td>{$smarty.section.x.index_next}</td>
+            <td>{$data[x].month}</td>
+            <td>{$data[x].year}</td>
+            <td align="right">{$data[x].totalamt}</td>
+            <td align="right">{$data[x].vat}</td>
+            <td align="right">{$data[x].totalcess}</td>
+            <td align="right">{$data[x].total}</td>
+            <td>{$data[x].bills}</td>
+        </tr>
+        {$amt = $amt + $data[x].totalamt}    
+        {$vat = $vat + $data[x].vat}
+        {$cess = $cess + $data[x].totalcess}
+        {$total = $total + $data[x].total}
+        {$bills = $bills + $data[x].bills}
+        {/section}
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Total</th>
+            <th align="right">{$amt}</th>
+            <th align="right">{$vat|string_format:"%.2f"}</th>
+            <th align="right">{$cess|string_format:"%.2f"}</th>
+            <th align="right">{$total|string_format:"%.2f"}</th>
+            <th>{$bills}</th>
+        </tr>
+    </table>
+

@@ -1,0 +1,20 @@
+<table border="1">
+    <tr>
+        <th>Sl.No.</th><th>Representative Name</th><th align="right">Amount</th>
+    </tr>
+    {$total=0}
+    {$slno=1}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$slno}</td>
+        <td>{$data[x].name}</td>
+        <td align="right">{$data[x].total|string_format:"%.2f"}</td>
+		{$slno=$slno+1}
+    </tr>
+    {$total = $total + $data[x].total}
+    {/section}
+    <tr>
+		<th colspan="2">Report Total</th>
+		<th align="right">{$total|string_format:"%.2f"}</th></tr><tr>
+    </tr>
+</table>

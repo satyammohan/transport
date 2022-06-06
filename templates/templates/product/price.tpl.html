@@ -1,0 +1,65 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".list_temp").change(function() {
+            document.plist.method = 'get';
+            document.plist.action = 'index.php';
+            $("form").submit();
+        })
+    });
+   function saveprice(id, cid, cval) {
+        var v =  escape(cval);
+		url = "index.php?module=product&func=saveprice&id=" + id + "&cid=" + cid + "&value="+v;
+        $.post(url);
+   }
+</script>
+<form action="" method="post" id="product_list"  name="plist" autocomplete="off">
+    <table>
+        <tr>
+            <td valign="top">
+                <input type="hidden" name="module" value="product">
+                <input type="hidden" name="func" value="price">
+                Choose Company:<br/>
+                <select name="id_company" class="list_temp">
+                    <option value="0">All</option>
+                    {html_options options=$company selected=$smarty.request.id_company}
+                </select></td>
+                <td valign="top">
+                    Status:<br/>
+                    <select name="status" id="list_status" class="list_temp">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+                </td>
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+<table border="1">
+    <thead>    
+        <tr>
+            <th>Name</th><th>HSN Code</th><th>Pack</th><th>Case</th><th>GST%</th><th>Cess%</th><th>MRP</th><th>Sell Price</th><th>Purc. Price</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td>{$mod.name}</td>			
+        <td>{$mod.hsncode}</td>			
+        <td>{$mod.pack} {$mod.unit}</td>
+        <td>{$mod.case}</td>
+        <td>{$tax[$mod.id_taxmaster_sale]}</td>
+        <td align="right">{$mod.cess}</td>
+        <td align="right">
+			<input size="8" type="text" value="{$mod.mrp}" onblur="saveprice('{$mod.id_product}', 'mrp', this.value);">
+		</td>
+
+        <td align="right">
+			<input size="8" type="text" value="{$mod.seller_price}" onblur="saveprice('{$mod.id_product}', 'seller_price', this.value);">
+		</td>
+
+        <td align="right">
+			<input size="8" type="text" value="{$mod.purchase_price}" onblur="saveprice('{$mod.id_product}', 'purchase_price', this.value);">
+		</td>
+    </tr>
+    {/foreach}
+</table>
+

@@ -1,0 +1,96 @@
+<script>
+    var d15 = '{($smarty.now+24*60*60*15)|date_format:"%d/%m/%Y"}';
+    var d30 = '{($smarty.now+24*60*60*30)|date_format:"%d/%m/%Y"}';
+    var d45 = '{($smarty.now+24*60*60*45)|date_format:"%d/%m/%Y"}';
+    var d60 = '{($smarty.now+24*60*60*60)|date_format:"%d/%m/%Y"}';
+    var d90 = '{($smarty.now+24*60*60*90)|date_format:"%d/%m/%Y"}';
+    var d120 = '{($smarty.now+24*60*60*120)|date_format:"%d/%m/%Y"}';
+    var d150 = '{($smarty.now+24*60*60*150)|date_format:"%d/%m/%Y"}';
+    var d180 = '{($smarty.now+24*60*60*180)|date_format:"%d/%m/%Y"}';
+    function update(days) {
+        switch(days) {
+        case 15:
+            $("#sd").val(d15);
+            break;
+        case 30:
+            $("#sd").val(d30);
+            break;
+        case 45:
+            $("#sd").val(d45);
+            break;
+        case 60:
+            $("#sd").val(d60);
+            break;
+        case 90:
+            $("#sd").val(d90);
+            break;
+        case 120:
+            $("#sd").val(d120);
+            break;
+        case 150:
+            $("#sd").val(d150);
+            break;
+        case 180:
+            $("#sd").val(d180);
+            break;
+        }
+    }
+</script>
+<fieldset>
+    <legend>Expiry Batch Report</legend>
+    <form method="post" action="index.php?module=batch&func=expiry">
+        <table>
+            <tr>
+                <td>Expirying Before :</td>
+                <td>
+                    <input type="radio" onclick="update(15)" name="range" value="30">15
+                    <input type="radio" onclick="update(30)" name="range" value="30">30
+                    <input type="radio" onclick="update(45)" name="range" value="30">45
+                    <input type="radio" onclick="update(60)" name="range" value="60">60
+                    <input type="radio" onclick="update(90)" name="range" value="90">90
+                    <input type="radio" onclick="update(120)" name="range" value="120">120
+                    <input type="radio" onclick="update(150)" name="range" value="150">150
+                    <input type="radio" onclick="update(180)" name="range" value="180">180 Days
+                    <input type="radio" onclick="update(0)" checked="checked" name="range" value="0"> Specify
+                </td>
+                <td><input type="text" name="start_date" id="sd" size="8" class="dtpickno" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <select name="company">
+                        <option value=" ">All Company</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="ExpiryRegister" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<table border="1">
+    <thead>    
+        <tr>
+            <th>Sl.No.</th><th>Company</th><th>Item name</th><th>Batch No</th><th>Exp Date</th><th>Mrp</th><th>MRP Without Tax</th>
+            <th>Purchasing Price</th><th>Selling Price</th><th>Distributor Price</th><th>Stock Quantity</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod name=fe}
+    <tr>
+        <td>{$smarty.foreach.fe.index+1}</td>
+        <td>{$mod.cname}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.batch_no}</td>
+        <td>{$mod.expiry_date|date_format:$smarty_date}</td>
+        <td align="right">{$mod.mrp}</td>
+        <td align="right">{$mod.mrp_without_tax}</td>
+        <td align="right">{$mod.purchase_price}</td>
+        <td align="right">{$mod.seller_price}</td>
+        <td align="right">{$mod.distributor_price}</td>
+        <td align="right">{$mod.qty1}</td>
+    </tr>
+    {/foreach}
+</table>

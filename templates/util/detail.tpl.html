@@ -1,0 +1,9 @@
+<table border="1">
+    <tr><th>Name</th><th>Row of Data</th></tr>
+    {foreach from=$detail key=k item=v}
+    <tr>
+        <td>{$k|upper|replace:$prefix:''}</td>
+        <td align="right">{$v}</td>
+    </tr>
+    {/foreach}
+</table>

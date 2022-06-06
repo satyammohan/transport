@@ -1,0 +1,26 @@
+<h3>Create Sales Team Username & Password</h3>
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Type</th><th>Address</th><th>User Name<th>Password</th>
+        </tr>
+    </thead>
+    {foreach from=$so item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$ini.salesteam[$mod.type]}</td>
+        <td>{$mod.address} {$mod.phone}</td>
+        <td><input size='15' value='{$mod.username}' onblur="saveme('username', this.value, {$mod.id_so} )"></td>
+        <td><input size='15' value='{$mod.password}' onblur="saveme('password', this.value, {$mod.id_so} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function saveme(fld, fvalue, id) {
+        var url = "index.php?module=so&func=setfieldvalue&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+</script>

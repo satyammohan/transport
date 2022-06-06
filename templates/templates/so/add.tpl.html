@@ -1,0 +1,40 @@
+<form method="post" action="index.php?module=so&func={if $data.id_so}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_so}Edit{else}Add{/if} SO</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="so[name]" value="{$data.name}"/></td>
+            </tr>
+             <tr>
+                <td><b>Type:</b></td>
+                <td><select name="so[type]">
+                    {html_options options=$ini.salesteam selected=$data.type}
+                </select>
+                </td>
+            </tr>
+            <tr>
+               <td><b>Under:</b></td>
+               <td><select name="so[id_parent]">
+                   {html_options options=$so selected=$data.id_parent}
+               </select>
+               </td>
+           </tr>
+            <tr>
+                <td><b>Address:</b></td>
+                <td><input type="text" size="40" name="so[address]" value="{$data.address}"/></td>
+            </tr>
+            <tr>
+                <td><b>Phone:</b></td>
+                <td><input type="text" name="so[phone]" value="{$data.phone}"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_so}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

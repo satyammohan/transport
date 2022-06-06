@@ -1,0 +1,66 @@
+{foreach from=$sale item=ch}
+<table width="100%" border="1">
+    <tr>
+        <td>
+            <font size="+1"><b>{$smarty.session.companyname}</b></font><br>
+            <font size="-1">{if $ch.invno|strpos:'U2/'===0}Basant Vihar. Vairpur, Jagatpur, Cuttack - 754021{else}{$smarty.session.address}{/if} {$smarty.session.state}<br>
+            GSTIN : {$smarty.session.gstin}<br>
+            </font>
+        </td>
+    </tr>
+    <tr>
+        <td>Party : <b>{$ch.party_name}</b><br>
+            {if $ch.address1}
+                {$ch.address1}, {$ch.address2}&nbsp;{$ch.address3}<br>
+            {else}
+                {$ch.party_address}&nbsp;{$ch.party_address1}<br>
+            {/if}
+            GSTIN : {$ch.gstin}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Bill No : <b>{$ch.invno}</b><br>
+            Date : <b>{$ch.date|date_format:$ini.smarty_date}</b><br>
+            Goods Value : {$ch.totalamt|string_format:"%.2f"}<br>
+            Total GST : {$ch.vat|string_format:"%.2f"}<br>
+            CESS Amt : {$ch.totalcess|string_format:"%.2f"}<br>
+            Bill Total : {$ch.total|string_format:"%.2f"}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Sl.</th><th>Product Name</th><th>HSN Code</th><th>Qty.</th><th>Taxable Amount</th><th>CGST %</th><th>SGST %</th><th>IGST %</th><th>Cess</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {foreach from=$saledetail[{$ch.id_sale}] item=mod name=items}
+                    <tr>
+                        <td>{$smarty.foreach.items.iteration}</td>
+                        <td>{$mod.item}</td>
+                        <td>{$mod.hsncode}</td>
+                        <td align="right">{$mod.qty+$mod.free|string_format:"%d"}</td>
+                        <td align="right">
+                            {$mod.goods_amount|string_format:"%.2f"}
+                        </td>
+                        {if $ch.local==0}
+                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                        {else}
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_per)|string_format:"%.2f"}</td>
+                        {/if}
+                        <td align="right">{$mod.cessamt}</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+{/foreach}

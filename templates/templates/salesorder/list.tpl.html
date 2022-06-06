@@ -1,0 +1,76 @@
+<script type="text/javascript">
+$(function(){
+    $('#id_sale').click(function(){
+        var val = [];
+        $(':checkbox:checked').each(function(i){
+            val[i] = $(this).val();
+        });
+        if(val==''){
+            alert('There is no record selected for Report!');
+        }else{
+            window.open('index.php?module=sales&func=prsale&id='+val+'&ce=0','_new','scrollbars=yes,resizable=yes,width=720,height=450,top=50,left=250');
+        }
+    });
+});
+</script>
+<table id="dataTable">
+    <thead>    
+        <tr>
+            <td colspan="7" valign="top">
+                <form action="index.php?module=salesorder&func=listing" method="post">
+                    <fieldset><legend>Filter Sales Order</legend>
+                        <p><span>
+                                {$rec = $sdata|count - 1}
+                                Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{$sdata.$rec.date|date_format:$smarty_date}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{$sdata.0.date|date_format:$smarty_date}' /></span>
+                            <span>Representative:
+                                <select name="represent">
+                                    <option>All</option>
+                                    {html_options options=$salesman selected=$smarty.request.represent}
+                                </select>
+                            </span>
+                            <span>
+                                Company:
+                                <select name="company">
+                                    <option>All</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Order No</th><th>Date</th><th>Party</th><th>Represent</th><th>Weight</th><th>Order Amount</th>
+            <th>
+                Manage
+                <a title="Add Sale Bill" href="index.php?module=salesorder&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{$mod.invno}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td>{$mod.party_name}</td>
+        <td>{$mod.rname}</td>
+        <td align="right">{$weight[$mod.id_salesorder]|string_format:"%.2f"}</td>
+        <td align="right">{$mod.total}</td>
+        <td width="100px">
+            <a href="index.php?module=salesorder&func=delete&id={$mod.id_salesorder}&ce=0" onclick="return confirm('Do you want to delete?');"><div title="Delete" class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=salesorder&func=edit&id={$mod.id_salesorder}"><div title="Edit" class="edit_bg">&nbsp;</div></a>
+            <a class="salebill" href="index.php?module=salesorder&func=prsale&id={$mod.id_salesorder}&ce=0" ><div title="Print Bill" class="report_bg">&nbsp;</div></a>&nbsp;
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("salebill");
+        fancy_handler_iframe("pdf");
+        tbl_handler();
+    });
+</script>

@@ -1,0 +1,26 @@
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th>Sl.No.</th><th>Name</th><th>Address1</th>
+            <th>Contact</th><th>Phone</th><th>Email</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod name=itr}
+        <tr>
+            <td>{$smarty.foreach.itr.iteration}</td>	
+            <td>{$mod.name}</td>
+            <td>{$mod.address1}<br>{$mod.address2}<br>{$mod.address3}<br>{$mod.areaname}</td>
+            <td>{$mod.contact_person}</td>
+            <td>{$mod.phone}
+		<br><a href='https://api.WhatsApp.com/send?phone={$mod.phone}'>Whatsapp</a>
+		<br><a href='tel://{$mod.phone}'>Call</a>
+	    </td>
+            <td>{$mod.email}</td>
+        </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+</script>

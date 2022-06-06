@@ -1,0 +1,54 @@
+<table id='report' border="1">
+    <tr>
+        <th>Party Name</th><th>Item Name</th><th>Quantity</th><th>Free</th><th>Ltr/Kg</th><th>Amount</th>
+    </tr>
+    {$c1=0}{$c2=0}{$c3=0}{$c4=0}{$c5=0}{$c6=0}
+    {$rc1=0}{$rc2=0}{$rc3=0}{$rc4=0}{$rc5=0}{$rc6=0}
+    {$prevparty=$data[0].party_name}
+    {foreach item=x name=it from=$data}
+    {if $prevparty!=$x.party_name}
+    <tr>
+        <th>Total LG : {$c5}</th>
+        <th>Total AEGO : {$c6}</th>
+        <th align="right">{$c2}</th>
+        <th align="right">{$c3}</th>
+        <th align="right">{$c4|string_format:"%.2f"}</th>
+        <th align="right">{$c1|string_format:"%.2f"}</th>
+    </tr>
+    {$c1=0}{$c2=0}{$c3=0}{$c4=0}{$c5=0}{$c6=0}
+    {/if}
+    <tr>
+        <td>{$x.party_name}</td>
+        <td>{$x.name}</td>
+        <td align="right">{$x.qty}</td>
+        <td align="right">{$x.free}</td>
+        <td align="right">{(($x.qty+$x.free)*$x.case)|string_format:"%.2f"}</td>
+        <td align="right">{$x.amount|string_format:"%.2f"}</td>
+        {$c1 = $c1 + $x.amount}
+        {$c2 = $c2 + $x.qty}
+        {$c3 = $c3 + $x.free}
+        {$c4 = $c4 + (($x.qty+$x.free)*$x.case)}
+        {$name = $x.name|upper}
+        {if $name|strstr:"LAAL GHODA" || $name|strstr:"LG"}
+            {$c5 = $c5 + (($x.qty+$x.free)*$x.case)}
+            {$rc5 = $rc5 + (($x.qty+$x.free)*$x.case)}
+        {else}
+            {$c6 = $c6 + (($x.qty+$x.free)*$x.case)}
+            {$rc6 = $rc6 + (($x.qty+$x.free)*$x.case)}
+        {/if}
+        {$rc1 = $rc1 + $x.amount}
+        {$rc2 = $rc2 + $x.qty}
+        {$rc3 = $rc3 + $x.free}
+        {$rc4 = $rc4 + (($x.qty+$x.free)*$x.case)}
+    </tr>
+    {$prevparty=$x.party_name}
+    {/foreach}
+    <tr>
+        <th>GRAND Total LG : {$rc5}</th>
+        <th>GRAND Total AEGO : {$rc6}</th>
+        <th align="right">{$rc2}</th>
+        <th align="right">{$rc3}</th>
+        <th align="right">{$rc4|string_format:"%.2f"}</th>
+        <th align="right">{$rc1|string_format:"%.2f"}</th>
+    </tr>
+</table>

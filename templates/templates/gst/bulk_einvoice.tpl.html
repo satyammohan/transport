@@ -1,0 +1,80 @@
+<fieldset>
+    <legend>e-Invoices Json</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{$smarty.request.start_date}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{$smarty.request.end_date}' /></td>
+                <td>
+                    <input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="eInvoice" />
+                    <input type="button" class="excel" value="einvoice As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br>
+<div class="print_content">
+    <table id="report">
+        <tr>
+            <td>Supply Type Code *</td><td></td><td></td><td>Igst On Intra</td><td>Document Type *</td><td>Document Number *</td><td>Document Date (DD/MM/YYYY) *</td>
+            <td>Buyer GSTIN *</td><td>Buyer Legal Name *</td><td>Buyer Trade Name </td><td>Buyer POS *</td><td>Buyer Addr1 *</td><td>Buyer Addr2</td>
+            <td>Buyer Location *</td><td>Buyer Pin Code</td><td>Buyer State *</td><td>Buyer Phone Number</td><td>Buyer Email Id</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Shipping GSTIN </td><td>Shipping Legal Name </td><td>Shipping Trade Name </td><td>Shipping Addr1 </td><td>Shipping Addr2</td><td>Shipping Location </td><td>Shipping Pin Code </td><td>Shipping State </td>
+            <td>Sl.No. *</td><td>Product Description</td><td></td><td>HSN code *</td><td>Bar code </td><td>Quantity *</td><td>Free Quantity</td>
+            <td>Unit *</td><td>Unit Price *</td><td>Gross Amount *</td><td>Discount</td><td>Pre Tax Value</td><td>Taxable value *</td>
+            <td>GST Rate (%) *</td><td>Sgst Amt(Rs)</td><td>Cgst Amt (Rs)</td><td>Igst Amt (Rs)</td><td>Cess Rate (%)</td><td>Cess Amt Adval (Rs)</td><td>Cess Non Adval Amt (Rs)</td>
+            <td>State Cess Rate (%)</td><td>State Cess Adval Amt (Rs)</td><td>State Cess Non-Adval Amt (Rs)</td><td>Other Charges</td><td>Item Total *</td>
+            <td>Batch Name</td><td>Batch Expiry Dt</td><td>Warranty Dt</td>
+            <td>Total Taxable value *</td><td>Sgst Amt</td><td>Cgst Amt</td><td>Igst Amt</td><td>Cess Amt</td><td>State Cess Amt</td>
+            <td>Discount</td><td>Other charges</td><td>Round off</td><td>Total Invoice value *</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>Trans ID</td><td>Trans Name</td><td>Trans Mode </td><td>Distance </td><td>Trans Doc No.</td><td>Trans Doc Date</td><td>Vehicle No.</td><td>Vehicle Type</td>
+            <td>Error List</td>
+        </tr>        {$sl=1}
+        {$no=""}
+        {foreach item=x name=it from=$data}
+        <tr>
+            {if $no!=$x.invno}
+                {$sl=1}
+            {else}
+                {$sl=$sl+1}
+            {/if}
+            {$no=$x.invno}
+            <td>B2B</td><td></td><td></td><td>{if $x.local}Yes{else}No{/if}</td><td>Tax Invoice</td><td>{$x.invno}</td><td>'{$x.date|date_format:'d/m/Y'}</td>
+            <td>{$x.gstin}</td><td>{$x.name}</td><td>{$x.name}</td><td>{$x.state}</td><td>{$x.address1}</td><td>{$x.address2}</td><td>{$x.location}</td>
+            <td>{$x.pincode}</td><td>{$x.state}</td><td>{$x.mobile|substr:0:10}</td><td>{$x.email}</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>{$x.gstin}</td><td>{$x.name}</td><td>{$x.name}</td><td>{$x.address1}</td><td>{$x.address2}</td><td>{$x.location}</td><td>{$x.pincode}</td><td>{$x.state}</td>
+            <td>{$sl}</td><td>{$x.iname}</td><td></td><td>{$x.hsncode}</td><td>&nbsp;</td><td>{$x.qty}</td><td>{$x.free}</td>
+
+            <td>{$x.unit}</td><td>{$x.rate}</td><td>{$x.amount}</td>
+            <td>0</td><td>{$x.goods_amount}</td><td>{$x.goods_amount}</td><td>{$x.tax_per}</td>
+            <td>{if $x.local}0{else}{($x.tax_amount/2)|string_format:"%.2f"}{/if}</td>
+            <td>{if $x.local}0{else}{($x.tax_amount/2)|string_format:"%.2f"}{/if}</td>
+            <td>{if $x.local}{$x.tax_amount}{else}0{/if}</td>
+            <td>{$x.cess|string_format:"%.2f"}</td>
+            <td>{$x.cessamt}</td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>{$x.qty+$x.free}</td>
+            <td>{$x.batch_no}</td><td>'{$x.exp_date|date_format:'d/m/Y'}</td><td>&nbsp;</td>
+
+            <td>{$x.goods_amount}</td>
+            <td>{if $x.local}0{else}{($x.tax_amount/2)|string_format:"%.2f"}{/if}</td>
+            <td>{if $x.local}0{else}{($x.tax_amount/2)|string_format:"%.2f"}{/if}</td>
+            <td>{if $x.local}{$x.tax_amount}{else}0{/if}</td>
+            <td>{$x.cessamt}</td>
+            <td>0</td><td>0</td><td>0</td>
+            <td>{$x.round}</td><td>{$x.total}</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td>{$x.transport_id}</td><td>{$x.transport_name}</td><td>{$x.transport_mode}</td><td>{$x.distance}</td><td>{$x.invno}</td>
+            <td>'{$x.date|date_format:'d/m/Y'}</td><td>{$x.vehicle_number}</td><td>Regular</td>
+            <td>&nbsp;</td>
+        </tr>
+        {/foreach}
+    </table>
+</div>

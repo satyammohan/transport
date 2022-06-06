@@ -1,0 +1,50 @@
+<fieldset>
+  <legend>Remittance</legend>
+  <form method="post" action="index.php?module=reportspl&func=remi">
+    <table>
+      <tr>
+        <td>Ref. No. :</td>
+        <td><input type="text" name="refno" size="10" value='{$smarty.request.refno}' /></td>
+        <td colspan="4" align="center">
+          <input type="submit" value="Go" />&nbsp;
+          <input type="button" class="print" value="Print" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</fieldset>
+<br />
+<div class="print_content" width="50%">
+  {$smarty.session.cname}<br>
+  Manufactures of : Papad, Bhujia, Badi & Namkins<br>
+  <hr>
+  <table width="100%">
+    <tr><td>Factory :</td><td>Depot :</td></tr>
+    <tr><td>F 138 - 139, Bichhwal</td><td>Panchgachia, Baraipali</td></tr>
+    <tr><td>Industrial Area, Bikaner</td><td>Sambalpur</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>Ref. No : {$smarty.request.refno}</td><td>Date : 03/04/2014</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>Dear Sir,</td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td>We are enclosing herewith</td></tr>
+  </table>
+  <br>
+
+  <table border="1">
+    <tr><th>NAME OF THE DEALER </th><th>TOWN</th><th>AMOUNT</th><th>PAYMENT PARTICULARS</th></tr>
+    {section name=x loop=$data}
+    <tr><td>{$data[x].name}</td>
+      <td>{$data[x].address1}</td>
+      <td class="ra">{$data[x].total}</td>
+      {$total = $total + $data[x].total}
+      <td>{$data[x].memo}</td></tr>
+    {/section}
+    </td>
+    <tr><th>&nbsp;</th><th>Total</th><th class="ra">{$total|string_format:"%.2f"}</th><th>&nbsp;</th></tr>
+  </table>
+  <br>
+  Yours faithfully.
+</div>

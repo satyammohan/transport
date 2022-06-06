@@ -1,0 +1,38 @@
+<table id="dataTable" border="1">
+    <thead> 
+        <tr>
+            <th colspan="6">
+                <select id="list_status" onchange="update_listing('so', this.value);">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+            </th>
+            <th><a class="so" href="index.php?module=so&func=edit&ce=0">
+                    <div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Name</th><th>Type</th><th>Parent</th><th>Address</th><th>Phone</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$so item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$ini.salesteam[$mod.type]}</td>
+        <td>{$det[$mod.id_parent]}</td>
+        <td>{$mod.address}</td>
+        <td>{$mod.phone}</td>
+        <td><select onchange="update_status('so', '{$mod.id_so}', this.value,$('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td>
+            <a class="so" href="index.php?module=so&func=edit&id={$mod.id_so}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+            <a href="index.php?module=so&func=delete&id={$mod.id_so}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("so");
+        tbl_handler();
+    });
+</script>

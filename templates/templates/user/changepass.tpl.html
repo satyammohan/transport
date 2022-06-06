@@ -1,0 +1,34 @@
+<div id="wrapperl">
+    <div id="login" class="animate form">
+        <form id="edit_password_form" method="post" action="index.php?module=user&func=updatepass" onsubmit="return checkpass()" >
+            <h1>Change Password</h1> 
+            <p> 
+                <label for="passwordsignup" class="youpasswd" >Old Password</label>
+                <input name="user[pass]" required type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p> 
+                <label for="passwordsignup" class="youpasswd" >New Password</label>
+                <input id="npass" name="user[npass]" required type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p> 
+                <label for="npass" class="youpasswd">Confirm New password</label>
+                <input id="renpass" required type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p class="signin button"> 
+                <input type="submit" value="Change"/> 
+            </p>
+        </form>
+    </div>
+</div>
+
+<script>
+    function checkpass() {
+        let np = $("#npass").val();
+        let renp = $("#renpass").val();
+        if (np!=renp) {
+            alert("Confirm New password does not match with New Password.");
+            $("#renpass").focus();
+            return false;
+        }
+    }
+</script>

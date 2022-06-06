@@ -1,0 +1,85 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#trans_date").datepicker({
+            dateFormat:js_date,
+            minDate:"{$smarty.session.sdate|date_format:$ini.smarty_date}",
+            maxDate:"{$smarty.session.edate|date_format:$ini.smarty_date}"
+        });
+    })
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_voucher").validate({
+            rules:{
+                'voucher[bank_no]'    : { required: true },
+                'voucher[trans_date]' : { required: true },
+                'voucher[debit]'      : { required: true },
+                'voucher[credit]'     : { required: true },
+                'voucher[amount]'     : { required: true }
+            },
+            messages: { 
+                'voucher[bank_no]'     : { required: "<br/>This Field is Required" },
+                'voucher[trans_date]'  : { required: "<br/>This Field is Required" },
+
+                'voucher[debit]'       : { required: "<br/>This Field is Required" },
+                'voucher[credit]'      : { required: "<br/>This Field is Required" },
+                'voucher[amount]'      : { required: "<br/>This Field is Required" }	
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<script type="text/javascript" src="jsmodule/account.js"></script>
+<table align="center">
+    <tr><td>
+            <form name="add_voucher" id="add_voucher"  method="post" action="index.php?module=voucher&func={if $data.id}update{else}insert{/if}" onsubmit="return form_valid();">
+                <fieldset>
+                    <legend>Bank Receipt</legend> 
+                    <table>
+                        <tr>
+                            <td><b>Bank No:</b></td>
+                            <td><input type="text" onchange="check(this.value,this.id,'bank',3);" name="vno" id="voucher_no" value="{if $data}{$data.bno}{else}{$nextno+1}{/if}"/>
+                                <label for="vno"></label></td>    
+                        </tr>
+                        <tr>
+                            <td><b>Transaction Date:</b></td>
+                            <td><input type="text" name="voucher[trans_date]" id="trans_date" value="{if $data}{$data.trans_date|date_format:$ini.smarty_date}{else}{$smarty.now|date_format:$ini.smarty_date}{/if}"/>
+                                <label for="code"></label>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td><b>Account Type:</b></td>
+                            <td>
+                                <select id="actype" name="voucher[account_type]">
+                                    {html_options options=$ini.account_type selected=3}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td><b>Account head:</b></td>
+                            <td> 
+                                <input  type="text" name="party"  value='{if $data}{$data.hname}{else}{/if}' id="head">
+                                <br><input type="text" name="add1" id="add1" value="{$data.add1},{$data.add2}" readonly="readonly" size="30">
+                                <input type="hidden" name="voucher[debit]" id="id_head" value='{if $data}{$data.debit}{else}{/if}'>    
+                            </td>
+                        </tr>
+                        <tr >
+                            <td><b>Amount:</b></td>
+                            <td><input type="text"  name="voucher[amount]"  id="amount"value='{$data.amount|string_format:"%.2f"}'></td>
+                        </tr>
+                        <tr>
+                            <td><b>Remark:</b></td>
+                            <td><textarea   name="voucher[remark]" >{$data.remark}</textarea></td>
+                        </tr>
+                        <tr >
+                            <td align="center" colspan="2">
+                                <input type="hidden" id="hide" name="id" value="{$data.id}">
+                                <input type="submit" id="submit" value="Submit" />
+                                <input type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </form>
+        </td></tr>
+</table>

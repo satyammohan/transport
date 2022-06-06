@@ -1,0 +1,61 @@
+<script>
+    function removerow(id, mybal, obj) {
+            var x = $("#bal").text();
+            bal = parseFloat(x) - mybal;
+            bal = parseFloat(bal).toFixed(2);
+            $("#bal").text(bal);
+        $.post("index.php?module=accounts&func=bankreconsave", { id: id, reconcile : 1 }, function(res) {
+	    {if !isset($smarty.request.all)}
+	            $(obj).closest("tr").remove();
+	    {/if}
+            //alert("done");
+        });
+    }
+</script>
+<b><font size="+2">Bank Reconsilation for :: {$head[$smarty.request.id]}</font><br></b>
+{$r = $smarty.request.rbal}
+<font size="+1">Reconsilation Previous Balance : <span id="pbal">{$r}</span> Current Balance : <span id="bal">{$smarty.request.rbal}</span></font>
+<font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="index.php?module=accounts&func=bankrecondetail&all=1&id={$smarty.request.id}&rbal={$smarty.request.rbal}">Show All</a></font>
+<table border=1>
+<tr><th>Sl.</th><th>Date</th><th>Party Name</th><th>Ref No.</th><th>Remark</th><th>Debit</th><th>Credit</th><th>Balance</th><th>Reconcile</th></tr>
+{foreach item=d name=v from=$vouchers}
+    <tr>
+        <td>{$smarty.foreach.v.index+1}</td>
+        <td>{$d.date|date_format:$smarty_date}</td>
+        {if $d.id_head_debit==$smarty.request.id}
+                {$id = $d.id_head_credit}
+        {else}
+                {$id = $d.id_head_debit}
+        {/if}
+        <td>{$head[$id]}</td>
+        <td>{$d.ref1}</td>
+        <td><div width='20px'>{$d.memo|substr:0:40}</div></td>
+        <td align='right'>
+            {if $d.id_head_debit!=$smarty.request.id}
+                {$r = $r - $d.total}
+                {$d.total|string_format:"%.2f"}
+            {else}
+                &nbsp;
+            {/if}
+        </td>
+        <td align='right'>
+            {if $d.id_head_debit==$smarty.request.id}
+                {$r = $r +$d.total}
+                {$d.total|string_format:"%.2f"}
+            {else}
+                &nbsp;
+            {/if}
+        </td>
+        {if $d.id_head_debit!=$smarty.request.id}
+            {$b = $d.total}
+        {else}
+            {$b = -$d.total}
+        {/if}
+        <td align='right'>
+            <b>{$r|string_format:"%.2f"}</b>
+        </td>
+        <td align='center'><input type="checkbox" {if $d.reconcile==1}checked=checked{/if} onclick="removerow({$d.id_voucher}, {$b}, this)" ></a>
+        </td>
+    </tr>
+{/foreach}
+</table>

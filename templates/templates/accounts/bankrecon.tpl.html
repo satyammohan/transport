@@ -1,0 +1,20 @@
+<h3>Bank Reconsilation</h3>
+<table border=1>
+<tr><th>Name</th><th>Current Balance</th><th>Reconcilation Balance</th><th>Last Reconcilation Date</th><th>Action</th></tr>
+{foreach item=d from=$heads}
+    <tr>
+        <td>{$d.name}</td>
+        <td align='right'>
+	    {abs($d.total)|string_format:"%.2f"} {if $d.total<0}CR{else}DB{/if}
+	</td>
+        <td align='right'>
+	    {abs($d.rtotal)|string_format:"%.2f"} {if $d.rtotal<0}CR{else}DB{/if}
+	</td>
+        <td align='right'>{$d.date|date_format:$smarty_date}</td>
+        <td><a href="?module=accounts&func=bankrecondetail&id={$d.id_head}&rbal={abs($d.rtotal)}"><button>Reconcile</button></a>
+	    <a href="?module=accounts&func=ledger&id={$d.id_head}&option=1&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank"><button>Ledger</button></a>
+
+	</td>
+    </tr>
+{/foreach}
+</table>

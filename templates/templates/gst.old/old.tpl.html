@@ -1,0 +1,65 @@
+<style>
+    a {
+        text-decoration: underline !important;
+    }
+</style>
+<fieldset>
+    <legend>GSTR Summary</legend>
+    <form method="post" action="index.php?module=gst&func=gstrsummary">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="GSTRSummary" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GSTR - Summary Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    <table id='report'>
+        <tr>
+            <th>GST %</th><th>Taxable Amount</th><th>CGST Amount</th><th>SGST Amount</th><th>IGST Amount</th><th>Cess Amount</th>
+        </tr>
+        {call name=printdata data=$datap title="Purchase" type="purchase"}
+        {call name=printdata data=$data title="Sales" type="sale"}
+        {call name=printdata data=$sreturn title="Sales Return" type="sreturn"}
+        {call name=printdata data=$creditnote title="Credit Note" type="creditnote"}
+        {call name=printdata data=$debitnote title="Debit Note" type="debitnote"}
+    </table>
+</div>
+<hr>
+{function name=printdata}
+    <tr><th colspan="6"><br>{$title}</th></tr>
+    {$taxsales=0}{$cesss=0}{$cgsts=0}{$igsts=0}{$sgsts=0}
+    {foreach item=x name=it from=$data}
+        {$icgsts=0}{$iigsts=0}{$isgsts=0}
+        {if $x.local==0}
+            {$icgsts=$x.tax_amount/2}
+            {$isgsts=$x.tax_amount/2}
+        {else}
+            {$iigsts=$x.tax_amount}
+        {/if}
+        {$cgsts=$cgsts+$icgsts}{$sgsts=$sgsts+$isgsts}{$igsts=$igsts+$iigsts}{$cesss=$cesss+$x.cessamt}{$taxsales=$taxsales+$x.goods_amount}
+        <tr><td align="right"><a target="new" href='index.php?module=gst&func=gstrdetail&local={$x.local}&type={$type}&start_date={$smarty.request.start_date}&end_date={$smarty.request.end_date}&tax={$x.tax_per}'>{if $x.local==0}Local {else}Outside {/if}{if $x.havegst==0}Having GSTIN {else}No GSTIN {/if}{$x.tax_per}</a></td>
+            <td align="right">{$x.goods_amount|string_format:"%.2f"}</td>
+            <td align="right">{$icgsts|string_format:"%.2f"}</td>
+            <td align="right">{$isgsts|string_format:"%.2f"}</td>
+            <td align="right">{$iigsts|string_format:"%.2f"}</td>
+            <td align="right">{$x.cessamt|string_format:"%.2f"}</td></tr>
+    {/foreach}
+    <tr><th>Total {$title}</th><th align="right">{$taxsales|string_format:"%.2f"}</th>
+    <th align="right">{$cgsts|string_format:"%.2f"}</th>
+    <th align="right">{$sgsts|string_format:"%.2f"}</th>
+    <th align="right">{$igsts|string_format:"%.2f"}</th>
+    <th align="right">{$cesss|string_format:"%.2f"}</th></tr>
+{/function}

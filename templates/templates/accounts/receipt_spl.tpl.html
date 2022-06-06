@@ -1,0 +1,22 @@
+<fieldset>
+    <legend>Receipt and Payment</legend>
+    <form method="post" action="index.php?module=accounts&func=receipt_spl">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{$smarty.request.start_date|date_format:"%d/%m/%Y"}' /></td>
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Receipt and Payment Report as on : {$smarty.request.start_date|date_format:"%d/%m/%Y"}
+    <br /><br />
+    {include file="accounts/receipt_spl1.tpl.html"}
+</div>

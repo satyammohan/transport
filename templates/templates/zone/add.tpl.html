@@ -1,0 +1,44 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_zone").validate({
+            rules:{
+                'zone[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=zone&func=check_zone&id={$data.id_zone}", async:false }
+                }
+        },
+        messages: { 
+            'zone[name]':{
+              required: "<br/>This Field is Required",
+              remote:"<br/>zone already exists"
+            }
+        }
+    });
+    var x = fvalid.form();
+    return x;
+}
+</script>
+<form name="zone" id="add_zone" method="post" action="index.php?module=zone&func={if $data.id_zone}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_zone}Edit{else}Add{/if} zone</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="zone[name]" id="name" value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Description:</b></td>
+                <td><textarea name="zone[description]">{$data.description}</textarea></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+            <input type="hidden" id="hide" name="id" value="{$data.id_zone}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

@@ -1,0 +1,73 @@
+<fieldset>
+    <legend>Representativewise Performance Sales</legend>
+    <form method="post" action="index.php?module=sreport&func=representper">
+        <table>
+            <tr>
+                <td valign="top">Start Date :</td>
+                <td valign="top"><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td valign="top">End Date :</td>
+                <td valign="top"><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td valign="top">Choose Company:</td>
+                <td>
+                    <select name="company">
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="Rep_perfomance" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Representativewise Performance Sales Period
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data }
+        <table id="report" border="1">
+            <tr>
+                <th>REPRESENTATIVE</th>
+                <th>Date</thwidth=>
+                <th>CALLS</th>
+                <th>AREA NAME</th>
+                <th width="100" class="right">AMOUNT</th>
+            </tr>
+
+            {$total=0} {$rtotal=0} {$call=0}
+            {foreach item=v1 key=k1 from=$data}
+                <tr>
+                    <td>{if $v1.rname==$data[$k1-1].rname}&nbsp;{else}{$v1.rname}{/if}</td>
+                    <td>{$v1.date|date_format:$smarty_date}</td>
+                    <td>{$v1.cnt}</td>
+                    <td>{$v1.name}</td>
+                    <td align="right">{$v1.total|string_format:"%.2f"}</td>
+                </tr>
+                {$call = $call + $v1.cnt}
+                {$rtotal = $rtotal + $v1.total}
+                {if $v1.rname!=$data[$k1+1].rname}
+                    <tr>
+                        <th colspan="2">Total</th>
+                        <th>{$call}</th>
+                        <td>&nbsp;</td>
+                        <th align="right">{$rtotal|string_format:"%.2f"}</th>
+                        {$rtotal=0} {$call=0}
+                    </tr>
+                {/if}
+                {$total = $total + $v1.total}
+            {/foreach}
+            <tr>
+                <th colspan="4"> Total</th>
+                <th align="right">{$total|string_format:"%.2f"}</th>
+            </tr>
+        </table>
+    {else}
+       <b>No Record Found!</b>
+    {/if}
+</div>
+

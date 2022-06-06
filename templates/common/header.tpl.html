@@ -1,0 +1,20 @@
+<div class="header">
+  <nav class="navbar fixed-top" style="padding: 0">
+    <div class="container-fluid mt-2 mb-2">
+      <div class="col-lg-12 text-white">
+        <div class="float-left" >
+          <b>Welcome Admin</b>
+        </div>
+        <div class="float-right">
+            <a href="#" class="text-white">
+              <span data-target=".bs-logout-modal-sm" data-toggle="modal"><i class="fa fa-power-off"></i></span>
+            </a>  
+        </div>
+        <div class="text-center">
+            {$smarty.session.cname}&nbsp;
+            {$smarty.session.sdate|date_format:$smarty_date}-{$smarty.session.edate|date_format:$smarty_date}
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

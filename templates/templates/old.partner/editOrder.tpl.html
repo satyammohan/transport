@@ -1,0 +1,51 @@
+<script>
+    function show(id) {
+        $("#"+id).toggle();
+    }
+    function update(id, v, p) {
+        myq = $("#q"+id).html();
+        myq1 = myq*1 - preq*1 + v*1;
+        $("#q"+id).html(myq1);
+
+        mya = $("#a"+id).html();
+        mya1 = (mya*1 - prea*1 + p*v).toFixed(2);
+        $("#a"+id).html(mya1);
+    }
+    function myFunction(q, r) {
+        preq = q;
+        prea = q*r;
+    }
+    var preq=0; prea=0;
+</script>
+<b><div class="float-left">Edit Order:{$party.name}</div><div class="float-right">Ledg:{if $balance<0}{abs($balance)} DB{else}{abs($balance)} CR{/if}</div></b>
+{$sl = 1}
+<form method="post" action="index.php?module=partner&func=saveEditOrder">
+    {foreach from=$items item=mod key=k}
+        <button type="button" class="bs btn btn-primary dropdown-toggle" data-toggle="dropdown" onclick="show('c_{$sl}');">{$k}
+            (Qty:<span id="qq_{$sl}">0</span> Value:<span id="aq_{$sl}">0</span>)</button><br>
+        <table class='tbl' id="c_{$sl}" style="display: none; width:100%">
+        <tr><th>Name</th><th>MRP</th><th>Qty</th></tr>
+        {foreach from=$mod item=m}
+        <tr>
+            <td>{$m.name}</td>
+            {$price = $m.mrp}
+            <td><input tabindex="-1" name="price[{$m.id_product}]" value="{$price}" readonly="readonly" class="ns">
+                <input type="hidden" value="{$m.id_partner}" name="partner[{$m.id_product}]">
+                <input type="hidden" value="{$m.qty}" name="qty[{$m.id_product}]">
+            </td>
+            <td><input value="{$m.approve_qty|string_format:'%.0f'}" name="item[{$m.id_product}]" min="0" type="number" class="ns" onfocus="myFunction(this.value, {$price})" onblur="update('q_{$sl}', this.value, {$price})" size="4"></td>
+            <script>
+                update('q_{$sl}', '{$m.approve_qty}', {$price});
+            </script>
+        </tr>
+        {/foreach}
+        </table>
+        {$sl = $sl + 1}
+    {/foreach}
+    <input type="hidden" name="id_head" value="{$m.id_head}">
+    <input type="hidden" name="date" value="{$m.date}">
+    <input type="hidden" name="time" value="{$m.time}">
+    <div class="text-center">
+        <input type="submit" class="btn btn-primary" value="Save Order">
+    </div>
+</form>

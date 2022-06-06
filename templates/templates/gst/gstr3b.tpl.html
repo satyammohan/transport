@@ -1,0 +1,96 @@
+<fieldset>
+    <legend>GSTR 3B</legend>
+    <form method="post" action="index.php?module=gst&func=gstr3b">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="B2CL" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GSTR - 3B Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    <table id='report' border="1">
+        <tr>
+            <th>&nbsp;</th><th>Purchase</th><th>Sale</th>
+        </tr>
+        {$totals=0}{$taxsales=0}{$cesss=0}{$cgsts=0}{$igsts=0}{$sgsts=0}{$taxexes=0}
+        {foreach item=x name=it from=$data}
+            {if $x.tax_per==0}
+                {$taxexes=$taxexes+$x.goods_amount}
+            {else}
+                {$taxsales=$taxsales+$x.goods_amount}
+            {/if}
+            {if $x.local==0}
+                {$cgsts=$sgsts+$x.tax_amount/2}
+                {$sgsts=$sgsts+$x.tax_amount/2}
+            {else}
+                {$igsts=$igsts+$x.tax_amount}
+            {/if}
+            {$cesss=$cesss+$x.cessamt}
+        {/foreach}
+        {$totalp=0}{$taxsalep=0}{$cessp=0}{$cgstp=0}{$igstp=0}{$sgstp=0}{$taxexep=0}
+        {foreach item=x name=it from=$datap}
+            {if $x.tax_per==0}
+                {$taxexep=$taxexep+$x.goods_amount}
+            {else}
+                {$taxsalep=$taxsalep+$x.goods_amount}
+            {/if}
+            {if $x.local==0}
+                {$cgstp=$sgstp+$x.tax_amount/2}
+                {$sgstp=$sgstp+$x.tax_amount/2}
+            {else}
+                {$igstp=$igstp+$x.tax_amount}
+            {/if}
+            {$cessp=$cessp+$x.cessamt}
+        {/foreach}
+        <tr>
+            <td>TOTAL TAXABLE</td><td align="right">{$taxsalep|string_format:"%.2f"}</td><td align="right">{$taxsales|string_format:"%.2f"}</td>
+            <tr><td>TOTAL CGST</td><td align="right">{$cgstp|string_format:"%.2f"}</td><td align="right">{$cgsts|string_format:"%.2f"}</td>
+            <tr><td>TOTAL SGST</td><td align="right">{$sgstp|string_format:"%.2f"}</td><td align="right">{$sgsts|string_format:"%.2f"}</td>
+            <tr><td>TOTAL IGST</td><td align="right">{$igstp|string_format:"%.2f"}</td><td align="right">{$igsts|string_format:"%.2f"}</td>
+            <tr><td>TOTAL CESS</td><td align="right">{$cessp|string_format:"%.2f"}</td><td align="right">{$cesss|string_format:"%.2f"}</td>
+            <tr><td>TOTAL EXEMPTED</td><td align="right">{$taxexep|string_format:"%.2f"}</td><td align="right">{$taxexes|string_format:"%.2f"}</td>
+        </tr>
+        <tr>
+            <th>NET TOTAL :</th>
+            <th align="right">{$taxsalep+$cgstp+$sgstp+$igstp+$cessp+$taxexep|string_format:"%.2f"}</th>
+            <th align="right">{($taxsales+$cgsts+$sgsts+$igsts+$cesss+$taxexes)|string_format:"%.2f"}</th>
+        </tr>
+            <tr><td>TOTAL TCS</td><td align="right">{$purctcs.0.tcsamt|string_format:"%.2f"}</td><td align="right">{$saletcs.0.tcsamt|string_format:"%.2f"}</td>
+            <tr><td>TOTAL OTHER</td><td align="right">{$purctcs.0.other|string_format:"%.2f"}</td><td align="right">{$saletcs.0.other|string_format:"%.2f"}</td>
+        <tr>
+            <th>GRAND TOTAL :</th>
+            <th align="right">{($taxsalep+$cgstp+$sgstp+$igstp+$cessp+$taxexep+$purctcs.0.tcsamt+$purctcs.0.other)|string_format:"%.2f"}</th>
+            <th align="right">{($taxsales+$cgsts+$sgsts+$igsts+$cesss+$taxexes+$saletcs.0.tcsamt+$saletcs.0.other)|string_format:"%.2f"}</th>
+        </tr>
+
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><th colspan="4" style="color: red;">CROSS VERIFICATION</th></tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <td>TOTAL GOODS VALUE AS PER 3B</td><td align="right">{($taxsalep+$taxexep)|string_format:"%.2f"}</td><td align="right">{($taxsales+$taxexes)|string_format:"%.2f"}</td>
+        <tr><td>TOTAL GST AS PER 3B</td><td align="right">{($cgstp+$sgstp+$igstp)|string_format:"%.2f"}</td><td align="right">{($cgsts+$sgsts+$igsts)|string_format:"%.2f"}</td>
+
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><td colspan="4">&nbsp;</td></tr>
+        <tr><td>GOODS VALUE (ACTUAL)</td><td align="right">{$purctcs.0.goods_amt|string_format:"%.2f"}</td><td align="right">{$saletcs.0.goods_amt|string_format:"%.2f"}</td>
+        <tr><td>GST (ACTUAL)</td><td align="right">{$purctcs.0.vat|string_format:"%.2f"}</td><td align="right">{$saletcs.0.vat|string_format:"%.2f"}</td>
+        <tr><td>TOTAL (ACTUAL)</td><td align="right">{$purctcs.0.total|string_format:"%.2f"}</td><td align="right">{$saletcs.0.total|string_format:"%.2f"}</td>
+
+
+    </table>
+</div>
+

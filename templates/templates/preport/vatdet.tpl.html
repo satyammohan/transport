@@ -1,0 +1,30 @@
+<fieldset>
+    <legend>Purchase Vat Detail</legend>
+    <form method="post" action="index.php?module=preport&func=vatdet">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Option : <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                                <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                </td>
+                <td>Type : <input type="radio" name="type" value="1" {if isset($smarty.request.type) AND $smarty.request.type=="1"}checked="checked"{else}{if !isset($smarty.request.type)}checked="checked"{/if}{/if} />All
+                                <input type="radio" name="type" value="2" {if isset($smarty.request.type) AND $smarty.request.type=="2"}checked="checked"{/if}/>Local
+                                <input type="radio" name="type" value="3" {if isset($smarty.request.type) AND $smarty.request.type=="3"}checked="checked"{/if} />Outside
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Purchase VAT Detail Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {include file="preport/vatdet{$smarty.request.option}.tpl.html"}
+</div>

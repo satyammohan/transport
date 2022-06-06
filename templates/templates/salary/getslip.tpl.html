@@ -1,0 +1,130 @@
+{$months=[ 'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY ', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER']}
+<input type="button" class="print" value="Print" />
+<div class="print_content">
+<table>
+    <tr>
+        <td colspan="6">
+            <div style="text-align: center">
+                <font size="+1"><b style='background-color: lightgrey'>{$smarty.session.companyname}</b></font><br>
+                {$smarty.session.address} {$smarty.session.state}<br>
+                GSTIN : {$smarty.session.gstin}
+            </div>
+        </td>
+    </tr>
+    <tr class='border_bottom'>
+        <td colspan="6">
+            <b class="border_bottom">PAY SLIP FOR THE MONTH OF {$months[$data[0].month-1]}-{$data[0].year}</b>
+        </td>
+    </tr>
+    <tr>
+        <td style="width: 26%">Employee Code</td><td style="width: 12%">{$data[0].no}</td>
+        <td style="width: 12%">Name</td><td style="width: 26%">{$data[0].name}</td>
+        <td style="width: 12%">Operation</td><td style="width: 12%">{$data[0].function}</td>
+    </tr>
+    <tr>
+        <td>Designation</td><td>{$data[0].designation}</td><td>W. Days</td><td>{$data[0].daysworked}</td><td>PFAcc NO</td><td>{$data[0].pfdetails}</td>
+    </tr>
+    <tr>
+        <td>Location</td><td>{$data[0].location}</td><td>Bank</td><td>{$data[0].bank}</td><td>Account No</td><td>{$data[0].acno}</td>
+    </tr>
+    <tr>
+        <td>Gross Salary</td><td>{$data[0].cgross}</td><td>PAN</td><td>{$data[0].pan}</td><td>ESIC Insu.No</td><td>{$data[0].esidetails}</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>UAN No</td><td>{$data[0].uan}</td>
+    </tr>
+    <tr class='border_bottom'>
+        <td>EARNINGS</td><td>MONTHLY</td><td>YTD</td><td>Deductions</td><td>MONTHLY</td><td>YTD</td>
+    </tr>
+    <tr>
+        <td>Basic</td><td>{$data[0].basic}</td><td>{$data[0].basic*12}</td>
+        <td>ESIC 0.75%</td><td>{$data[0].esic}</td><td>{($data[0].esic*12)|string_format:"%.2f"}</td>
+    </tr>
+    <tr>
+        <td>DA</td><td>{$data[0].da}</td><td>{$data[0].da*12}</td>
+        <td>EPF 12.00%</td><td>{$data[0].pf}</td><td>{($data[0].pf*12)|string_format:"%.2f"}</td>
+    </tr>
+    <tr>
+        <td>HRA</td><td>{$data[0].hra}</td><td>{$data[0].hra*12}</td>
+        <td>Profesional Tax</td><td>{$data[0].pt}</td><td>{($data[0].pt*12)|string_format:"%.2f"}</td>
+    </tr>
+    <tr>
+        <td>Convency</td><td>{$data[0].convecy}</td><td>{$data[0].convecy*12}</td>
+        <td>TDS</td><td>{$data[0].tds}</td><td>{($data[0].tds*12)|string_format:"%.2f"}</td>
+    </tr>
+    <tr>
+        <td>Medical Allow.</td><td>{$data[0].medical}</td><td>{$data[0].medical*12}</td>
+        <td>Previous Advance</td><td>{$data[0].padvance}</td><td>0.00</td>
+    </tr>
+    {$month = $data[0].month-1}
+    {if $month < 0}
+        {$month = $month + 12}
+    {/if}
+    {$m = $months[$month]|substr:0:3}
+    {if $data[0].month==1}
+        {$y = $data[0].year-1}
+    {else}
+        {$y = $data[0].year}
+    {/if}
+    <tr>
+        <!-- <td>Telephone Allowance</td><td>{$data[0].telephone}</td><td>{$data[0].telephone*12}</td> -->
+        <td>OT</td><td>{$data[0].otamt}</td><td>{$data[0].otamt*12}</td>
+        <td>Adv.taken in {$m}'{$y}</td><td>{$data[0].advance}</td><td>0.00</td>
+    </tr>
+    <tr>
+        <!-- <td>TA/DA</td><td>0</td><td>0</td> -->
+        <td>Others</td><td>{$data[0].others}</td><td>{$data[0].others*12}</td>
+        <td>Total Adv.</td><td>{($data[0].padvance+$data[0].advance)|string_format:"%.2f"}</td><td>0.00</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        <td>Deduction Amount in {$m}'{$y}</td><td>{$data[0].deduct_adv}</td><td>0.00</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        <td>Adv. To be Deducted</td><td>{($data[0].padvance+$data[0].advance-$data[0].deduct_adv)|string_format:"%.2f"}</td><td>0.00</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        <td>Health Insurance</td><td>{$data[0].insurance|string_format:"%.2f"}</td><td>0.00</td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        <td>Others</td><td>{$data[0].deduct_other|string_format:"%.2f"}</td><td>0.00</td>
+    </tr>
+    <tr class='border_bottom'>
+        <td>GROSS EARNINGS</td><td>{$data[0].net}</td><td>{($data[0].net*12)|string_format:"%.2f"}</td>
+        <td>GROSS DEDUCTIONS</td><td>{($data[0].net-$data[0].total)|string_format:"%.2f"}</td><td>{(($data[0].net-$data[0].total)*12)|string_format:"%.2f"}</td>
+    </tr>
+ 
+    <tr class='border_bottom'>
+        <td>NET AMOUNT</td><td colspan="5">{$data[0].total}</td>
+    </tr>
+    <tr class='border_bottom'>
+        <td>Net Pay in words:</td><td colspan="5">{$data[0].words}</td>
+    </tr>
+    <tr>
+        <td colspan="6">** It is a Computer generated slip & no signature is required. **</td>
+    </tr>
+</table>
+<style>
+    tr.border_bottom td {
+        border:2px solid black;
+        height: 30px;
+        font-size: 11px;
+        text-align: center;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    table {
+        padding: 0px;
+        margin: 0px;
+        border:0px;
+        width:100%;
+        border:3px solid black;
+        border-collapse: collapse;
+        font-size:9px;
+    }
+</style>
+</div>
+

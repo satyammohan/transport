@@ -1,0 +1,19 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Group</th><th>Address</th><th>Second Opening<br>Balance</th><th width="5%">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach from=$head item=mod}
+        <tr>
+            <td>{$mod.name}</td>
+            <td>{$mod.gname}</td>
+            <td>{$mod.address1}<br>
+                {$mod.address2}<br>
+                {$mod.address3}</td>
+            <td align="right">{$mod.sopening_balance}&nbsp;{if $mod.sotype==0}Db{else}Cr{/if}</td>
+        </tr>
+        {/foreach}
+     </tbody>
+</table>

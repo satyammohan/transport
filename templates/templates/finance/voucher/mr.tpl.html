@@ -1,0 +1,134 @@
+<script>
+    $(document).ready(function(){
+        $("#trans_date").datepicker({
+            dateFormat:'dd/mm/yy'
+        });
+    })
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_voucher").validate({
+            rules:{
+                'voucher[mr_no]': {
+                    required: true
+                },
+                'voucher[trans_type]': {
+                    required: true
+                },
+                'voucher[trans_date]': {
+                    required: true
+                },
+                'voucher[debit]': {
+                    required: true
+                },
+                'voucher[credit]': {
+                    required: true
+                },
+                'voucher[amount]': {
+                    required: true
+                }
+            },
+            messages: { 
+                'voucher[mr_no]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[trans_date]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[trans_type]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[debit]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[credit]': {
+                    required: "<br/>This Field is Required"
+                },
+                'voucher[amount]': {
+                    required: "<br/>This Field is Required"
+                }	
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<script>
+    function check_mrno(mr_no){
+        $.post("index.php?module=voucher&func=check_mrno&mr_no="+mr_no,function(msg){
+            if(msg==0){
+                $(".add_mr").show();
+                $("#edit").hide();
+            }else{
+                $("#edit_id").val(msg);
+                $("#edit").show();
+                $(".add_mr").hide();
+            }
+            
+        });
+    }
+</script>
+<form name="add_voucher" id="add_voucher"  method="post" action="index.php?module=voucher&func={if $data.id}update{else}insert{/if}" onsubmit="return form_valid();">
+    <table>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td><b>Mr No:</b></td>
+                        <td><input type="text" onchange="check_mrno(this.value);" name="voucher[mr_no]" id="mr_no" value="{if isset($data)}{$data.mr_no}{else}{$mr_no+1}{/if}"/>
+                            <label for="mr_no"></label></td>    
+                            <input type="hidden" id="status" name="status" value="{$status}">
+                    </tr>
+                    <tr class="add_mr">
+                        <td><b>Transaction Date:</b></td>
+                        <td><input type="text" name="voucher[trans_date]" id="trans_date" value="{if $data}{$data.trans_date|date_format:'%d/%m/%Y'}{else}{$smarty.now|date_format:'%d/%m/%Y'}{/if}"/>
+                            <label for="code"></label></td>
+                    <input type="hidden" name="voucher[debit]" value="Cash">
+                    </tr>
+
+                    <tr class="add_mr">
+                        <td><b>Credit:</b></td>
+                        <td>  <select name="voucher[credit]"  >
+                                    {html_options options=$head}
+                                </select>
+                        </td>
+                    </tr>
+                    <tr class="add_mr">
+                        <td><b>Amount:</b></td>
+                        <td><input type="text"  name="voucher[amount]" value='{$data.amount}'></td>
+                    </tr>
+                    <tr class="add_mr">
+                        <td><b>Remark:</b></td>
+                        <td><textarea   name="voucher[remark]" >{$data.remark}</textarea></td>
+                    </tr>
+                    <tr class="add_mr">
+                        <td align="center" colspan="2">
+                            <input type="hidden" id="hide" name="id" value="{$data.id}">
+                            <input type="submit" id="submit" value="Submit" />
+                            <input type="reset" name="res" value="Reset"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</form>
+<table id="edit" style="display: none">
+    <tr>
+        <td><b>Receipt Number Exists!</b><br><b>Do You Want to Edit:</b></td>
+    <tr>
+        <td><input type="button" onclick="get_editform($('#edit_id').val(),$('#status').val());" id="edit" value="Yes"/>
+            <input type="button"  onclick="cancel($('#status').val());"  id="cancel" value="No"/>
+            <input type="hidden"  id="edit_id" name="edit_id"/>
+       </td>
+
+
+    </tr>
+</table>
+<script>
+    function get_editform(edit_id,status){
+        window.location.href = "index.php?module=voucher&func=edit&id="+edit_id+"&status="+status;
+    }
+     function cancel(status){
+        window.location.href = "index.php?module=voucher&func=mr&status="+status;
+    }
+</script>

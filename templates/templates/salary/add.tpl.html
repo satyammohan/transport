@@ -1,0 +1,94 @@
+<form method="post" action="index.php?module=salary&func={if $data.id_employee}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_employee}Edit{else}Add{/if} Employee Details</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Number:</b></td><td><input type="text" name="employee[no]" value="{$data.no}" /></td>
+                <td><b>Name:</b></td><td><input type="text" name="employee[name]" value="{$data.name}" /></td>
+            </tr>
+            <tr>
+                <td><b>Link to Accounts:</b></td>
+                <td><input type="text" name="party_name" value="{$data.party_name}" id="party" />
+                    <input type="hidden" name="employee[id_head]" value="{$data.id_head}" id="id_head"/>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Function:</b></td><td><input type="text" name="employee[function]" value="{$data.function}" /></td>
+                <td><b>Designation:</b></td><td><input type="text" name="employee[designation]" value="{$data.designation}" /></td>
+            </tr>
+            <tr>
+                <td><b>Location:</b></td><td><input type="text" name="employee[location]" value="{$data.location}" /></td>
+                <td><b>Date of Jointing:</b></td><td><input type="text" name="employee[doj]" value="{$data.doj}" /></td>
+            </tr>
+            <tr>
+                <td><b>Bank Details:</b></td><td><input type="text" name="employee[bank]" value="{$data.bank}" /></td>
+                <td><b>Account No.:</b></td><td><input type="text" name="employee[acno]" value="{$data.acno}" /></td>
+            </tr>
+            <tr>
+                <td><b>Income Tax PAN):</b></td><td><input type="text" name="employee[pan]" value="{$data.pan}" /></td>
+                <td><b>PF Account Details:</b></td><td><input type="text" name="employee[pfdetails]" value="{$data.pfdetails}" /></td>
+            </tr>
+            <tr>
+                <td><b>ESI Account Details:</b></td><td><input type="text" name="employee[esidetails]" value="{$data.esidetails}" /></td>
+                <td><b>PR Account Details:</b></td><td><input type="text" name="employee[prdetails]" value="{$data.prdetails}" /></td>
+            </tr>
+            <tr>
+                <td><b>UAN No:</b></td><td><input type="text" name="employee[uan]" value="{$data.uan}" /></td>
+                <td>&nbsp;</td><td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="4"><hr></td>
+            </tr>
+            <tr>
+                <td><b>Basic:</b></td><td><input type="text" name="employee[basic]" value="{$data.basic}" /></td>
+                <td><b>DA:</b></td><td><input type="text" name="employee[da]" value="{$data.da}" /></td>
+            </tr>
+            <tr>
+                <td><b>HRA:</b></td><td><input type="text" name="employee[hra]" value="{$data.hra}" /></td>
+                <td><b>Medical:</b></td><td><input type="text" name="employee[medical]" value="{$data.medical}" /></td>
+            </tr>
+            <tr>
+                <td><b>Health Insurance:</b></td><td><input type="text" name="employee[health]" value="{$data.health}" /></td>
+            </tr>
+            <tr>
+                <td><b>Convency:</b></td><td><input type="text" name="employee[convency]" value="{$data.convency}" /></td>
+                <td><b>Telephone:</b></td><td><input type="text" name="employee[telephone]" value="{$data.telephone}" /></td>
+            </tr>
+            <tr>
+                <td><b>TA/DA:</b></td><td><input type="text" name="employee[ta]" value="{$data.ta}" /></td>
+                <td><b>Other:</b></td><td><input type="text" name="employee[other]" value="{$data.other}" /></td>
+            </tr>
+            <tr>
+                <td colspan="4"><hr></td>
+            </tr>
+            <tr>
+                <td><b>ESI Applicable:</b></td>
+		<td>
+			<select name="employee[esiflag]" id="area">
+                            {html_options  options=$ini.local selected=$data.esiflag} 
+                        </select>
+		</td>
+            </tr>
+            <tr>
+                <td><b>ESI:</b></td><td><input type="text" name="employee[esi]" value="{$data.esi}" /></td>
+                <td><b>EPF:</b></td><td><input type="text" name="employee[epf]" value="{$data.epf}" /></td>
+            </tr>
+            <tr>
+                <td><b>LIC:</b></td><td><input type="text" name="employee[lic]" value="{$data.lic}" /></td>
+                <td><b>Advance:</b></td><td><input type="text" name="employee[advance]" value="{$data.advance}" /></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="4">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_employee}" />
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+<script>
+$(document).ready(function() {
+    callauto("party", "index.php?module=voucher&func=getparty&ce=0", ["id_head"]);
+});
+</script>

@@ -1,0 +1,65 @@
+<fieldset>
+    <legend>Outstanding</legend>
+    <form method="post" action="{$url}">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.session.sdate|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Option :<input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                            <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                </td>
+                <th>Filter Outstanding :
+                    <select name="daystype">
+                        <option value="2" {if isset($smarty.request.daystype) AND $smarty.request.daystype=="2"}selected="selected"{/if}>Above</option>
+                        <option value="1" {if isset($smarty.request.daystype) AND $smarty.request.daystype=="1"}selected="selected"{/if}>Below</option>
+                    </select>
+                    <input type="text" name="days" size="4" value="{if isset($smarty.request.days)}{$smarty.request.days}{/if}" /> days
+                </th>
+                <th><input type="checkbox" name="minimal" {if isset($smarty.request.minimal)}checked="checked"{/if}>Show Minimum </th>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+		    <br>
+                    <input type="hidden" id="excelfile" value="DebtorOutstanding" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="10">
+                    <select name="party">
+                        <option value="">All Party</option>
+                        {html_options options=$party selected=$smarty.request.party}
+                    </select>
+                    <select name="area">
+                        <option value="">All Area</option>
+                        {html_options options=$area selected=$smarty.request.area}
+                    </select>
+                    <select name="represent">
+                        <option value="">All Representative</option>
+                        {html_options options=$represent selected=$smarty.request.represent}
+                    </select>
+                    <select name="company">
+                        <option value="">All Company</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+            </tr>
+
+                
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Outstanding for the Period :
+    {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    <br /><br />
+    {if $data }
+    {include file="accounts/outstanding{$smarty.request.option}.tpl.html"}
+    {else}
+    <b>No Record Found!</b>
+    {/if}
+</div>

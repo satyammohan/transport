@@ -1,0 +1,23 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Bill No.</th><th>Date</th><th>Total</th><th>Company</th><th>Representative</th><th>Action</th>
+        </tr>
+    </thead>
+	{$tot = 0}
+    {foreach from=$os item=mod}
+    <tr>
+        <td>{$mod.invno}</td>
+		<td>{$mod.date}</td>
+        <td align="right">{$mod.total|string_format:"%.2f"}</td>
+		<td>{$mod.cname}</td>
+		<td>{$mod.rname}</td>
+		<td>--</td>
+		{$tot = $tot + $mod.total}
+    </tr>
+    {/foreach}
+</table>
+<br>
+Total Ledger Balance : {$head.0.opening_balance|string_format:"%.2f"}<br>
+Outstanding Bills    : {$tot|string_format:"%.2f"}<br>
+Difference : {($head.0.opening_balance-$tot)|string_format:"%.2f"}

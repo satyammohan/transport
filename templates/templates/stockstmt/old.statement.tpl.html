@@ -1,0 +1,114 @@
+<script type="text/javascript">
+    $(function() {
+        $("#type").val("{$smarty.request.type}");
+        $("#valuation").val("{$smarty.request.valuation}");
+    });
+</script>
+<table width="100%">
+    <thead>    
+        <tr>
+            <td colspan="9" valign="top">
+                <form action="index.php?module=stockstmt&func=statement" method="post">
+                    <fieldset><legend>Filter Stock Statement</legend>
+                        Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                        End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' />
+                        Company:
+                        <select name="company">
+                            <option value=" ">All</option>
+                            {html_options options=$company selected=$smarty.request.company}
+                        </select>
+                        <select name="type" id="type">
+                            <option value="1">Pieces</option>
+                            <option value="12">Dozen</option>
+                            <option value="case">Cases</option>
+                            <option value="weight">Weight</option>
+                            <option value="meter">Meters</option>
+                        </select>
+                        Valuation:
+                        <select name="valuation" id="valuation">
+                            <option value="0">No Valuation</option>
+                            <option value="1">Sales Price</option>
+                            <option value="2">Purchase Price</option>
+                            <option value="3">Actual</option>
+                        </select>
+                        <input type="checkbox" name="stock" {if isset($smarty.request.stock)}checked="checked"{/if}> Stocked Items
+                        <input type="checkbox" name="stockm" {if isset($smarty.request.stockm)}checked="checked"{/if}> Mini
+                        <input type="submit" value="Go" />
+                        <input type="button" class="print" value="Print" />
+                        <input type="hidden" id="excelfile" value="StockStatement" />
+                        <input type="button" class="excel" value="Download As Excel" />
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="9">
+                {if $sdata}
+                        {$mini = 0}
+                        {if isset($smarty.request.stockm)}
+                        {$mini = 1}
+                        {/if}
+                <div class="print_content">
+                    <table id="report" border="1">
+                        <tr>
+{if $mini==1}
+			<th>Company</th><th>Name of the Item</th><th>Closing</th>
+{else}
+                            <th>Company</th><th>Name of the Item</th><th>Opening</th><th>Stock In</th><th>Purc. Return</th><th>Total</th><th>Stock Out</th><th>Sale Return</th><th>Closing</th>i
+<th>Value</th>
+{/if}
+                        </tr>
+                        {$totalvalue = 0}
+                        {foreach from=$sdata item=mod key=k}
+                        {$total=($mod.obal+$mod.purchase-$mod.preturn)}
+                        {$closing=($total +$mod.sreturn -$mod.sales)}
+                        {$show = 1}
+                        {* if isset($smarty.request.stock) && $closing==0 && $total==0 && $mod.sales==0 *}
+                        {if isset($smarty.request.stock) && $closing==0}
+                        {$show = 0}
+                        {/if}
+                        {if $show==1}
+                        <tr>
+                            <td>{$mod.cname}</td>
+                            <td>{$mod.name}</td>
+                            {if isset($smarty.request.type)}
+                            {if is_numeric($smarty.request.type)}
+                            {$type = $smarty.request.type}
+                            {else}
+                            {$type = $smarty.request.type}
+                            {$type = $mod.$type}
+                            {/if}
+                            {else}
+                            {$type = 1}
+                            {/if}
+                            <!--<td class="ra">{$type}</td>-->
+{if $mini!=1}
+                            <td class="ra">{$mod.obal|convert:$type}</td>
+                            <td class="ra">{$mod.purchase|convert:$type}</td>
+                            <td class="ra">{$mod.preturn|convert:$type}</td>
+                            <td class="ra">{$total|convert:$type}</td>
+                            <td class="ra">{$mod.sales|convert:$type}</td>
+                            <td class="ra">{$mod.sreturn|convert:$type}</td>
+{/if}
+                            <td class="ra">{$closing|convert:$type}</td>
+{if $mini!=1}
+                            <td class="ra">{$mod.amount|string_format:"%.2f"}</td>
+{/if}
+                            {$totalvalue = $totalvalue + $mod.amount}
+                        </tr>
+                        {/if}
+                        {/foreach}
+{if $mini!=1}
+                        <tr>
+                            <th colspan="8">Total :</th>
+                            <th class="ra">{$totalvalue|string_format:"%.2f"}</th>
+                        </tr>
+{/if}
+                    </table>
+                </div>
+                {else}
+                No record Found with this match!
+                {/if}
+            </td>
+        </tr>
+</table>

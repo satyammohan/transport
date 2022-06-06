@@ -1,0 +1,159 @@
+<script>
+    function downloadJson() {
+        var text=$("#json-input").text();
+        var filename="B2BsalesInvoice_{$smarty.request.start_date}.json";
+        var a = document.createElement('a');
+        a.setAttribute('href', 'data:text/plain;charset=utf-8,'+encodeURIComponent(text));
+        a.setAttribute('download', filename);
+        a.click()
+        return false;
+    }
+    function checkall(v) {
+        if (v) {
+            $('.checkbox').prop('checked', true);
+        } else {
+            $('.checkbox').removeAttr('checked');
+        }
+    }
+    function showdata(type) {
+        $("#json").attr('disabled','disabled');
+        $("#print").attr('disabled','disabled');
+        var val = [];
+        $('.checkbox:checked').each(function(i){
+            val[i] = $(this).val();
+        });
+        if(val==''){
+            alert('There is no record selected for B2B Report!');
+        } else {
+            let date = $("#date").val();
+            let comp = $("#company").val();
+            let url='index.php?module=gst&func=saleseinvoice1&submit='+type+'&start_date='+date+'&company='+comp+'&id='+val+'&ce=0';
+            $(".print_content").html('<h3 class="blink">Loading data please wait....</h3>');
+            $.post(url, function(res) {
+                $("#"+type).removeAttr('disabled');
+                $(".print_content").html(res);
+            });
+        }
+    }
+</script>
+
+<fieldset>
+    <legend>B2B Sales E-Invoice</legend>
+    <form method="post" action="index.php?module=gst&func=saleseinvoice">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" id="startdate" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" id="enddate" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Company:
+                    <select name="company" id="company">
+                        <option value=" ">All</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td>
+                    <button type="submit" name="submit" value="print">Show Bills</button>
+                    {if $data}
+                        <input type="button" onclick="showdata('print');" value="ShowB2B Data">&nbsp;&nbsp;
+                        <input type="button" onclick="showdata('json');" value="ShowJson">&nbsp;&nbsp;
+                        <input type="button" id="print" class="excel" value="Download As Excel" />
+                        <input type="hidden" id="excelfile" value="B2BsalesInvoice" />
+                        <input type="button" id="json" onclick="downloadJson()" value="Download As Json" />
+                    {/if}
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div>
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    B2B Sales E-Invoice for {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {if $data}
+    <table id='report' border="1">
+        <tr>
+            <th><input checked="checked" type="checkbox" onclick="checkall(this.checked)"/>Select</th>
+            <th>Sl</th><td>Action</td><td>Remark</td>
+            <th>Invno</th><th>Date</th>
+            <!-- <th>Company</th> -->
+            <th>Party</th><th>Address</th><th>GSTIN</th><th>Station</th><th>GST</th><th>Total</th><th>Ack</th><th>Ack Date</th>
+        </td>
+        </tr>
+        {$idx=1}
+        {foreach item=x name=it from=$data}
+        <tr>
+            <td>
+                {if !$x.ack}
+                    <input class="checkbox" checked="checked" type="checkbox" name="id_sale[]" value="{$x.id_sale}" />
+                {/if}
+            </td>
+            <td>{$idx++}</td>
+	    <td>
+                {if !$x.ack}
+                    <a title="Edit Invoice" target="new" href="index.php?module=sales&func=edit&id={$x.id_sale}">Invoice</a>&nbsp;&nbsp;
+                    <a title="Edit Party" target="new" href="index.php?module=head&func=edit&id={$x.id_head}">Party</a>
+                {/if}
+            </td>
+            <td>
+                <font size="-1" style="color: red;">
+                {if !$x.location || !$x.pincode || !$x.statecode}
+                    Error:Buyer details
+                {/if}
+                </font>
+            </td>
+            <td>{$x.invno}</td>
+            <td>{$x.date|date_format:'d-m-Y'}</td>
+            <!-- <td>{$company[$x.id_company]}</td> -->
+            <td>{$x.name}</td>
+            <td>{$x.address1}</td>
+            <td>{$x.gstin}</td>
+            <td>{$x.location}-{$x.pincode}</td>
+            <td align="right">{$x.vat}</td>
+            <td align="right">{$x.total}</td>
+            <td align="right">{$x.ack}</td>
+            <td align="right">{$x.ackdate}</td>
+        </tr>
+        {/foreach}
+    </table>
+    <div class="print_content"></div>
+    <script>
+        showdata("json");
+    </script>
+    {/if}
+    <style>
+        #json-input {
+            width: 100% !important;
+            height: 200px !important;
+        }
+        .blink {
+            animation: blinker 0.6s linear infinite;
+            color: #1c87c9;
+            font-size: 30px;
+            font-weight: bold;
+            font-family: sans-serif;
+        }
+        @keyframes blinker {
+            50% {
+            opacity: 0;
+            }
+        }
+        .blink-one {
+            animation: blinker-one 1s linear infinite;
+        }
+        @keyframes blinker-one {
+            0% {
+            opacity: 0;
+            }
+        }
+        .blink-two {
+            animation: blinker-two 1.4s linear infinite;
+        }
+        @keyframes blinker-two {
+            100% {
+            opacity: 0;
+            }
+        }
+    </style>
+</div>
+

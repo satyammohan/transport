@@ -1,0 +1,21 @@
+<form method="post"  action="index.php?module=report&func=report&ack=1&name={$type}" name="f1">
+    <table>
+        <tr>
+            <td colspan="5" bgcolor="grey" style="color: black;"><b>Select {$type}</b></td>
+        </tr>
+        <tr>
+            <td>
+                <div> <select name="head[id_area][]" multiple="multiple">
+                        {if $type=Area} {html_options  options=$area  } {/if}
+                        {if $type=Group} {html_options  options=$group } {/if}
+                        {if $type=Zone} {html_options  options=$zone } {/if} 
+                    </select></div>
+            </td>
+        </tr>
+        <tr >
+            <td colspan="5"><input type="submit" name="go" value="Search"/></td>
+        </tr>
+    </table>
+</form>
+
+

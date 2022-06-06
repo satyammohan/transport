@@ -1,0 +1,22 @@
+<table border="1">
+    <tr>
+       	<th>Sl.No.</th>
+        <th>Party</th>
+        <th>Address</th>
+        <th>Item Name</th>
+       	<th align="right">Ordered Qty</th>
+       	<th align="right">Sales Qty</th>
+       	<th align="right">Pending Qty</th>
+    </tr>
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].party_name}</td>
+        <td>{$data[x].party_address}&nbsp;{$data[x].party_address1}</td>
+        <td>{$data[x].itemname}</td>
+        <td align="right">{$data[x].qty}</td>
+        <td align="right">{$data[x].sales}</td>
+        <td align="right">{$data[x].qty-$data[x].sales}</td>
+    </tr>
+    {/section}
+</table>

@@ -1,0 +1,492 @@
+<style type="text/css">
+    body,ul {
+        margin: 0px;padding: 0px;
+    }
+    .jd_menu li {
+        list-style: none;
+        float: left;
+        font-family: sans-serif;
+        font-size: 12px;
+        color: #FFF;
+        line-height: 14px;
+        padding: 4px 7px 3px 7px;
+        height: 13px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    .jd_menu li a { text-decoration: none;display: block;color: #FFF; }
+    .jd_menu li ul li { float: none;width: 175px; }
+    /* -- Sub-Menus -- */
+    ul.jd_menu li:hover ul { display: block;margin-left: -8px;margin-top: 2px; }
+    ul.jd_menu li:hover ul ul { display: none; }
+    ul.jd_menu li ul li:hover ul { display: block;margin-left: 182px;margin-top: -18px; }
+    ul.jd_menu ul {
+        position: absolute;
+        display: none;
+        list-style-type: none;
+        padding: 0px;
+        z-index: 10000;
+    }
+    ul.jd_menu,
+    ul.jd_menu ul {
+        background-color: #369;
+        border: 1px solid #036;
+        border-top: 1px solid #69C;
+        border-left: 1px solid #69C;
+    }
+    * html ul.jd_menu ul {
+        width: 1%;
+    }
+    ul.jd_menu li:hover,
+    ul.jd_menu li.jdm_active {
+        background-color: #69C;
+        color: #FFF;
+        padding: 3px 6px 2px 6px;
+        border: 1px solid #369;
+        border-left: 1px solid #9CF;
+        border-top: 1px solid #9CF;
+    }
+</style>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5b83cc7bafc2c34e96e7ef4b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+</head>
+<body>
+    <div>
+        <ul class="jd_menu">
+            <li><a href="#">Master &raquo;</a>
+                <ul>
+                    <li><a href="#">Group</a>
+                        <ul>
+                            <li><a href="index.php?module=group&func=edit">Add</a></li>
+                            <li><a href="index.php?module=group&func=listing">Manage</a></li> 
+                            <li><a href="index.php?module=group&func=tree">Tree Listing</a></li> 
+                        </ul>
+                    </li>
+                    <li><a href="#">Account Head &raquo;</a>
+                        <ul>
+                            <li><a href="index.php?module=head&func=edit">Add</a></li>
+                            <li><a href="index.php?module=head&func=listing">Manage</a></li>
+                            <li><a href="index.php?module=head&func=creditlimit">Set Credit Limit for Debtors</a></li>
+                            <li><a href="index.php?module=head&func=listing_rep">Party Vs Representative</a></li>
+                            <li><a href="index.php?module=head&func=setrepresent">Set Party Vs Representative</a></li>
+                            <li><a href="index.php?module=head&func=opening">Opening Balance</a></li>
+                            <li><a href="index.php?module=head&func=dopening">Debtors Opening Balance</a></li>
+			                <li><a href="index.php?module=head&func=call">Call/Whatsapp</a></li>
+                    	    <li><a href="index.php?module=head&func=sdays">Special Days</a></li>
+                    	    <li><a href="index.php?module=head&func=sopening">Second Opening</a></li>
+                    	    <li><a href="index.php?module=head&func=headuser">Specify Parties User/Password</a></li>
+                    	    <li><a href="index.php?module=head&func=tcs">TCS/Pincode Details</a></li>
+                            <li><a href="index.php?module=head&func=rcm">Mark RCM and GST %</a></li>
+                        </ul> 
+                    </li>
+                    <li><a href="#">Zone &raquo;</a>
+                        <ul>
+                            <li><a href="index.php?module=zone&func=edit">Add</a></li>
+                            <li><a href="index.php?module=zone&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Area &raquo;</a>
+                        <ul>
+
+                            <li><a href="index.php?module=area&func=edit">Add</a></li>
+                            <li><a href="index.php?module=area&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Representative &raquo;</a>
+                        <ul>
+                            <li><a href="index.php?module=represent&func=edit">Add</a></li>
+                            <li><a href="index.php?module=represent&func=user">Specify User/Password</a></li>
+                            <li><a href="index.php?module=represent&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Sales Team &raquo;</a>
+                        <ul>
+                            <li><a href="index.php?module=so&func=listing">Listing</a></li>
+                            <li><a href="index.php?module=so&func=mark">Mark Party</a></li>
+                            <li><a href="index.php?module=so&func=user">Specify User/Password</a></li>
+                            <li><a href="index.php?module=partner&func=updateall">Tree Update</a></li>
+                            <li><hr></li>
+                            <li><a href="index.php?module=so&func=sobill">Sales Bill</a></li>
+                            <li><a href="index.php?module=so&func=socollection">Collection</a></li>
+                            <li><a href="index.php?module=so&func=representInvoiceDetail">Invoice Detail</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Transport &raquo;</a>
+                        <ul>
+                            <li><a href="index.php?module=transport&func=edit">Add</a></li>
+                            <li><a href="index.php?module=transport&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="index.php?module=series&func=listing">Manage Series</a></li>
+                    <li><a href="index.php?module=form&func=listing">Manage Form</a></li>
+                </ul>
+            </li>
+            <li>Product &raquo;
+                <ul>
+                    <li><a href="index.php?module=taxmaster&func=listing">Tax Master</a></li>
+                    <li><a href="index.php?module=company&func=listing">Company</a></li>
+                    <li>Item &raquo;
+                        <ul>
+                            <li><a href="index.php?module=product&func=edit">Add</a></li>
+                            <li><a href="index.php?module=product&func=scroll_listing">Scroll Listing</a></li>
+                            <li><a href="index.php?module=product&func=listing">Manage</a></li>
+                            <li><a href="index.php?module=product&func=openingstock">Opening Stock</a></li>
+                            <li><a href="index.php?module=product&func=price">Price Listing</a></li>
+                    	    <li><a href="index.php?module=product&func=itemuser">Show Products to Parties</a></li>
+                            <li><a href="index.php?module=product&func=hsndetails">HSN, Minimum & Maximum Stock</a></li>
+                        </ul>
+                    </li>
+                    <li>Bonus &raquo;
+                        <ul>
+							<li><a href="index.php?module=bonus&func=listing">Listing</a></li>
+							<li><a href="index.php?module=bonus&func=bonusstm">Extra Bonus Statement</a></li>
+                        </ul>
+                    </li>
+
+                    <li>Batch &raquo;
+                        <ul>
+                            <li><a href="index.php?module=batch&func=edit">Add</a></li>
+                            <li><a href="index.php?module=batch&func=listing">Manage</a></li>
+                            <li><a href="index.php?module=batch&func=listing1">Last 100 Batchs</a></li>
+                            <li><a href="index.php?module=batch&func=expiry">Expiry Batch Report</a></li>
+                            <li><a href="index.php?module=batch&func=opening">Stock Opening Balance</a></li>
+                        </ul>
+		    </li>
+                    <li><a href="index.php?module=discount&func=listing">Party-Company Discount</a></li>
+                </ul>
+            </li>
+            <li>Transaction &raquo;
+                <ul>
+                    <li>Sales &raquo;
+                        <ul>
+                            <li><a accesskey="s" href="index.php?module=sales&func=edit">Add</a></li>
+                            <li><a href="index.php?module=sales&func=listing">Manage</a></li>
+                            <li><a href="index.php?module=sales&func=lr">LR Details</a></li>
+                        </ul>
+                    </li>
+                    <li>Sales Order &raquo;
+                        <ul>
+                            <li><a href="index.php?module=salesorder&func=edit">Add</a></li>
+                            <li><a href="index.php?module=salesorder&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li>Purchase &raquo;
+                        <ul>
+                            <li><a accesskey="p" href="index.php?module=purchase&func=edit">Add</a></li>
+                            <li><a href="index.php?module=purchase&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li>Purchase Order &raquo;
+                        <ul>
+                            <li><a href="index.php?module=purcorder&func=edit">Add</a></li>
+                            <li><a href="index.php?module=purcorder&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li>Stock Adjustment &raquo;
+                        <ul>
+                            <li><a href="index.php?module=adjust&func=edit">Add</a></li>
+                            <li><a href="index.php?module=adjust&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Production &raquo;
+                        <ul>
+                            <li><a href="index.php?module=production&func=edit">Add</a></li>
+                            <li><a href="index.php?module=production&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Sales Return &raquo;
+                        <ul>
+                            <li><a href="index.php?module=sreturn&func=edit">Add</a></li>
+                            <li><a href="index.php?module=sreturn&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li>Purchase Return &raquo;
+                        <ul>
+                            <li><a href="index.php?module=preturn&func=edit">Add</a></li>
+                            <li><a href="index.php?module=preturn&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Debit Note &raquo;
+                        <ul>
+                            <li><a href="index.php?module=debitnote&func=edit">Add</a></li>
+                            <li><a href="index.php?module=debitnote&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                    <li>Credit Note &raquo;
+                        <ul>
+                            <li><a href="index.php?module=creditnote&func=edit">Add</a></li>
+                            <li><a href="index.php?module=creditnote&func=listing">Manage</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Salary &raquo;
+                <ul>
+                    <li><a href="index.php?module=salary&func=edit">Add Employee</a></li>
+                    <li><a href="index.php?module=salary&func=listing&status=0">Manage Employee</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=salary&func=master">Masters for Generating Salary</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=salary&func=attendance">Daily Attendance</a></li>
+                    <li><a href="index.php?module=salary&func=generate">Generate Salary for Month</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=salary&func=attendance_summary">Attendance Summary</a></li>
+                    <li><a href="index.php?module=salary&func=statement">Employee Statement</a></li>
+                    <li><a href="index.php?module=salary&func=payslip">PaySlip</a></li>
+                    <li><a href="index.php?module=salary&func=deduction">Deduction</a></li>
+                    <li><a href="index.php?module=salary&func=esi">ESI Statement</a></li>
+                    <li><a href="index.php?module=salary&func=epf">EPF Statement</a></li>
+                </ul>
+            </li>
+            <li>Accounts &raquo;
+                <ul>
+                    <li><a accesskey="A" href="index.php?module=voucher&func=edit">Voucher Add</a></li>
+                    <li><a href="index.php?module=voucher&func=multi">Multi Voucher Add</a></li>
+                    <li><a href="index.php?module=voucher&func=listing">Manage Voucher</a></li>
+		    <li><hr></li>
+                    <li><a href="index.php?module=accounts&func=bankrecon">Bank Reconcilation</a></li>
+                </ul>
+            </li>
+            <li>GST Report &raquo;
+                <ul>
+                    <li><a href="index.php?module=gst&func=saleseinvoice">B2B Sales E-Invoice</a></li>
+                    <li><a href="index.php?module=gst&func=sreturneinvoice">B2B Sales Return E-Invoice</a></li>
+                    <li><a href="index.php?module=gst&func=bulk_upload_irn">Upload IRN</a></li>
+                    <!-- <li><a href="index.php?module=gst&func=bulk_einvoice">Bulk e-Invoice</a></li> -->
+                    <!-- <li><a href="index.php?module=gst&func=bulk_irn_cancel">Bulk IRN Cancel</a></li> -->
+                    <li><hr></li>
+                    <li><a href="index.php?module=gst&func=gstr3b">GSTR - 3B</a></li>
+                    <li><a href="index.php?module=gst&func=gstrsummary">GSTR - Summary</a></li>
+                    <li><a href="index.php?module=gst&func=gstinsales">GSTIN-wise Sales</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=sreport&func=error">Check Error in Sales Bill</a></li>
+                    <li><a href="index.php?module=sreport&func=gst">Sales GST Register</a></li>
+                    <li><a href="index.php?module=gst&func=hsn">Sales HSN Summary</a></li>
+                    <li><a href="index.php?module=gst&func=gstrJSON">Sales GST JSON</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=preport&func=error">Check Error in Purchase Bill</a></li>
+                    <li><a href="index.php?module=preport&func=gst">Purchase GST Register</a></li>
+                    <li><a href="index.php?module=gst&func=hsnpurc">Purchase HSN Summary</a></li>
+		    <li><hr></li>
+                    <li><a href="index.php?module=sreport&func=gst_return">Sales Return GST Register</a></li>
+                    <li><a href="index.php?module=gst&func=hsnsreturn">Sales Return HSN Summary</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=gst&func=dbnotereg">Debitnote GST Register</a></li>
+                    <li><a href="index.php?module=gst&func=hsndebit">Debitnote HSN Summary</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=gst&func=crnotereg&type=S">CR Note GST Register (Saleable)</a></li>
+                    <li><a href="index.php?module=gst&func=crnotereg&type=N">CR Note GST Register (Non-Saleable)</a></li>
+                    <li><a href="index.php?module=gst&func=hsncredit&type=S">CR Note HSN Summary (Saleable)</a></li>
+                    <li><a href="index.php?module=gst&func=hsncredit&type=N">CR Note HSN Summary (Non-Saleable)</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=gst&func=b2b">GST B2B Register</a></li>
+                    <li><a href="index.php?module=gst&func=b2cl">GST B2CL Register</a></li>
+                    <li><a href="index.php?module=gst&func=b2cs">GST B2CS Register</a></li>
+                </ul>
+            </li>
+            <li>Reports &raquo;
+                <ul>
+                    <li>Sales &raquo;
+                        <ul>
+                            <li><a accesskey="T" href="index.php?module=sreport&func=sreg">Sales Register</a></li>
+                            <li><a href="index.php?module=sreport&func=tcs">TCS Detail</a></li>
+                            <li><a href="index.php?module=sreport&func=representInvoiceDetail">Representativewise Invoice Detail of Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=vat">VAT Register</a></li>
+                            <li><a href="index.php?module=sreport&func=vatdet">VAT Detail</a></li>
+                            <li><a href="index.php?module=sreport&func=zone">Zonewise Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=area">Areawise Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=represent">Representativewise Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=representper">Representativewise Performance</a></li>
+                            <li><a accesskey="U" href="index.php?module=sreport&func=company">Companywise Sales</a></li>
+                            <li><a accesskey="X" href="index.php?module=sreport&func=item">Itemwise Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=partyitem">Party vs Itemwise Sales</a></li>
+                            <li><a accesskey="W" href="index.php?module=sreport&func=party">Partywise Sales</a></li>
+                            <li><a accesskey="Y" href="index.php?module=sreport&func=discount">Discount</a></li>
+                            <li><a href="index.php?module=sreport&func=ltrkg">Ltr/Kg Sales</a></li>
+                            <li><a href="index.php?module=sreport&func=salesana">Sales Analysis</a></li>
+
+                        </ul>
+                    </li>
+                    <li>Sales Return&raquo;
+                        <ul>
+                            <li><a href="index.php?module=sreturn&func=register">Sales Return Register</a></li>
+                            <li><a href="index.php?module=sreturn&func=taxregister">Sales Return Tax Register</a></li>
+                            <li><a href="index.php?module=sreturn&func=item">Itemwise Sales Return</a></li>
+                        </ul>
+                    </li>
+                    <li>Sales Order&raquo;
+                        <ul>
+                            <li><a href="index.php?module=salesorder&func=order">Order History</a></li>
+                            <li><a href="index.php?module=salesorder&func=aorder">Approved Order</a></li>
+                            <li><a href="index.php?module=salesorder&func=pending">Pending History</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Partner&raquo;
+                        <ul>
+                            <li><a href="index.php?module=partner&func=adminstock">Partner Stock</a></li>
+                            <li><a href="index.php?module=partner&func=adminsales">Partner Sales</a></li>
+                            <li><a href="index.php?module=partner&func=adminorder">Partner Order</a></li>
+                            <li><hr></li>
+                            <li><a href="index.php?module=partner&func=login_partner">Partner Login</a></li>
+                            <li><a href="index.php?module=partner&func=login_represent">Representative Login</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Purchase &raquo;
+                        <ul>
+                            <li><a accesskey="Q" href="index.php?module=preport&func=preg">Purchase Register</a></li>
+                            <li><a href="index.php?module=preport&func=tcs">TCS Detail</a></li>
+                            <li><a accesskey="M" href="index.php?module=preport&func=vat">VAT Register</a></li>
+                            <li><a href="index.php?module=preport&func=vatdet">VAT Detail</a></li>
+                            <li><a href="index.php?module=preport&func=zone">Zonewise Purchase</a></li>
+                            <li><a href="index.php?module=preport&func=area">Areawise Purchase</a></li>
+                            <li><a accesskey="R" href="index.php?module=preport&func=company">Companywise Purchase</a></li>
+                            <li><a accesskey="O" href="index.php?module=preport&func=item">Itemwise Purchase</a></li>
+                            <li><a href="index.php?module=preport&func=partyitem">Party vs Itemwise Purchase</a></li>
+                            <li><a accesskey="N" href="index.php?module=preport&func=party">Partywise Purchase</a></li>
+                            <li><a href="index.php?module=preport&func=ltrkg">Ltr/Kg Purchase</a></li>
+                        </ul>
+                    </li>
+                    <li>Purchase Order&raquo;
+                        <ul>
+                            <li><a href="index.php?module=purcorder&func=register">Order Register</a></li>
+                            <li><a href="index.php?module=purcorder&func=pending">Pending Order</a></li>
+                            <li><a href="index.php?module=purcorder&func=minstock">Minimum Stock</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Debit Note Reports&raquo;
+                        <ul>
+                            <li><a href="index.php?module=dreport&func=register">Register</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Credit Note Reports&raquo;
+                        <ul>
+                            <li><a href="index.php?module=creport&func=register">Register</a></li>
+                            <li><a href="index.php?module=creport&func=summary">Summary Statement</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Production&raquo;
+                        <ul>
+                            <li><a href="index.php?module=prodreport&func=register">Production Register</a></li>
+                            <li><a href="index.php?module=prodreport&func=wastage">Production Valuation</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li>Stock &raquo;
+                        <ul>
+                            <li><a href="index.php?module=stockstmt&func=statement">Stock Statement</a></li>
+                            <li><a href="index.php?module=stockstmt&func=sreg">Stock Register</a></li>
+                            <li><a href="index.php?module=stockstmt&func=value">Stock Valuation</a></li>
+                            <li><a href="index.php?module=stockstmt&func=age">Stock Aging</a></li>
+                            <li><a href="index.php?module=stockstmt&func=batchstatement">Batch-wise Stock Statement</a></li>
+                            <li><a href="index.php?module=stockstmt&func=batchsreg">Batch-wise Stock Register</a></li>
+                        </ul>
+                    </li>
+                    <li>Accounts &raquo;
+                        <ul>
+                            <li><a accesskey="C" href="index.php?module=accounts&func=cashbook">Cashbook</a></li>
+                            <li><a accesskey="B" href="index.php?module=accounts&func=ledger">Account Head Ledger</a></li>
+                            <li><a href="index.php?module=accounts&func=repparty">Represenativewise Party Balance</a></li>
+                            <li><a href="index.php?module=accounts&func=gledger">Group Ledger</a></li>
+                            <li><a accesskey="G" href="index.php?module=accounts&func=trial">Trial Balance</a></li>
+                            <li><a href="index.php?module=accounts&func=profit">Profit & Loss</a></li>
+                            <li><a href="index.php?module=accounts&func=balance">Balance Sheet</a></li>
+                            <li><a href="index.php?module=accounts&func=confirmation">Ledger Confirmation</a></li>
+                            <li><a href="index.php?module=accounts&func=outstanding">Outstanding Debtors</a></li>
+                            <li><a href="index.php?module=accounts&func=outstandingc">Outstanding Creditors</a></li>
+
+                            <li><a href="index.php?module=accounts&func=billdetail">Billwise Details</a></li>
+                            <li><a href="index.php?module=accounts&func=osVSledger">Ledger VS Billwise Sundry Debtors Balance</a></li>
+
+                            <li><a href="index.php?module=accounts&func=daybook">Day Book</a></li>
+                            <li><a href="index.php?module=accounts&func=receipt_spl">Receipt & Payment Statement</a></li>
+                            <li><a href="index.php?module=accounts&func=receipt">Receipt & Payment Summary</a></li>
+                            <li><a href="index.php?module=accounts&func=collection">Collection Statement</a></li>
+                            <li><a href="index.php?module=accounts&func=expenses">Expenses Statement</a></li>
+                            <li><a href="index.php?module=accounts&func=fundflow">Fund Flow Statement</a></li>
+                        </ul>
+                    </li>
+                    <li>Accounts Analysis &raquo;
+                        <ul>
+                            <li><a href="index.php?module=accountsana&func=summary">Datewise Collection Summary</a></li>
+                            <li><a href="index.php?module=accountsana&func=rep_sale">Representative Sales</a></li>
+                            <li><a href="index.php?module=accountsana&func=rep_coll">Representative Collection</a></li>
+                        </ul>
+                    </li>
+                    <li>Master &raquo;
+                        <ul>
+                            <li><a href="index.php?module=report&func=report&page=search_group">Group Wise</a></li>
+                            <li><a href="index.php?module=report&func=report&page=search_zone">Zone Wise</a></li>
+                            <li><a href="index.php?module=report&func=report&page=search_area">Area Wise</a></li>
+                        </ul>
+                    </li>
+                    <li>Special &raquo;
+                        <ul>
+                            <li><a href="index.php?module=reportspl&func=remi">Remitance Report</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>Util &raquo;
+                <ul>
+                    <li><a href="index.php?module=head&func=reminder">Party Reminder</a></li>
+                    <li><hr></li>
+                    <li><a accesskey="2" href="index.php?module=util&func=listing">Backup</a></li>
+                    <li><a accesskey="1" href="index.php?module=util&func=import">Import Data (Neuron)</a></li>
+                </ul>
+            </li>
+            <li>Admin &raquo;
+                <ul>
+                    <li><a href="index.php?module=permission&func=config">General Configuration</a></li>
+                    <li><a href="index.php?module=user&func=listing">User Management</a></li>
+                    <li><a href="index.php?module=permission&func=listing">User Permission</a></li>
+                    <li><a href="index.php?module=permission&func=access">User Access Report</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=voucher&func=voucherserial">Date-wise Serial Voucher Number</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=user&func=showprofile">Show Profile</a></li>
+                    <li><a href="index.php?module=user&func=changepass">Change Password</a></li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=info&func=listing">Manage Company/Financial Year</a></li>
+                    <li>Carry Balance from Last Year &raquo;
+                        <ul>
+                            <li><a href="index.php?module=info&func=stockop">Stock Opening Balance</a></li>
+                            <li><a href="index.php?module=info&func=ledgerop">Ledger Opening Balance</a></li>
+                            <li><a href="index.php?module=info&func=billop">Bill-wise Outstanding</a></li>
+                        </ul>
+                    </li>
+                    <li><hr></li>
+                    <li><a href="index.php?module=util&func=tcs">TCS Upgrade</a></li>
+                    <li><a href="index.php?module=util&func=newstru">Upgrade to new structure</a></li>
+                    <li><a href="index.php?module=util&func=check">Check All</a></li>
+                    <li><a href="index.php?module=voucher&func=updateall">Update Bill-wise Outstanding</a></li>
+                    <li><a href="index.php?module=util&func=transentry">Journal GST Entries</a></li>
+                    <li><a href="index.php?module=util&func=check_index">Repair Index</a></li>
+                    <li><a href="index.php?module=util&func=dropindex">Drop Index</a></li>
+                    <li><a href="index.php?module=util&func=check_autoincrement">Repair Autoincrement</a></li>
+                    <li><a href="index.php?module=util&func=detail">Entry Details</a></li>
+                </ul>
+            </li>
+            <li><a accesskey="3" href="index.php?module=info&func=unset_prefix">Exit</a></li>
+            <div style="clear: both;"></div>
+        </ul>
+    </div>
+

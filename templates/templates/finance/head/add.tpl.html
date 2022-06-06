@@ -1,0 +1,250 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_head").validate({
+            rules:{
+                gname: {
+                    required: true
+
+                },
+                'head[name]': {
+                    required: true
+
+                },
+                'head[mobile]': {
+                    required: true
+                },
+                'head[id_area]': {
+                    required: true
+                },
+                'head[id_transport]': {
+                    required: true
+                },
+                'head[pincode]': {
+                    required: true
+                },
+                   'head[tin_date]':{
+                    date:true
+                },
+                'head[cst_date]':{
+                    date:true
+                }
+            },
+            messages: { 
+                gname: {
+                    required: "<br/>This Field is Required"
+                },
+                'head[name]': {
+                    required: "<br/>This Field is Required"
+
+                },
+                'head[id_area]': {
+                    required: "<br/>This Field is Required"
+                },
+                'head[id_transport]': {
+                    required: "<br/>This Field is Required"
+                },
+                'head[pincode]': {
+                    required: "<br/>This Field is Required"
+                },
+                'head[mobile]': {
+                    required: "<br/>This Field is Required"
+                },
+                'head[cst_date]':{
+                    date:"<br/>Date should be in Right Format"
+                },
+                'head[tin_date]':{
+                    date:"<br/>Date should be in Right Format"
+                }  
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    $(document).ready(function() {
+        callauto("gname", "index.php?module=head&func=getgroup&ce=0", "id_group");
+        $("#group").change(function(){
+        
+            $.post("index.php?module=head&func=checkgroup",{ data:$("#group").val() },function(msg){
+                if(msg==1){
+                    $("#sh").show();
+                }else{
+                    $("#sh").hide();
+                }
+                        
+            });
+            
+        });
+        $(".cst_date").datepicker({
+            dateFormat:date_format
+        });
+        
+    });
+</script>
+<form name="head" id="add_head" method="post" action="index.php?module=head&func={if $data.id}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id}Edit{else}Add{/if} Head</legend>
+        <table  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td valign="top">
+                    <fieldset>
+                        <table>
+                            <tr>
+                                <td><b>Code:</b></td>
+                                <td><input type="text" name="head[code]" id="name" value="{$data.code}"/>
+                                    <label for="code"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Name:</b></td>
+                                <td><input type="text" name="head[name]"  value="{$data.name}"/>
+                                    <label for="name"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Group:</b></td>
+                                <td> <select name="head[id_group]" id="group">
+                                        {html_options  options=$group selected=$id_group } 
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address1:</b></td>
+                                <td><input type="text"  name="head[address1]" value='{$data.address1}'></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address2:</b></td>
+                                <td><input type="text"  name="head[address2]" value='{$data.address2}'></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address3:</b></td>
+                                <td><input type="text"  name="head[address3]" value='{$data.address3}'>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Opening Balance:</b></td>
+                                <td><spam><input type="text" size="12" name="head[obal]" value="{$data.obal}"/></spam><spam><select name="head[otype]" >
+                                    {html_options  options=$ini.balance_type selected=$data.id_group } 
+                                </select></spam>
+                            <label for="pack"></label></td>
+                            </tr>
+
+
+                            <tr>
+                                <td><b>Pan No:</b></td>
+                                <td><input type="text" name="head[pan_no]" value="{$data.pan_no}"/>
+                                    <label for="cunit"></label></td>
+                            </tr>
+
+                        </table>
+                    </fieldset>
+                </td>         
+
+
+                {if ($data.id_group==18||$data.id_group==20)}
+                <td>{else}
+                <td id="sh" style="display: none; float: right">
+                    {/if} <fieldset>
+                        <table>
+
+                            <tr>
+                                <td><b>Tin No:</b></td>
+                                <td><input type="text" name="head[tin_no]"  value="{$data.tin_no}"/>
+                                    <label for="tin_date"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Tin Date:</b></td>
+                                <td><input type="text" name="head[tin_date]"  class="cst_date"value="{$data.tin_date}"/>
+                                    <label for="tin_date"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Cst No:</b></td>
+                                <td><input type="text" name="head[cst_no]"  value="{$data.cst_no}"/>
+                                    <label for="cst_no"></label></td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Cst Date:</b></td>
+                                <td><input type="text" name="head[cst_date]"  class="cst_date"value="{$data.tin_date}"/>
+                                    <label for="cst_date"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Phone:</b></td>
+                                <td><input type="text" name="head[phone]"  value="{$data.phone}"/>
+                                    <label for="phone"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Mobile:</b></td>
+                                <td><input type="text" name="head[mobile]" value="{$data.mobile}"/>
+                                    <label for="mobile"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Area:</b></td>
+                                <td>  <select name="head[id_area]" id="area">
+                                        <option>Select</option>
+                                        {html_options  options=$area selected=$data.id_area } 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Pin Code:</b></td>
+                                <td><input type="text" name="head[pin_code]" value="{$data.pin_code}"/>
+                                    <label for="pin_code"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Transport:</b></td>
+                                <td>  <select name="head[id_transport]" id="area">
+                                        <option> Select</option>
+                                        {html_options  options=$transport selected=$data.id_transport } 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Station:</b></td>
+                                <td><input type="text" name="head[station]" value="{$data.station}"/>
+                                    <label for="station"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Banker:</b></td>
+                                <td><input type="text" name="head[banker]" value="{$data.banker}"/>
+                                    <label for="banker"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Dl No:</b></td>
+                                <td><input type="text" name="head[dl_no]" value="{$data.dl_no}"/>
+                                    <label for="dl_no"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Contact Person:</b></td>
+                                <td><input type="text" name="head[contact_person]" value="{$data.contact_person}"/>
+                                    <label for="contact_person"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Credit Limits:</b></td>
+                                <td><input type="text" name="head[credit_limit]" value="{$data.credit_limit}"/>
+                                    <label for="case"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Credit Days:</b></td>
+                                <td><input type="text" name="head[credit_days]" value="{$data.credit_days}"/>
+                                    <label for="cunit"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Local:</b></td>
+                                <td> <select name="head[local]" id="area">
+                                        {html_options  options=$ini.local  } 
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

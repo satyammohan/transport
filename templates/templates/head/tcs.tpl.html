@@ -1,0 +1,35 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Address</th><th>Pin Code</th><th>Tan No</th><th>Pan No</th><th>TCS</th><th>TCS %</th><th>Location</th><th>State</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1}<br>
+            {$mod.address2}<br>
+            {$mod.address3}<br>{$mod.state}<br>GSTN:{$mod.gstin}</td>
+        <td><input size='15' value='{$mod.pincode}' onblur="savehead('pincode', this.value, {$mod.id_head} )"></td>
+        <td><input size='15' value='{$mod.panno}' onblur="savehead('panno', this.value, {$mod.id_head} )"></td>
+        <td><input size='15' value='{$mod.tanno}' onblur="savehead('tanno', this.value, {$mod.id_head} )"></td>
+        <td><select onchange="savehead('tcs', this.value, {$mod.id_head} )">
+                <option {if $mod.tcs!=1}selected="selected"{/if} value="0">No</option>
+                <option {if $mod.tcs==1}selected="selected"{/if} value="1">Yes</option>
+            </select>
+        </td>
+        <td><input size='5' value='{$mod.tcsper}' onblur="savehead('tcsper', this.value, {$mod.id_head} )"></td>
+        <td><input size='10' value='{$mod.location}' onblur="savehead('location', this.value, {$mod.id_head} )"></td>
+        <td><input size='3' value='{$mod.statecode}' onblur="savehead('statecode', this.value, {$mod.id_head} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function savehead(fld, fvalue, id) {
+        var url = "index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+</script>

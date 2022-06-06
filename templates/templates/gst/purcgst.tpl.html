@@ -1,0 +1,35 @@
+<fieldset>
+    <legend>Purchase GST Register</legend>
+    <form method="post" action="index.php?module=preport&func=gst">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td colspan="4">Option : <input type="radio" name="option" value="1" {if isset($smarty.request.option) AND $smarty.request.option=="1"}checked="checked"{else}{if !isset($smarty.request.option)}checked="checked"{/if}{/if} />Detail
+                                <input type="radio" name="option" value="2" {if isset($smarty.request.option) AND $smarty.request.option=="2"}checked="checked"{/if}/>Summary
+                                <input type="radio" name="option" value="3" {if isset($smarty.request.option) AND $smarty.request.option=="3"}checked="checked"{/if} />Monthly
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Purchase GST Register Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {include file="gst/purcgst{$smarty.request.option}.tpl.html"}
+</div>
+<script type="text/javascript">
+  {if isset($smarty.request.debug)}
+    $("#report").find("b").parent().parent().addClass('donotremove');
+    $("#report").find("th").parent().addClass('donotremove');
+    $("#report tbody tr").not('.donotremove').remove();
+  {/if}
+</script>

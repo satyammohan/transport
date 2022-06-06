@@ -1,0 +1,44 @@
+<fieldset>
+    <legend>Batch Opening Stock</legend>
+    <form method="post" action="index.php?module=batch&func=opening">
+        <table>
+            <tr>
+                <td>
+                    <select name="company">
+                        <option value=" ">All Company</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<table border="1">
+    <thead>    
+        <tr>
+            <th>Sl.No.</th><th>Item name</th><th>Batch No</th><th>Exp Date</th>
+            <th>Opening Stock</th>
+        </tr>
+    </thead>
+    {foreach from=$batch item=mod name=fe}
+    <tr>
+        <td>{$smarty.foreach.fe.index+1}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.batch_no}</td>
+        <td align="right">{$mod.expiry_date|date_format:"%b-%Y"}</td>
+        <td><input size='15' class="ra" value='{if $mod.opening_stock!=0}{$mod.opening_stock}{/if}' onblur="savebatch('opening_stock', this.value, '{$mod.id_batch}' )"></td>
+    </tr>
+    {/foreach}
+</table>
+
+<script type="text/javascript">
+    function savebatch(fld, fvalue, id) {
+        var url = "index.php?module=batch&func=savebatch&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url, function(res) { } );
+    }
+</script>
+

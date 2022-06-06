@@ -1,0 +1,92 @@
+<div style="float:right;"><button id="print">Print</button></div>
+<div id="divToPrint">
+    <style>
+        table{
+            font-size:12px;
+            color:#666666;
+        }
+        table a{
+            background: transparent;
+        }
+        .btable{
+            border-collapse:collapse;
+            table-layout:auto;
+            vertical-align:top;
+            margin-bottom:15px;
+            border:1px solid #CCCCCC;
+        }
+
+        .btable thead th{
+            color: #666666;
+            background-color: #cbcbcb;
+            border:1px solid #666666;
+            border-collapse:collapse;
+            text-align:center;
+            table-layout:auto;
+            vertical-align:middle;
+        }
+        .btable thead td{
+            color: #666666;
+            background-color: #7F99A9;
+            border:1px solid #CCCCCC;
+            border-collapse:collapse;
+
+            table-layout:auto;
+            vertical-align:middle;
+        }
+        .btable tbody td{
+            vertical-align:top;
+            border-collapse:collapse;
+            border-left:1px solid #CCCCCC;
+            border-right:1px solid #CCCCCC;
+            color: #666666;
+        }
+
+        .btable thead th, .btable tbody td{
+            padding:5px;
+            border-collapse:collapse;
+        }
+
+        .btable tbody tr.light{
+            color:#666666;
+            background-color:#F7F7F7;
+        }
+
+        .btable tbody tr.dark{
+            color:#666666;
+            background-color:#E8E8E8;
+        }
+    </style>
+    <table class="btable" align="center">
+        <thead>
+            <tr><th colspan="16">{if $smarty.request.type=="purchase"}Purchase{else}Sales{/if} History [{$sdata.0.item}]</th></tr>
+            <tr>
+                <th>Party Name</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th>
+                <th>Discount</th><th>Spl.Discount</th><th>C.D.</th><th>Goods Value</th><th>GST %</th>
+                <th>GST</th><th>Discount</th><th>Net Amount</th><th>Net Rate</th><th>Date</th><th>Invno</th>
+            </tr>
+        </thead>
+        {foreach from=$sdata item=mod}
+        <tbody>
+            <tr>
+                <td>{$mod.pname}</td>
+                <td align="right">{$mod.rate}</td>			
+                <td align="right">{$mod.qty}</td>			
+                <td align="right">{$mod.free}</td>
+                <td align="right">{$mod.amount}</td>
+                <td align="right">{$mod.discount_amount1}</td>
+                <td align="right">{$mod.discount_amount2}</td>
+                <td align="right">{$mod.discount_amount3}</td>
+                <td align="right">{$mod.goods_amount}</td>
+                <td align="right">{$mod.tax_per}</td>
+                <td align="right">{$mod.tax_amount}</td>
+                <td align="right">{$mod.discount_amount4}</td>
+                <td align="right">{$mod.net_amount}</td>
+                <td align="right">{($mod.net_amount/$mod.qty)|string_format:"%.2f"}</td>
+                <td align="right">{$mod.date|date_format:$ini.smarty_date}</td>
+                <td align="right">{$mod.invno}{$mod.bill_no}</td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>

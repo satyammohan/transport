@@ -1,0 +1,81 @@
+<script type="text/javascript">
+    $(function(){
+        $('#id_sale').click(function(){
+            var val = [];
+            $(':checkbox:checked').each(function(i){
+                val[i] = $(this).val();
+            });
+            if(val==''){
+                
+                alert('There is no record selected for Report!');
+                
+            }else{
+                window.open('index.php?module=sreturn&func=prsale&id='+val+'&ce=0','_new','scrollbars=yes,resizable=yes,width=720,height=450,top=50,left=250');
+            }
+        });
+    });
+</script>
+<table id="dataTable">
+    <thead>    
+        <tr>
+            <td colspan="20" valign="top">
+                <form action="index.php?module=sreturn&func=listing" method="post">
+                    <fieldset><legend>Filter Sale Return List</legend>
+                        <p><span>
+                                Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></span>
+                            <span>
+                                <select name="represent">
+                                    <option value=" ">All Representative</option>
+                                    {html_options options=$salesman selected=$smarty.request.represent}
+                                </select></span>
+                            <span>
+                                <select name="company">
+                                    <option value=" ">All Company</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Sl No</th><th>Date</th><th>Party Ref</th><th>Ref No</th><th>Ref Date</th><th>Party</th><th>Goods Value</th><th>Discount</th><th>GST</th><th>CESS</th><th>Others</th><th>Total Amount</th>
+            <th>
+                <a href="#" id="id_sale"><img src="images/report2.png" alt="Sale" width="35" title="report"></a>
+                <a  href="index.php?module=sreturn&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{$mod.slno}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>A
+        <td>{$mod.party_ref}</td>
+        <td>{$mod.challan_no}</td>
+        <td>{$mod.challan_date|date_format:$smarty_date}</td>
+        <td><a href="?module=accounts&func=ledger&id={$mod.id_head}&option=1&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank">{$mod.pname}</a></td>
+        <td align="right">{$mod.totalamt|string_format:"%.2f"}</td>			
+        <td align="right">{$mod.discount|string_format:"%.2f"}</td>			
+        <td align="right">{$mod.vat|string_format:"%.2f"}</td>
+        <td align="right">{$mod.cessamt|string_format:"%.2f"}</td>			
+        <td align="right">{($mod.add-$mod.less+$mod.round)|string_format:"%.2f"}</td>
+        <td align="right">{$mod.total|string_format:"%.2f"}</td>			
+        <td align="left">
+            <input type="checkbox" name="id_sale[]" value="{$mod.id_sreturn}"/>
+            <a href="index.php?module=sreturn&func=delete&id={$mod.id_sreturn}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=sreturn&func=edit&id={$mod.id_sreturn}"><div class="edit_bg">&nbsp;</div></a>
+            <a class="salesreturn" href="index.php?module=sreturn&func=prsale&id={$mod.id_sreturn}&ce=0" ><div title="Print Sales Return" class="report_bg">&nbsp;</div></a>&nbsp;
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("salesreturn");
+        tbl_handler();
+    });
+</script>

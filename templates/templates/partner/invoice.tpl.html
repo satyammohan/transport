@@ -1,0 +1,72 @@
+Bill Details
+<fieldset>
+    <form method="post" action="index.php?module=partner&func=invoice">
+        <table>
+            <tr>
+                <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td>
+                    <input type="submit" value="Go" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+{if $data}
+<table data-role="table" data-mode="columntoggle" class="ui-responsive">
+    <thead>
+        <tr>
+            <th>Invoice</th>
+            <th>Date</th>
+            <th data-priority="1">Goods Value</th>
+            <th>Tax</th>
+            <th>Total</th>
+            <th data-priority="2">Product</th>
+            <th data-priority="3">Qty</th>
+            <th data-priority="4">Free</th>
+            <th data-priority="5">Rate</th>
+            <th data-priority="6">Net</th>
+        </tr>
+    </thead>
+    {$total=0}
+    {$prev=0}
+    {foreach from=$data item=mod}
+        <tr>
+            {if $prev!=$mod.id_sale}
+                <td>{$mod.invno}</td>
+                <td>{$mod.date|date_format:$smarty_date}</td>
+                <td align="right">{$mod.totalamt}</td>
+                <td align="right">{($mod.vat+$mod.totalcess+$mod.tcsamt+$mod.add-$mod.less+$mod.round+$mod.packing)|string_format:"%.2f"}</td>
+                <td align="right">{$mod.total}</td>
+                {$total = $total + $mod.total}
+            {else}
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+                <th>&nbsp;</th>
+            {/if}
+            <td>{$mod.name}</td>
+            <td align="right">{$mod.qty|string_format:"%.0f"}</td>
+            <td align="right">{$mod.free|string_format:"%.0f"}</td>
+            <td align="right">{$mod.rate|string_format:"%.2f"}</td>
+            <td align="right">{$mod.net_amount|string_format:"%.2f"}</td>
+        </tr>
+        {$prev=$mod.id_sale}
+    {/foreach}
+    <tr>
+        <th>&nbsp;</th>
+        <th>Total</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>{$total|string_format:"%.2f"}</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+     </tr>
+</table>
+{else}
+    No Sales Bills.
+{/if}

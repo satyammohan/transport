@@ -1,0 +1,130 @@
+<input type="button" class="print" value="Print" />
+<div class="print_content">
+{$max = 8}
+<style>
+    p { page-break-after: always; }
+    .pagenum { position: fixed; bottom: 0px; }
+    .pagenum:before { content: "Page :" counter(page); }
+</style>
+{foreach from=$salesorder item=ch}
+{capture name=pgfooter}
+    <tr><td colspan="10"><b>Rupees:</b>{$ch.w}<br>{$ch.memo}</td></tr>
+    <tr><td colspan="12">
+            <table width="100%">
+                <tr>
+                    <td width="80%">
+                        <font size="-3">{$smarty.session.config.SALEBILLFOOTER}</font>
+                    </td>
+                    <td>
+                        <font size="-2">{$smarty.session.config.SALEBILLFOOTERRIGHT}</font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{/capture}
+
+{capture name=header}
+<center><h2>Sales Order</h2></center>
+<table width="100%" border="1">
+    <tr>
+        <td valign="top" width="40%">
+            <font size="+2">{$smarty.session.companyname}</font><br>
+            {$smarty.session.address}<br>PHONE : {$smarty.session.phone}<br>TIN : {$smarty.session.tin}
+        </td>
+        <td valign="top" width="35%"><b>Party : </b>{$ch.name}<br>
+            {$ch.address1}<br>{$ch.address2}<br>
+            Phone : {$ch.phone}{$ch.mobile}
+        </td>
+        <td>
+            Sales Order No : <b>{$ch.invno}</b><br>
+            Date : <b>{$ch.date|date_format:$ini.smarty_date}</b>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th>Sl.</th><th>Product Name</th><th>Rate</th><th>Qty.</th><th>Free</th><th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+{/capture}
+
+{capture name=footer}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6"><table width="100%"><tr><td>&nbsp;<br>&nbsp;</td></tr></table></td>
+    </tr>
+    <tr>
+        <td colspan="6" align="right">Continued to Next Page.... </td>
+    </tr>
+    {$smarty.capture.pgfooter}
+</table>
+{/capture}
+                    {$qty=0}
+                    {$vat=[]}
+                    {$smarty.capture.header}
+                    {foreach from=$salesorderdetail[{$ch.id_salesorder}] item=mod name=items}
+                    {if $smarty.foreach.items.iteration % $max == 1 && $smarty.foreach.items.iteration != 1}
+                        {$smarty.capture.footer}<p></p>{$smarty.capture.header}
+                    {/if}
+                    <tr>
+                        <td>{$smarty.foreach.items.iteration}</td>
+                        <td>{$mod.item}</td>
+                        <td align="right">{$mod.rate|string_format:"%.2f"}</td>
+                        <td align="right">{$mod.qty|string_format:"%d"}</td>
+                        <td align="right">{$mod.free|string_format:"%d"}</td>
+                        <td align="right">{$mod.net_amount}</td>
+                    </tr>
+                    {if !isset($vat[$mod.id_taxmaster])}
+                    {$vat[$mod.id_taxmaster].amt = 0}
+                    {$vat[$mod.id_taxmaster].tax_per = 0}
+                    {$vat[$mod.id_taxmaster].vat = 0}
+                    {/if}
+                    {$vat[$mod.id_taxmaster].vat = $vat[$mod.id_taxmaster].vat + $mod.tax_amount}
+                    {$vat[$mod.id_taxmaster].tax_per = $mod.tax_per}
+                    {$vat[$mod.id_taxmaster].amt = $vat[$mod.id_taxmaster].amt + $mod.goods_amount}
+                    {$qty=$qty + $mod.qty + $mod.free }
+                    {/foreach}
+                    {if $smarty.foreach.items.iteration!=$max}
+                        {for $l=$smarty.foreach.items.iteration%$max to $max}
+                            <tr><td colspan="10">&nbsp;</td></tr>
+                        {/for}
+                    {/if}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10">
+            <table width="100%">
+                <tr>
+                    <td><b>Items</b><br>{$smarty.foreach.items.iteration}</td>
+                    <td><b>Quantity</b><br>{$qty}</td>
+                    <td><b>Goods Value</b><br>{$ch.totalamt|string_format:"%.2f"}</td>
+                    <td><b>Discount</b><br>{$ch.discount|string_format:"%.2f"}</td>
+                    <td><b>Vat</b><br>{$ch.vat|string_format:"%.2f"}</td>
+                    <td><b>R/off</b><br>{($ch.add-$ch.less+$ch.round)|string_format:"%.2f"}</td>
+                    <td><b>Total</b><br>{$ch.total|string_format:"%.2f"}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10"><b>Tax Bifurcation:</b>
+        {foreach from=$vat item=v key=k1}
+            {$v.amt|string_format:"%.2f"} @ {$tax[$k1]}={$v.vat|string_format:"%.2f"}  ||  
+        {/foreach}
+        </td>
+    </tr>
+    {$smarty.capture.pgfooter}
+</table>
+<div class="pagenum"></div>
+<p></p>
+{/foreach}
+</div>

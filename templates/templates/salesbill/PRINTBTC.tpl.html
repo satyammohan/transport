@@ -1,0 +1,191 @@
+{if !isset($noprint)}
+    <input type="button" class="print" value="Print" />
+{/if}
+<div class="print_content">
+{$max = 14}
+<style>
+    p { page-break-after: always; }
+    .pagenum { position: fixed; bottom: 0px; }
+    .pagenum:before { content: "Page :" counter(page); }
+</style>
+{foreach from=$sale item=ch}
+{capture name=pgfooter}
+    <tr><td colspan="10"><b>Rupees:</b>{$ch.w}<br>{$ch.memo}</td></tr>
+    <tr><td colspan="12">
+            <table width="100%">
+                <tr>
+                    <td width="80%">
+                        <font size="-3">{$smarty.session.config.SALEBILLFOOTER}</font>
+                    </td>
+                    <td>
+                        <font size="-2">{$smarty.session.config.SALEBILLFOOTERRIGHT}</font>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+{/capture}
+{capture name=header}
+<table width="100%" border="1">
+    <tr>
+        <th colspan="3"><font size="+1">{if $ch.taxbill==1}TAX INVOICE{else}TAX INVOICE{/if}</font></th>
+    </tr>
+    <tr>
+        <td valign="top" width="40%">
+            <font size="+1"><b>{$smarty.session.companyname}</b></font><br>
+            <font size="-1">{$smarty.session.address} {$smarty.session.state}<br>
+            PHONE : {$smarty.session.phone}<br>
+            GSTIN : {$smarty.session.gstin}<br>
+            Drug Licence : {$smarty.session.dlicence}
+            </font>
+        </td>
+        <td valign="top" width="35%">Party : <b>{$ch.party_name}</b><br>
+            {if $ch.address1}
+		{if strpos($smarty.session.companyname, "ODIRAY") != false}
+                {$ch.address1}, {$ch.address2}<br>
+                {$ch.address3} {$ch.pincode}<br>
+		{else}
+                {$ch.address2}, {$ch.address3}<br>
+                {$ch.address1} {$ch.pincode}<br>
+		{/if}
+            {else}
+                {$ch.party_address}<br>
+                {$ch.party_address1}<br>
+            {/if}
+            Phone : {$ch.phone} {$ch.mobile} {$ch.state}<br>
+            GSTIN : {$ch.gstin} {$ch.panno}<br>
+        </td>
+        <td>
+            <b>{if $ch.local==0}In-State Sale{else}Inter-State Sale{/if}</b><br>
+            {if $smarty.session.name != "ODI RAY INDUSTRIES LIMITED"}
+                {if $ch.cash==1}CREDIT BILL{else}CASH BILL{/if}
+            {/if}
+            <br>
+            Bill No : <b>{$ch.invno}</b><br>
+            Date : <b>{$ch.date|date_format:$ini.smarty_date}</b><br>
+            Challan No : {$ch.challan_no}  Date : {$ch.challan_date|date_format:$ini.smarty_date}
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <table width="100%" style="font-size:11px">
+                <thead>
+                    <tr>
+                        <th>Sl.</th><th>Product Name</th><th>HSN Code</th><th>Rate</th><th>Qty.</th><th>Free</th><th>Amount</th><th>Discount</th><th>CGST %</th><th>CGST</th><th>SGST %</th><th>SGST</th>
+<!--<th>IGST %</th><th>IGST</th>-->
+<th>Net Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+{/capture}
+{capture name=footer}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10"><table width="100%"><tr><td>&nbsp;<br>&nbsp;</td></tr></table></td>
+    </tr>
+    <tr>
+        <td colspan="10" align="right">Continued to Next Page.... </td>
+    </tr>
+    {$smarty.capture.pgfooter}
+</table>
+{/capture}
+                    {$qty=0}
+                    {$vat=[]}
+                    {$smarty.capture.header}
+                    {foreach from=$saledetail[{$ch.id_sale}] item=mod name=items}
+                    {if $smarty.foreach.items.iteration % $max == 1 && $smarty.foreach.items.iteration != 1}
+                        {$smarty.capture.footer}<p></p>{$smarty.capture.header}
+                    {/if}
+                    <tr>
+                        <td>{$smarty.foreach.items.iteration}</td>
+                        <td>{$mod.item}</td>
+                        <td>{$mod.hsncode}</td>
+                        <td align="right">{($mod.rate/10)|string_format:"%.2f"}</td>
+                        <td align="right">{$mod.qty|string_format:"%d"}{$mod.unit|substr:0:1}</td>
+                        <td align="right">{$mod.free|string_format:"%d"}</td>
+                        <td align="right">{$mod.amount|string_format:"%.2f"}</td>
+                        <td align="right">
+                            {($mod.discount_amount1+$mod.discount_amount2+$mod.discount_amount3)|string_format:"%.2f"}
+                        </td>
+                        {if $ch.local==0}
+                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_per/2)|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_amount/2)|string_format:"%.2f"}</td>
+                            <!---<td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>-->
+                        {else}
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{0|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_per)|string_format:"%.2f"}</td>
+                            <td align="right">{($mod.tax_amount)|string_format:"%.2f"}</td>
+                        {/if}
+                        <td align="right">{$mod.net_amount}</td>
+                    </tr>
+                    {if !isset($vat[$mod.id_taxmaster])}
+                    {$vat[$mod.id_taxmaster].amt = 0}
+                    {$vat[$mod.id_taxmaster].tax_per = 0}
+                    {$vat[$mod.id_taxmaster].vat = 0}
+                    {/if}
+                    {$vat[$mod.id_taxmaster].vat = $vat[$mod.id_taxmaster].vat + $mod.tax_amount}
+                    {$vat[$mod.id_taxmaster].tax_per = $mod.tax_per}
+                    {$vat[$mod.id_taxmaster].amt = $vat[$mod.id_taxmaster].amt + $mod.goods_amount}
+                    {$qty=$qty + $mod.qty + $mod.free }
+                    {/foreach}
+                    {if $smarty.foreach.items.iteration!=$max}
+                        {for $l=$smarty.foreach.items.iteration%$max to $max}
+                            <tr><td colspan="10">&nbsp;</td></tr>
+                        {/for}
+                    {/if}
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10">
+            <table width="100%">
+                <tr>
+                    <td><b>Items</b><br>{$smarty.foreach.items.iteration}</td>
+                    <td><b>Quantity</b><br>{$qty}</td>
+                    <td><b>Goods Value</b><br>{$ch.totalamt|string_format:"%.2f"}</td>
+                    <td><b>Discount</b><br>{$ch.discount|string_format:"%.2f"}</td>
+                    {if $ch.local==0}
+                        <td><b>CGST</b><br>{($ch.vat/2)|string_format:"%.2f"}</td>
+                        <td><b>SGST</b><br>{($ch.vat/2)|string_format:"%.2f"}</td>
+                        <td><b>IGST</b><br>{0|string_format:"%.2f"}</td>
+                    {else}
+                        <td><b>CGST</b><br>{0|string_format:"%.2f"}</td>
+                        <td><b>SGST</b><br>{0|string_format:"%.2f"}</td>
+                        <td><b>IGST</b><br>{$ch.vat|string_format:"%.2f"}</td>
+                    {/if}
+                    <td><b>CESS Amt</b><br>{$ch.totalcess|string_format:"%.2f"}</td>
+                    <td><b>R/off</b><br>{($ch.add-$ch.less+$ch.round)|string_format:"%.2f"}</td>
+                    <td><b>TCS</b><br>{($ch.tcsamt)|string_format:"%.2f"}</td>
+                    <td><b>Total</b><br>{$ch.total|string_format:"%.2f"}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="10"><b>GST Bifurcation:</b>
+        {foreach from=$vat item=v key=k1}
+            {$v.amt|string_format:"%.2f"} @ {$tax[$k1]}={$v.vat|string_format:"%.2f"}  ||  
+        {/foreach}
+        </td>
+    </tr>
+    {if $ch.vehicle_contact}
+        <tr>
+            <td colspan="10"><b>Contact Person : </b>{$ch.vehicle_contact}&nbsp;<b>Vehicle : </b>{$ch.vehicle_number}<b>Amount : </b>{$ch.vehicle_amount}</td>
+        </tr>
+    {/if}
+    {$smarty.capture.pgfooter}
+</table>
+<div class="pagenum"></div>
+<p></p>
+{/foreach}
+</div>

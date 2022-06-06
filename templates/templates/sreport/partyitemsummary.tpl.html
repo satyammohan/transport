@@ -1,0 +1,44 @@
+{if $saleitem}
+{$rqty=0}{$rfree=0}{$rltr=0}{$ramount=0}
+{$ltr = $smarty.request.ltrkg}
+<table border="1">
+    <tr>
+        <th>Item Name</th>
+        <th>Rate</th>
+        <th>Qty</th>
+        <th>Free</th>
+        <th>Amount</th>
+        <th>Total</th>
+	{if $ltr}
+        <th>Ltr/Kg</th>
+	{/if}
+    </tr>
+    {foreach item=v key=k from=$saleitem}
+    <tr>
+        <td>{$v.name}</td>
+        <td align="right">{$v.rate}</td>
+        <td align="right">{$v.qty}</td>
+        <td align="right">{$v.free}</td>
+        <td align="right">{$v.amount|string_format:"%.2f"}</td>
+        <td align="right">{$v.qty+$v.free}</td>
+	{if $ltr}
+        <td align="right">{(($v.qty+$v.free)*$v.case)|string_format:"%.3f"}</td>
+	{/if}
+    </tr>
+    {$rltr=$rltr+(($v.qty+$v.free)*$v.case)}
+    {$rqty=$rqty+$v.qty}
+    {$rfree=$rfree+$v.free}
+    {$ramount=$ramount+$v.amount}
+    {/foreach}
+    <tr>
+        <th colspan="2" class="right">Grand Total</th>
+        <th align="right">{$rqty}</th>
+        <th align="right">{$rfree}</th>
+        <th align="right">{$ramount|string_format:"%.2f"}</th>
+        <th align="right">{$rqty+$rfree}</th>
+	{if $ltr}
+        <th align="right">{$rltr|string_format:"%.3f"}</th>
+	{/if}
+    </tr>
+</table>
+{/if}

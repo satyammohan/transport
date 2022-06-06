@@ -1,0 +1,38 @@
+{$gvattot=0}
+{$gtotal=0}
+<table border="1">
+    {foreach item=v key=k from=$data}
+    <tr><th colspan="4">Zone : {$zone[$k]}</th></tr>
+    <tr>
+        <th>Date</th>
+        <th>No of bills</th>
+        <th class="right">Vat</th>
+        <th class="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0} 
+    {foreach item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$v1.date|date_format:$smarty_date}</td>
+        <td>{$v1.bills}</td>
+        <td align="right">{$v1.vat|string_format:"%.2f"}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$vattot = $vattot + $v1.vat}
+    {$total = $total + $v1.total}
+    {/foreach}
+    <tr>
+        <td colspan="2" class="right">Zone Total</td>
+        <td align="right">{$vattot|string_format:"%.2f"}</td>
+        <td align="right">{$total|string_format:"%.2f"}</td>
+    </tr>
+    <tr><td colspan="4">&nbsp;</td></tr>
+    {$gtotal = $gtotal + $total}
+    {$gvattot = $gvattot + $vattot}
+    {/foreach}
+    <tr>
+        <th colspan="2">Grand Total :</th>
+        <td align="right"><b>{$gvattot|string_format:"%.2f"}</b></td>
+        <td align="right"><b>{$gtotal|string_format:"%.2f"}</b></td>
+    </tr>
+</table>

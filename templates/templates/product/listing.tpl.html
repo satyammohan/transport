@@ -1,0 +1,68 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".list_temp").change(function() {
+            document.plist.method = 'get';
+            document.plist.action = 'index.php';
+            $("form").submit();
+        })
+    });
+</script>
+<form action="" method="post" id="product_list"  name="plist" autocomplete="off">
+    <table>
+        <tr>
+            <td valign="top">
+                <input type="hidden" name="module" value="product">
+                <input type="hidden" name="func" value="listing">
+                Choose Company:<br/>
+                <select name="id_company" class="list_temp">
+                    <option value="0">All</option>
+                    {html_options options=$company selected=$smarty.request.id_company}
+                </select></td>
+                <td valign="top">
+                    Status:<br/>
+                    <select name="status" id="list_status" class="list_temp">
+                    {html_options options=$ini.status_all selected=$smarty.request.status}
+                </select>
+                </td>
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th colspan="11"><a class="product" href="index.php?module=product&func=edit"><div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Name</th><th>HSN Code</th><th>Pack</th><th>Opening Stock</th><th>MRP</th><th>Sale Tax%</th><th>Sell Price</th><th>Purc Tax%</th><th>Purc. Price</th><th>Cess%</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td>{$mod.name}</td>			
+        <td>{$mod.hsncode}</td>			
+        <td>{$mod.pack} {$mod.unit}</td>
+        <td>{$mod.opening_stock}</td>
+        <td>{$mod.mrp}</td>
+        <td>{$tax[$mod.id_taxmaster_sale]}</td>
+        <td>{$mod.seller_price}</td>
+        <td>{$tax[$mod.id_taxmaster_purchase]}</td>
+        <td>{$mod.purchase_price}</td>
+        <td>{$mod.cess}</td>
+        <td>
+            <select  onchange="update_status('product', '{$mod.id_product}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select>
+            <a href="index.php?module=product&func=delete&id={$mod.id_product}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=product&func=edit&id={$mod.id_product}"><div class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("comp");
+        tbl_handler();
+    });
+</script>

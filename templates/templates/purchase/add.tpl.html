@@ -1,0 +1,307 @@
+<script>
+    var taxrates = {$taxrates};
+    $(document).ready(function () {
+        $(".dtpick1").datepicker({
+            dateFormat: js_date,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '-1:+1',
+        });
+    });
+</script>
+<script type="text/javascript" src="{$source}jsmodule/purchase.js"></script>
+{include file='common/generaljs.tpl.html'}
+<form  method="post" action="" name="purchase" id="purchase" autocomplete="off">
+    <fieldset>
+        <legend>{if $sdata.id_purchase}Edit{else}Add{/if} Purchase Bill</legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <td colspan="2">
+                    <table width="100%">
+                        <tr>
+                            <td width="25%"><b>Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Invoice No</b></td>
+                            <td><b>Date</b></td>
+                            <td><b>Bill No</b></td>
+                            <td><b>Bill Date</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select name="purchase[taxbill]">
+                                    {html_options options=$ini.tax_type selected=$sdata.taxbill}
+                                </select>
+                                <input type="text" name="purchase[no]" size="12" id="inv" value="{if $sdata.id_purchase==''}{$no}{else}{$sdata.no}{/if}" /><br><span id="msgbox"></span>
+                            </td>
+                            <td>
+                                {if isset($sdata.date)}
+                                    {$date=$sdata.date}
+                                {else}
+                                        {$date=$smarty.now}
+                                {/if}
+                                {if isset($sdata.date)}
+                                    {$date=$sdata.date}
+                                {else}
+                                    {if $smarty.now|date_format:'%y/%m/%d'>=$smarty.session.sdate|date_format:'%y/%m/%d' && $smarty.now|date_format:'%y/%m/%d'<=$smarty.session.edate|date_format:'%y/%m/%d'}
+                                        {$date=$smarty.now}
+                                    {else}
+                                        {$date=$smarty.session.edate}
+                                    {/if}
+                                {/if}
+
+                                <input type="text" name='purchase[date]' class="dtpick"   value="{$date|date_format:$smarty_date}"/>
+                            </td>
+                            <td><input type="text" name="purchase[bill_no]"  id="bill_no" value="{$sdata.bill_no}"  /><br><span id="msgbox1"></span></td>
+                            <td><input type="text" name="purchase[bill_date]" class="dtpick1"  value="{$sdata.bill_date|date_format:$smarty_date}"/></td>
+                        </tr>
+                        <tr>
+                            <td><b>Company Name</b></td>
+                            <td><b>Party</b></td>
+                            <td><b>Purchase Type</b></td>
+                            <td><b>Account Head</b></td>
+                        </tr>
+                        <tr>
+                            <td><select name="purchase[id_company]" id="id_company">
+                                    <option value="">All Company</option>
+                                    {html_options options=$company selected=$sdata.id_company}
+                                </select></td>
+                            <td><input type="text" name="purchase[party_name]"  id="party" size="50"  value="{$sdata.party_name}"/>
+<input type="button" onclick="editparty()" value="Edit">
+                                <br><span id="valid_party"></span>
+                                <input type="hidden" name="purchase[id_head]" value="{$sdata.id_head}" id="id_head"/>
+                            </td>
+                            <td><select name="purchase[purchase_type]" onchange="showaccount(this.value, '{$purcac.0.id_head}', '{$purcac.0.name}');">
+                                <option value="Purchase" {if $sdata.purchase_type=="Purchase"} selected="selected" {/if} >Purchase</option>
+                                <option value="Other" {if $sdata.purchase_type!="Purchase"} selected="selected" {/if} >Other</option>
+                                </select>                            
+                            </td>
+                            <td><input type="text" id="account" value="{$account.name}"/>
+                                <br><input type="hidden" name="purchase[id_account]" value="{$account.id_head}" id="id_account"/>
+                            </td>
+                            <!---<td><select name="purchase[id_area]" id="id_area">
+                                    {html_options options=$area selected=$sdata.id_area}
+                                </select>
+                            </td>
+                            <td><select name="purchase[id_represent]">
+                                    {html_options options=$salesman selected=$sdata.id_represent}
+                                </select> 
+                            </td>-->
+                        </tr>
+                        <tr>
+                            <td>
+                                {if $sdata}{$select=$sdata.cash} {else} {$select=1} {/if}
+                                {html_radios name='purchase[cash]' options=$ini.tran_type selected=$select}
+                            </td>
+                            <td colspan="3">
+                                <table id="partydetail">
+                                    <tr><td><b>Address1</b></td><td><b>Address2</b></td><td><b>GST No</b></td></tr>
+                                    <tr>
+                                        <td><input type="text" name="purchase[party_address]" style="border:none;" id="paddr" value="{$sdata.party_address}"></td>
+                                        <td><input type="text" name="purchase[party_address1]"  style="border:none;" id="paddr2" value="{$sdata.party_address1}"></td>
+
+                                        <td valign="top">
+                                            <input type="hidden" name="purchase[party_vattype]" value="{$sdata.party_vattype}" id="vattype"/>
+                                            <input type="text" name="purchase[party_vatno]"  style="border:none;"  value="{$sdata.party_vatno}" id="vatno"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>  
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <div style="height:210px; overflow:auto;">
+                        <table width="100%" class="btable">
+                            <thead>
+                                <tr>
+                                    <th>&nbsp;</th><th>Item Details</th><th>Batch</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Amount</th><th>Discount</th><th>Spl.Disc.</th><th>C.D.</th><th>GST</th><th>CESS %</th><th>Report</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mtable">
+                                <tr class="tabRow">
+                                    <td><a onclick="removeRow(this);" href="#" tabindex="-1" ><img src="{$source}images/close.png" /></a></td>
+                                    <td>
+                                        <input class="drop" type="text" name="items[]" id="item__1" style="width:210px"  onfocus='$("#" + this.id).autocomplete("search", "a")' size="35" onblur="getValues();
+                                            getbatch(this.id);" required="required"/>
+                                        <br>Stk:<input type="text" readonly="readonly" tabindex="-1" size="6" name="balance[]" id="balance__1" />
+                                        <input type='button' id="productadd__1" class="add_bg" onclick="enterproduct(this.id);" title="Add Batch" tabindex='-1'>
+
+                                        <input type="hidden" name="id_product[]" id="id_product__1" />
+                                        <input type="hidden" name="discount_amount1[]" id="discount_amount1__1" />
+                                        <input type="hidden" name="discount_amount2[]" id="discount_amount2__1" />
+                                        <input type="hidden" name="discount_amount3[]" id="discount_amount3__1" />
+                                        <input type="hidden" name="discount_amount4[]" id="discount_amount4__1" />
+                                    </td>
+                                    <td><input class="drop" type="text" name="batch_no[]" id="batch_no__1" size="10" onfocus='newadded(this.id);$("#" + this.id).autocomplete("search", "a")' />
+                                        <br><input type="text" name="exp_date[]" id="exp_date__1" size="3" tabindex='-1'/>
+                                        <input type='button' id="batchadd__1" onclick="enterbatch(this.id);" class="add_bg" title="Add Batch" tabindex='-1'>
+                                        <input type='button' id="batchedit__1" onclick="editbatch(this.id);" class="edit_bg" title="Edit Batch" tabindex='-1'>
+                                        <input type="hidden" name="id_batch[]" id="id_batch__1" />
+                                    </td>
+                                    <td><input type="text" size="6" name="rate[]" id="rate__1"  tabindex="-1" class="ra" /></td>
+                                    <td><input type="text" size="6" name="quantity[]" onblur="getbonus(this.id);getValues();getdiscount();" id="qty__1" required="required" class="ra"/></td>
+                                    <td><input type="text" size="6" name="free[]" id="free__1" class="ra"/></td>
+                                    <td><input type="text" size="6" name="amount[]" tabindex="-1" readonly="readonly" id="amount__1" class="ra"/></td>
+                                    <td><input type="text" size="6" name="discount1[]" onblur="getValues()" id="discount1__1" class="ra"/>
+                                        <select name="discount_type1[]" onchange="getValues()" id="discount_type1__1" class="select" tabindex=-1>
+                                            {html_options options=$ini.discount}
+                                        </select>
+                                    </td>
+                                    <td><input type="text" size="6" name="discount2[]" onblur="getValues()" id="discount2__1" class="ra"/>
+                                        <select name="discount_type2[]" onchange="getValues()"  id="discount_type2__1" class="select" tabindex=-1>
+                                            {html_options options=$ini.discount}
+                                        </select>
+                                    </td>
+                                    <td><input type="text" size="6" name="discount3[]" id="discount3__1" onblur="getValues()" class="ra" />
+                                        <select name="discount_type3[]" onchange="getValues()" id="discount_type3__1" class="select" tabindex=-1>
+                                            {html_options options=$ini.discount}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="id_taxmaster[]" id="id_taxmaster__1" onchange="getTaxRates(this.id);getValues()" tabindex=-1  class="select">
+                                            {html_options options=$tax}
+                                        </select>
+                                        <input type="hidden" name="tax_per[]" id="tax_per__1"  />
+                                        <input type="hidden" name="goods_amount[]" id="goods_amount__1" />
+                                        <input type="text"  name="tax_amount[]" tabindex="-1" id="taxamt__1" readonly="readonly" size="4" class="ra" />
+                                    </td>
+                                    <td>
+                                        <input type="text" size="6" name="cess[]" id="cess__1" onblur="getValues();
+                                            rowadd(this, 'mtable');" class="ra" />
+                                        <input type="text"  name="cessamt[]" tabindex="-1" id="cessamt__1" readonly="readonly" size="4" class="ra" />
+                                    </td>
+                                    <td width="60px">
+                                        <a href="#" id="history__1" onclick="showid(this.id);"  title="Item Sale History"><img src="{$source}images/report1.png" alt="Sale" width="15" height="15"></a>
+                                        <a href="#" id="phistory__1" onclick="showparty(this.id);" title="Item Party History" ><img src="{$source}images/report1.png" alt="Sale" width="15" height="15"></a>
+                                        <a href="#" id="purhistory__1" onclick="purchase(this.id);"  title="Item Purchase History"><img src="{$source}images/report1.png" alt="Sale" width="15" height="15"></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td  valign="top" width="70%" align="left">
+                    <label><input type="checkbox" name="purchase[transport]" value="transport" id="tran"   onclick="doInputs(this, this.value)" {if $sdata.is_transport && $sdata.is_transport=='1'} checked="checked" {/if}/>Transport</label><br>
+                    <table id="transport" {if !$sdata.is_transport || $sdata.is_transport=='0'} style="display: none" {/if}>
+                           <tr>
+                            <th>LR No<br><input type="text" name="purchase[lr_no]"  size="10" value="{$sdata.lr_no}" id="lrno"/></th>
+                            <th>LR Date<br><input type="text" name="purchase[lr_date]" class="dtpick"  size="10" value="{$sdata.lr_date|date_format:$smarty_date}"/></th>
+                            <th>TR MR Date<br><input type="text" name="purchase[transport_mr_date]"  size="10" value="{$sdata.transport_mr_date|date_format:$smarty_date}" class="dtpick"/></th>
+                            <th>Trn. Recpt. No<br><input type="text" name="purchase[transport_no]"  size="10" value="{$sdata.transport_no}"/></th>
+                            <th>Transport<br><select name="purchase[id_transport]" >
+                                    {html_options options=$transport selected=$sdata.id_transport}
+                                </select></th>
+                            <th>Station<br><input type="text" name="purchase[station]"  size="10" value="{$sdata.station}"/></th>
+                        </tr>
+                        <tr>
+                            <th>Gate<br><input type="text" name="purchase[gatename]"  size="10" value="{$sdata.gatename}" id="lrno"/></th>
+                            <th>Vehicle No<br><input type="text" name="purchase[vehicle]"   size="10" value="{$sdata.vehicle}"/></th>
+                            <th>Bales<br><input type="text" name="purchase[bales]"  size="10" value="{$sdata.bales}" /></th>
+                            <th>Freight<br><input type="text" name="purchase[freight]"  size="10" value="{$sdata.freight}"/></th>
+                            <th>Cases<br><input type="text" name="purchase[cases]"  size="10" value="{$sdata.cases}"/></th>
+                            <th>Weight<br><input type="text" name="purchase[weight]"  size="10" value="{$sdata.weight}"/></th>
+                        </tr>
+                    </table>
+                    <br />
+                    <label><input type="checkbox" name="purchase[payment]" value="payment"  id="pay"  onclick="doInputs(this, this.value)" {if $sdata.is_payment && $sdata.is_payment=='1'} checked="checked" {/if}/>Payment</label>
+                    <br/>
+                    <table id="payment" {if !$sdata.is_payment || $sdata.is_payment=='0'} style="display: none" {/if} >
+                           <tr>
+                            <th>Cheque No<br><input type="text" name="purchase[cheque_no]"  size="10" value="{$sdata.cheque_no}"/></th>
+                            <th>Date<br><input type="text" name="purchase[cheque_date]"  size="10" class="dtpick" value="{$sdata.cheque_date|date_format:$smarty_date}"/></th>
+                            <th>Bank<br><input type="text" name="purchase[bank]"  size="20" value="{$sdata.bank}"/></th>
+                            <th>Amount<br><input type="text" name="purchase[cheque_amount]" size="10" class="ra"  value="{$sdata.cheque_amount}"/></th>
+                        </tr>
+                    </table>
+                    <br />
+                    <label><input type="checkbox" name="purchase[form]" value="frm1"  id="frm" onclick="doInputs(this, this.value)" {if $sdata.is_form && $sdata.is_form=='1'} checked="checked" {/if}/>Form</label>
+                    <br/>
+                    <table id="frm1"  {if !$sdata.is_form || $sdata.is_form=='0'} style="display: none" {/if}>
+                           <tr>
+                            <th>Form Type<br>
+                                <select name="purchase[id_form]" id="id_form">
+                                    <option value="">-Select Form-</option>
+                                    {html_options options=$frm selected=$sdata.id_form}
+                                </select>
+                                <input type="hidden" name="purchase[form_type]" id="form_type" value="{$sdata.form_type}"/>
+                            </th>
+                            <th>Form No<br><input type="text" name="purchase[form_no]"  size="20"  maxlength="15" value="{$sdata.form_no}"/></th>
+                            <th>Form Date<br><input type="text" name="purchase[form_date]"  size="20" class="dtpick"  value="{$sdata.form_date|date_format:$smarty_date}"/></th>
+                            <th>Form Amount<br><input type="text" name="purchase[form_amount]" size="10" class="ra" id="frm_amt"  value="{$sdata.form_amount}"/></th>
+                        </tr>
+                    </table>
+                    <br/>
+                    <label><input type="checkbox" name="purchase[waybill]" value="wbill"  id="wb" onclick="doInputs(this, this.value)" {if $sdata.is_waybill && $sdata.is_waybill=='1'} checked="checked" {/if}/>Waybill</label>
+                    <table id="wbill"  {if !$sdata.is_waybill || $sdata.is_waybill=='0'} style="display: none" {/if}>
+                           <tr>
+                            <th>Waybill No<br><input type="text" name="purchase[waybill_no]"  size="10" value="{$sdata.waybill_no}"/></th>
+                            <th>Waybill Date<br><input type="text" name="purchase[waybill_date]"  size="20" value="{$sdata.waybill_date|date_format:$smarty_date}"  class="dtpick"/></th>
+                            <th>Waybill Amount<br><input type="text" name="purchase[waybill_amount]" size="10" class="ra"  value="{$sdata.waybill_amount}"/></th>
+                        </tr>
+                    </table>  
+                </td>
+                <td valign="top">
+                    <table>
+                        <tr>
+                            <td  align="right" ><b>Goods Value:</b></td>
+                            <td><input type="text" name="purchase[totalamt]" id="totalamt" class="ra" value="{$sdata.totalamt}" readonly/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right" ><b>Discount:</b></td>
+                            <td><input type="text" name="purchase[discount]" id="tdiscount" class="ra" value="{$sdata.discount}" readonly tabindex=-1 /></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>GST:</b></td>
+                            <td><input type="text" name="purchase[vat]" id="vat" class="ra" value="{$sdata.vat}" onblur="getTotal()"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>CESS Amount:</b></td>
+                            <td><input type="text" name="purchase[totalcess]" id="totalcess" class="ra" value="{$sdata.totalcess}" readonly tabindex=-1 /></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Add:</b></td>
+                            <td><input type="text" name="purchase[add]" id="add" class="ra" value="{$sdata.add}" onblur="getTotal()"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Less:</b></td>
+                            <td><input type="text" name="purchase[less]" id="less" class="ra" value="{$sdata.less}" onblur="getTotal()"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Packing & Forwarding:</b></td>
+                            <td><input type="text" name="purchase[packing]" id="pfrd" class="ra" value="{$sdata.packing}" onblur="getTotal()"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right">
+				<!--<b><input type="checkbox" onclick="roundbill()">Round off:</b>-->
+				<b>Round Off:</b>
+			    </td>
+                            <td><input type="text" name="purchase[round]" id="roundof" class="ra" value="{$sdata.round}" onblur="getTotal()" /></td>
+                        </tr>
+                        <tr>
+                            <td  align="right" style="color:red"><b>TCS Amount:</b></td>
+                            <td><input type="text" name="purchase[tcsamt]" id="tcsamt" class="ra" value="{$sdata.tcsamt}" onblur="getTotal()"/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Total:</b></td>
+                            <td><input type="text" name="purchase[total]" id="total" class="ra" value="{$sdata.total}" readonly/></td>
+                        </tr>
+                        <tr>
+                            <td  align="right"><b>Description:</b></td>
+                            <td><textarea name="purchase[memo]" cols="60" rows="2">{$sdata.memo}</textarea></td>
+                        </tr>  
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="3">
+                    <input type="hidden" name="id" value="{$sdata.id_purchase}" id="sale_id"/>
+                    <input type="button" value="Save" id="sub" style=" cursor: pointer" name="save"/>
+                    <input type="button" value="Save & Print" id="print" style=" cursor: pointer" name="print"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

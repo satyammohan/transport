@@ -1,0 +1,18 @@
+<form method="post" action="index.php?module=mode&func={if $data.id_mode}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_mode}Edit{else}Add{/if} Mode</legend>
+        <table>
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" class="form-control" name="mode[name]" id="name" value="{$data.name}" size="40"/>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_mode}">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+                    <input class="btn btn-danger" type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

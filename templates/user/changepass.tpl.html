@@ -1,0 +1,23 @@
+<div id="wrapperl">
+    <div id="login" class="animate form">
+        <form id="edit_password_form" method="post" action="index.php?module=user&func=updatepass" >
+            <h1>Change Password</h1> 
+            <p> 
+                <label for="passwordsignup" class="youpasswd" >Old Password</label>
+                <input name="user[oldpass]" type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p> 
+                <label for="passwordsignup" class="youpasswd" >New Password</label>
+                <input id="pass" name="user[pass]"  type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p> 
+                <label for="npass" class="youpasswd">Confirm New password</label>
+                <input id="npass" name="user[npass]"  type="password" placeholder="eg. X8df!90EO"/>
+            </p>
+            <p class="signin button"> 
+                <input type="submit" value="Save"/> 
+                <input type="reset" value="Reset"/> 
+            </p>
+        </form>
+    </div>
+</div>

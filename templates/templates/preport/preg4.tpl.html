@@ -1,0 +1,50 @@
+<table border="1" id="report">
+    <tr>
+        <th>Sl</th><th>Date</th><th>Purch.Sl.no.</th>
+	<th>Party</th><th>Address</th><th>GSTIN</th>
+	<th>Bill No</th><th>Bill Date</th>
+	<th>Goods Value</th><th>Discount</th>
+        <th align="right">Taxable Amount</th>
+        <th align="right">GST</th><th align="right">Cess</th><th align="right">TCS</th><th align="right">Others</th><th align="right">Total</th>
+    </tr>
+    {$igst=0} {$cgst=0} {$sgst=0} {$tcess=0} {$total=0} {$taxable=0} {$other=0} {$g=0} {$d=0} {$tcs=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].no}</td>
+        <td>{$data[x].party_name}</td>
+        <td>{$data[x].party_address}&nbsp;{$data[x].party_address1}</td>
+        <td>{$data[x].gstin}</td>
+        <td>{$data[x].bill_no}</td>
+        <td>{$data[x].bill_date|date_format:$smarty_date}</td>
+        <td align="right">{$data[x].totalamt}</td>
+        <td align="right">{$data[x].discount}</td>
+        <td align="right">{$data[x].totalamt-$data[x].discount}</td>
+        <td align="right">{$data[x].vat}</td>
+        <td align="right">{$data[x].totalcess}</td>
+        <td align="right">{$data[x].tcsamt}</td>
+        <td align="right">{($data[x].add-$data[x].less+$data[x].round+$dta[x].packing)|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].total}</td>
+    </tr>
+    {$g = $g + $data[x].totalamt}
+    {$d = $d + $data[x].discount}
+    {$taxable = $taxable + $data[x].totalamt - $data[x].discount}
+    {$other = $other + ($data[x].add-$data[x].less+$data[x].round+$dta[x].packing)}
+    {$vattot = $vattot + $data[x].vat}
+    {$tcess = $tcess + $data[x].totalcess}
+    {$tcs = $tcs + $data[x].tcsamt}
+    {$total = $total + $data[x].total}
+{/section}
+<tr>
+    <th colspan="8">Total</th>
+    <th align="right">{$g|string_format:"%.2f"}</th>
+    <th align="right">{$d|string_format:"%.2f"}</th>
+    <th align="right">{$taxable|string_format:"%.2f"}</th>
+    <th align="right">{$vattot|string_format:"%.2f"}</th>
+    <th align="right">{$tcess|string_format:"%.2f"}</th>
+    <th align="right">{$tcs|string_format:"%.2f"}</th>
+    <th align="right">{$other|string_format:"%.2f"}</th>
+    <th align="right">{$total|string_format:"%.2f"}</th>
+</tr>
+</table>

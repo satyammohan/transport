@@ -1,0 +1,111 @@
+
+<fieldset>
+    <legend>Ledger VS Billwise Balances of Sundry Debtors</legend>
+    <form method="post" action="index.php?module=accounts&func=osVSledger">
+        <table>
+            <tr>
+                <td>Option :<input type="radio" name="option" value="1" checked="checked"/>All
+                    <input type="radio" name="option" value="2"/>Opening Balance Only
+                    <input type="checkbox" name="debug"  {if isset($smarty.request.debug)}checked="checked"{/if} />Show only Difference
+                    <input type="checkbox" name="billdebug"  {if isset($smarty.request.billdebug)}checked="checked"{/if} />Bill-wise OS not matching
+                </td>
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Ledger VS Billwise Balances of Sundry Debtors as on : {$smarty.now|date_format:"%d/%m/%Y"}
+    <br /><br />
+    <table border="1" id="report" style="font-size:12px">
+        <tr>
+            <th>Sl.No.</th>
+            <th>Party</th>
+            <th>Address</th>
+	        <th align="right">Party<br>Opening</th>
+            <th align="right">Bills Opening</th>
+            <th align="right">Difference</th>
+            <th align="right">Ledger Balance</th>
+            <th align="right">Billwise Balance</th>
+            <th align="right">Difference</th>
+	    <th>Remark</th>
+            <th>Action</th>
+        </tr>
+        {$col1=1}{$col2=0}{$sl=1}{$c2=0}
+        {section name=x loop=$party}
+            {$l = $ledger[$party[x].id_head]}
+            {$b = $os[$party[x].id_head]}
+            {$bos = $billos[$party[x].id_head]}
+	    {$pbill = $partybill[$party[x].id_head]}
+<!-- && $b  -->
+            {if $l}
+        	{$difval = abs(abs($b)-$bos)}
+                <tr>
+                    <td>{$sl}</td>
+                    <td>{$party[x].name}</td>
+                    <td>{$party[x].address1}<br>{$party[x].address2}</td>
+                    {if $party[x].otype==1}
+                        {$po = -$party[x].opening_balance}
+                    {else}
+                        {$po = $party[x].opening_balance}
+                    {/if}
+                    <td align="right">{$po|string_format:"%.2f"}</td>
+                    <td align="right">{$pbill|string_format:"%.2f"}</th>
+                    <td align="right"><span{if $po!=$pbill} class="billnotmatch"{/if}>{abs($po-$pbill)|string_format:"%.2f"}</span></th>
+                    <td align="right">{abs($l)|string_format:"%.2f"} {if $l<0}CR{else}DB{/if}</td>
+                    <td align="right">{abs($b)|string_format:"%.2f"}</span></td>
+                    <td align="right">{if $l!=$b}<b>{($l-$b)|string_format:"%.2f"}</b>{else}{0|string_format:"%.2f"}{/if}</td>
+                    <td width="240px">{if $po!=$pbill}Opening mismatching.<br>{/if}{if $l!=$b}Ledger/OS mismatching.{/if}</td>
+                    <td>
+                        <a href="?module=head&func=obchange&id={$party[x].id_head}" target="_blank"><button>Fix Bill OS</button></a>
+                        <a href="?module=accounts&func=ledger&id={$party[x].id_head}&option=1&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank"><button>Ledger</button></a>
+                        <a href="?module=accounts&func=outstanding&party={$party[x].id_head}" target="_blank"><button>OS</button></a><br>
+                        <a href="?module=accounts&func=billdetail&id={$party[x].id_head}&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank"><button>Billwise</button></a>
+                        <a href="?module=voucher&func=listing&id_head={$party[x].id_head}&start_date={$smarty.session.sdate|date_format:'%d/%m/%Y'}&end_date={$smarty.now|date_format:'%d/%m/%Y'}" target="_blank"><button>Voucher</button></a>
+                    </td>
+                    {$col = $col + $po}
+                    {$col0= $col0 + $pbill}
+                    {$col1 = $col1 + $l}
+                    {$col2 = $col2 + $b}
+                    {$c2 = $c2 + (abs($b)-$bos)}
+                    {$sl=$sl+1}
+                </tr>
+            {/if}
+        {/section}
+        <tr>
+            <th colspan="3">Total</th>
+            <td align="right">{abs($col)|string_format:"%.2f"}</td>
+            <td align="right">{abs($col0)|string_format:"%.2f"}</td>
+            <td align="right">{abs($col-$col0)|string_format:"%.2f"}</td>
+            <td align="right">{abs($col1)|string_format:"%.2f"}</td>
+            <td align="right">{abs($col2)|string_format:"%.2f"}</td>
+            <td align="right">{$c2|string_format:"%.2f"}</td>
+            <td align="right">{if $col1!=$col2}<b>{($col1-$col2)|string_format:"%.2f"}</b>{else}{0|string_format:"%.2f"}{/if}</td>
+            <th>&nbsp;</th>
+            <th>&nbsp;</th>
+        </tr>
+    </table>
+</div>
+<script type="text/javascript">
+  {if isset($smarty.request.debug)}
+    $("#report").find("b").parent().parent().addClass('donotremove');
+    $("#report").find("th").parent().addClass('donotremove');
+    $("#report tbody tr").not('.donotremove').remove();
+  {/if}
+  {if isset($smarty.request.billdebug)}
+    $("#report").find(".billnotmatch").parent().parent().addClass('donotremove');
+    $("#report").find("th").parent().addClass('donotremove');
+    $("#report tbody tr").not('.donotremove').remove();
+  {/if}
+</script>
+<style>
+.billnotmatch {
+   color:red;
+}
+</style>
+

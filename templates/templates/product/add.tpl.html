@@ -1,0 +1,189 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid = $("#add_product").validate({
+            rules: {
+                'product[name]': {
+                    required: true
+                },
+                cname: {
+                    required: true
+                },
+                'product[code]': {
+                    required: true
+                },
+                'product[distributor_price]': {
+                    required: true
+                },
+                'product[seller_price]': {
+                    required: true
+                },
+                'product[purchase_price]': {
+                    required: true
+                },
+                'product[mrp]': {
+                    required: true
+                },
+                'product[tax_id]': {
+                    required: true
+                }
+            },
+            messages: {
+                'product[name]': {
+                    required: "<br/>This Field is Required"
+                },
+                cname: {
+                    required: "<br/>This Field is Required"
+                },
+                'product[code]': {
+                    required: "<br/>This Field is Required"
+                },
+                'product[distributor_price]': {
+                    required: "<br/>This Field is Required"
+                },
+                'product[seller_price]': {
+                    required: "<br/>This Field is Required"
+                },
+                'product[purchase_price]': {
+                    required: "<br/>This Field is Required"
+                },
+                'product[mrp]': {
+                    required: "<br/>This Field is Required"
+                },
+                'product[tax_id]': {
+                    required: "<br/>This Field is Required"
+                }
+
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    $(document).ready(function() {
+        callauto("cname", "index.php?module=product&func=getcomp&ce=0", "id_company");
+    });
+</script>
+<div class="content">
+    <form name="product" id="add_product" method="post" action="index.php?module=product&func={if $data.id_product}update{else}insert{/if}" onsubmit="return form_valid();">
+        <fieldset>
+            <legend>{if $data.id_product}Edit{else}Add{/if} Product</legend>
+            <table border="0" cellspacing="2" cellpadding="2">
+                <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="product[name]" id="name" value="{$data.name}" size="40"/>
+                    <label for="name"></label></td>
+                </tr>
+                <tr>
+                <td><b>HSNCode:</b></td>
+                <td><input type="text" name="product[hsncode]" id="name" value="{$data.hsncode}"/>
+                    <label for="hsncode"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Company:</b></td>
+                    <td><input type="text"  id="cname" name="cname" value="{$data1.name}"/>
+                        <input type="hidden" id="id_company" name="product[id_company]" value="{$data.id_company}" />
+                        <label for="cname"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Code:</b></td>
+                    <td><input type="text" name="product[code]"  value="{$data.code}"/>
+                        <label for="code"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Distributor Price:</b></td>
+                    <td><input type="text" name="product[distributor_price]"  value="{$data.distributor_price}"/>
+                        <label for="price"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Seller Price:</b></td>
+                    <td><input type="text" name="product[seller_price]" value="{$data.seller_price}"/>
+                        <label for="seller"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Purchase Price:</b></td>
+                    <td><input type="text" name="product[purchase_price]"  value="{$data.purchase_price}"/>
+                        <label for="purchase"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Mrp:</b></td>
+                    <td><input type="text" name="product[mrp]" value="{$data.mrp}"/>
+                        <label for="mrp"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Sales Tax:</b></td>
+                    <td>  <select name="product[id_taxmaster_sale]" id="id_tax">
+                            {html_options  options=$tax selected=$data.id_taxmaster_sale}
+                        </select>
+                    <td><b>Cess % :</b></td>
+                    <td><input type="text" name="product[cess]" value="{$data.cess}" size="5" />
+                        <label for="cess"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Purchase Tax:</b></td>
+                    <td>  <select name="product[id_taxmaster_purchase]">
+                            {html_options  options=$tax selected=$data.id_taxmaster_purchase}
+                        </select>
+                </tr>
+                <tr>
+                    <td><b>Short:</b></td>
+                    <td><input type="text" name="product[short]" value="{$data.short}"/>
+                        <label for="short"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Opening Stock:</b></td>
+                    <td><input type="text" name="product[opening_stock]" value="{$data.opening_stock}"/>
+                        <label for="stock"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Pack:</b></td>
+                    <td><input type="text" name="product[pack]" value="{$data.pack}"/>
+                        <label for="pack"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Unit:</b></td>
+                    <td><input type="text" name="product[unit]" value="{$data.unit}"/>
+                        <label for="unit"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Case:</b></td>
+                    <td><input type="text" name="product[case]" value="{$data.case}"/>
+                        <label for="case"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Case Unit:</b></td>
+                    <td><input type="text" name="product[case_unit]" value="{$data.case_unit}"/>
+                        <label for="case_unit"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Weight:</b></td>
+                    <td><input type="text" name="product[weight]" value="{$data.weight}"/> (in Grams)
+                        <label for="weight"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Meter:</b></td>
+                    <td><input type="text" name="product[meter]" value="{$data.meter}"/> (in c.m.)
+                        <label for="meter"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Case Unit:</b></td>
+                    <td><input type="text" name="product[case_unit]" value="{$data.case_unit}"/>
+                        <label for="case_unit"></label></td>
+                </tr>
+                <tr>
+                    <td><b>Batch:</b></td>
+                    <td>
+                        {html_radios name='product[batch]' options=$ini.local selected=$data.batch  }
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" colspan="2">
+                        <input type="hidden" id="hide" name="id" value="{$data.id_product}">
+                        <input type="submit" id="submit" value="Submit" />
+                        <input type="reset" name="res" value="Reset"/>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+    </form>
+</div>
+

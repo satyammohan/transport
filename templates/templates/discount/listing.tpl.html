@@ -1,0 +1,43 @@
+<h2>Discount Details</h2>
+<form name="discount" method="post" action="index.php?module=discount&func=listing&ack=1">
+    <table>
+        <tr>
+            <td><span><b>Party Name</b></span>
+                <select  name="id_head"  >
+                    <option value="">All</option>
+                    {html_options  options=$head  selected="{$smarty.request.id_head}"} 
+                </select>
+            </td>
+            <td><span><b>Company Name</b></span> <select name="id_company">
+                    <option value="">All</option>
+                    {html_options options=$company selected="{$smarty.request.id_company}"}
+                </select>   
+            </td>
+            <td colspan="5"><input type="submit" name="go" value="Go"/></td>
+        </tr>
+    </table>
+</form> 
+{if isset($sdata)}
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <th>Party Name</th><th>Company Name</th><th>Discount</th><th><a class="reps" href="index.php?module=discount&func=edit&ce=0"><div class="add_bg"></div></a></th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{get_name key=$mod.id_head list=$head}</td>
+        <td>{get_name key=$mod.id_company list=$company}</td>
+        <td>{if isset($mod.discount)} {$mod.discount}{else}&nbsp;{/if}</td>
+        <td><a class="reps" href="index.php?module=discount&func=edit&id={$mod.id_discount}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+            <a href="index.php?module=discount&func=delete&id={$mod.id_discount}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+{/if}
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("reps");
+        tbl_handler();
+    });
+</script>

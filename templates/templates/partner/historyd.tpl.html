@@ -1,0 +1,28 @@
+{include file='report.tpl.html'}
+Showing Order Details of : <br><b>{$orders.0.name}</b>
+<br>for SO : <b><a href="index.php?module=partner&func=history&id_so={$orders.0.id_so}">{$orders.0.sname}</a></b>
+<table data-filter="true" data-input="#searchP" data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th>Order Placed</th><th>SO<i class="fa fa-check" aria-hidden="true"></i></th><th>Accounts<i class="fa fa-check" aria-hidden="true"></i></th><th>Despatched On</th>
+        </tr>
+    </thead>
+    <tbody>
+    {foreach from=$orders item=m}
+        <tr>
+            <td>
+                <a href="index.php?module=partner&func=historydet&id_head={$m.id_head}&id={$m.add_time}">{$m.add_time|date_format:"%d-%m-%Y"}</a>
+            </td>
+            <td>
+                {if $m.qty==0}Canceled{else}{$m.approve_time|date_format:"%d-%m-%Y"}{/if}
+            </td>
+            <td>
+                {$m.account_date|date_format:"%d-%m-%Y"}
+            </td>
+            <td>
+                {$m.despatch_date|date_format:"%d-%m-%Y"} {$m.despatch_no}
+            </td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

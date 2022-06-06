@@ -1,0 +1,51 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_tax").validate({
+            rules:{
+                'tax[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=taxmaster&func=check_name&id={$data.id_taxmaster}", async:false }
+                },
+                'tax[tax_per]': {
+                    required: true
+                }
+        },
+        messages: { 
+            'tax[name]':{
+              required: "<br/>This Field is Required",
+              remote:"<br/>Tax already exists"
+            },
+            'tax[tax_per]':{
+              required: "<br/>This Field is Required"
+            }
+        }
+    });
+    var x = fvalid.form();
+    return x;
+}
+</script>
+<form name="tax" id="add_tax" method="post" action="index.php?module=taxmaster&func={if $data.id_taxmaster}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_taxmaster}Edit{else}Add{/if} Tax</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="tax[name]"  value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Tax Amount:</b></td>
+                <td><input type="text" name="tax[tax_per]"  value="{$data.tax_per}"/>
+                    <label for="tax_per"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+            <input type="hidden" id="hide" name="id" value="{$data.id_taxmaster}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

@@ -1,0 +1,97 @@
+<fieldset>
+    <legend><h3>New GST Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="GST" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GST Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <thead>
+        <tr>
+            <td colspan="13"></td><th>GST 0%</th><th colspan="3">GST 5%</th><th colspan="3">GST 12%</th><th colspan="3">GST 18%</th><th colspan="5">&nbsp;</th>
+        </tr>
+        <tr>
+            <th>Sl</th><th>Type</th><th>Bill No</th><th>Bill Date</th><th>In Date</th><th>In Time</th><th>Out Time</th><th>Ref No</th><th>GRC</th><th>Name</th><th>GSTIN</th>
+            <th>Rent</th><th>Days Stay</th>
+            <th>0% GST Taxable Value</th>
+            <th>5% GST Taxable Value</th><th>SGST</th><th>CGST</th>
+            <th>12% GST Taxable Value</th><th>SGST</th><th>CGST</th>
+            <th>18% GST Taxable Value</th><th>SGST</th><th>CGST</th>
+            <th>Net Amount</th><th>Total GST Amount</th><th>Total</th><th>Discount</th><th>Add Date</th><th>Modify Date</th>
+        </tr>
+        </thead>
+        {$total=0}{$goods=0}{$gst=0}
+        {$goodsamount_0=0}{$discount=0}
+        {$goodsamount_5=0}{$sgst_5=0}{$cgst_5=0}
+        {$goodsamount_12=0}{$sgst_12=0}{$cgst_12=0}
+        {$goodsamount_18=0}{$sgst_18=0}{$cgst_18=0}
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.rtype}</td>
+                <td>{$x.billno}</td>
+                <td>{$x.depature_date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+<td>{$x.time}</td><td>{$x.depature_time}</td>
+                <td>{$x.no}</td><td>{$x.grcno}</td><td>{$x.name}</td><td>{$x.gstin}</td>
+                <td align="right">{$x.rent|string_format:"%.2f"}</td><td>{$x.daysstay}</td>
+                <td align="right">{$x.goodsamount_0|string_format:"%.2f"}</td>
+                <td align="right">{$x.goodsamount_5|string_format:"%.2f"}</td><td align="right">{$x.sgst_5|string_format:"%.2f"}</td><td align="right">{$x.cgst_5|string_format:"%.2f"}</td>
+                <td align="right">{$x.goodsamount_12|string_format:"%.2f"}</td><td align="right">{$x.sgst_12|string_format:"%.2f"}</td><td align="right">{$x.cgst_12|string_format:"%.2f"}</td>
+                <td align="right">{$x.goodsamount_18|string_format:"%.2f"}</td><td align="right">{$x.sgst_18|string_format:"%.2f"}</td><td align="right">{$x.cgst_18|string_format:"%.2f"}</td>
+                <td align="right">{($x.goodsamount_0+$x.goodsamount_5+$x.goodsamount_12+$x.goodsamount_18)|string_format:"%.2f"}</td>
+                <td align="right">{($x.sgst_5+$x.sgst_12+$x.sgst_18+$x.cgst_5+$x.cgst_12+$x.cgst_18)|string_format:"%.2f"}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+                <td align="right">{$x.discount|string_format:"%.2f"}</td>
+                <td>{$x.create_date|date_format:"%d-%m"}</td>
+                <td>{$x.modify_date|date_format:"%d-%m"}</td>
+
+                {$goodsamount_0=$goodsamount_0+$x.goodsamount_0}
+                {$goodsamount_5=$goodsamount_5+$x.goodsamount_5}
+                {$sgst_5=$sgst_5+$x.sgst_5}
+                {$cgst_5=$cgst_5+$x.cgst_5}
+                {$goodsamount_12=$goodsamount_12+$x.goodsamount_12}
+                {$sgst_12=$sgst_12+$x.sgst_12}
+                {$cgst_12=$cgst_12+$x.cgst_12}
+                {$goodsamount_18=$goodsamount_18+$x.goodsamount_18}
+                {$sgst_18=$sgst_18+$x.sgst_18}
+                {$cgst_18=$cgst_18+$x.cgst_18}
+
+                {$total=$total+$x.total}
+                {$discount=$discount+$x.discount}
+                {$gst=$gst+$x.sgst_5+$x.sgst_12+$x.sgst_18+$x.cgst_5+$x.cgst_12+$x.cgst_18}
+                {$goods=$goods+$x.goodsamount_0+$x.goodsamount_5+$x.goodsamount_12+$x.goodsamount_18}
+            </tr>
+        {/foreach}
+<tr>
+    <td colspan="13">Total :</td>
+    <td align="right">{$goodsamount_0|string_format:"%.2f"}</td>
+    <td align="right">{$goodsamount_5|string_format:"%.2f"}</td><td align="right">{$sgst_5|string_format:"%.2f"}</td><td align="right">{$cgst_5|string_format:"%.2f"}</td>
+    <td align="right">{$goodsamount_12|string_format:"%.2f"}</td><td align="right">{$sgst_12|string_format:"%.2f"}</td><td align="right">{$cgst_12|string_format:"%.2f"}</td>
+    <td align="right">{$goodsamount_18|string_format:"%.2f"}</td><td align="right">{$sgst_18|string_format:"%.2f"}</td><td align="right">{$cgst_18|string_format:"%.2f"}</td>
+    <td align="right">{$goods|string_format:"%.2f"}</td>
+    <td align="right">{$gst|string_format:"%.2f"}</td>
+    <td align="right">{$total|string_format:"%.2f"}</td>
+    <td align="right">{$discount|string_format:"%.2f"}</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+</tr>
+
+    </table>
+</div>

@@ -1,0 +1,34 @@
+<table border="1">
+    <tr>
+       	<th>Sl.No.</th>
+       	<th>Invno</th>
+       	<th>Date</th>
+        <th>Party</th>
+        <th>Address</th>
+       	<th align="right">Total</th>
+       	<th>Representative</th>
+    </tr>
+    {$vattot=0} {$cash=0}
+    {$total=0} {$credit=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].invno}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].party_name}</td>
+        <td>{$data[x].party_address}&nbsp;{$data[x].party_address1}</td>
+        <td align="right">{$data[x].total}</td>
+        <td>{$salesman[$data[x].id_represent]}</td>
+    </tr>
+    {$total = $total + $data[x].total}
+    {/section}
+    <tr>
+       	<th>&nbsp;</th>
+       	<th>&nbsp;</th>
+       	<th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>Total</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+        <th>&nbsp;</th>
+    </tr>
+</table>

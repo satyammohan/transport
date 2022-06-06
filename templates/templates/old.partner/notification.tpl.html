@@ -1,0 +1,32 @@
+<b>Notification</b>
+<form method="post" action="index.php?module=partner&func=notification">
+    <table>
+        <tr>
+            <td><input type="checkbox" value="1" name="all" {if isset($smarty.request.all)}checked="checked"{/if}></td>
+            <td width="30px"></td>
+            <td>Show All Notifications</td>
+            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+            <td><input data-mini="true" type="submit" value="Go" /></td>
+        </tr>
+    </table>
+</form>
+<table data-role="table" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Message</th>
+            <th>Read</th>
+        </tr>
+    </thead>
+    <tbody>
+    {foreach from=$notification item=m}
+        <tr>
+            <td>{$m.date|date_format:"%d-%m-%Y"}<br>{$m.from_name}</td>
+            <td>{$m.message}
+                {if $m.date_read}<br>Read On:{$m.date_read|date_format:"%d-%m-%Y %H:%M:%S"}{/if}
+            </td>
+            <td>{if !$m.date_read}<a href="index.php?module=partner&func=readnotification&id={$m.id}" ><input type="button" value="Read"></a>{/if}</td>
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

@@ -1,0 +1,69 @@
+Ledger of : <b>{$party.0.name}</b><br>
+<fieldset>
+    <form method="post" action="index.php?module=partner&func=ledger">
+        <table>
+            <tr>
+		<td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td>
+                    <input type="hidden" name="id"  value='{$smarty.request.id}' />
+                    <input type="submit" value="Go" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<table data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+    <tr>
+       	<th data-priority="3">Sl.No.</th>
+       	<th>Date</th>
+        <th data-priority="2">Party</th>
+        <th class="right">Debit</th>
+        <th class="right">Credit</th>
+       	<th class="right" data-priority="1">Balance</th>
+    </tr>
+    </thead>
+    <tbody>
+    {$debit=0} {$total=0} {$credit=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{if $data[x].dhead==$smarty.request.id}{$partyname=$head[$data[x].chead]}{else}{$partyname=$head[$data[x].dhead]}{/if}
+        {if $data[x].date}
+            {$partyname} {$data[x].refno}
+        {else}
+            Opening Balance
+            {if $data[x].total<0}
+                {$data[x].dhead = 0}
+                {$data[x].chead = $smarty.request.id}
+                {$data[x].total = -$data[x].total}
+            {/if}
+        {/if}
+        </td>
+        <td class="right">{if $data[x].dhead==$smarty.request.id}
+            {$data[x].total|string_format:"%.2f"}
+            {$debit=$debit+$data[x].total}
+            {$total=$total+$data[x].total}
+            {else}&nbsp;{/if}</td>
+        <td class="right">{if $data[x].chead==$smarty.request.id}
+            {$data[x].total|string_format:"%.2f"}
+            {$credit=$credit+$data[x].total}
+            {$total=$total-$data[x].total}
+            {else}&nbsp;{/if}</td>
+        <td class="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+    </tr>
+    {/section}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td>&nbsp;</td>
+        <td>&nbsp;</td>
+        <th>Total</th>
+        <th class="right">{$debit|string_format:"%.2f"}</th>
+        <th class="right">{$credit|string_format:"%.2f"}</th>
+        <th class="right">{abs($total)|string_format:"%.2f"} {if $total<0}CR{else}DB{/if}</td>
+    </tr>
+    </tfoot>
+</table>

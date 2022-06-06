@@ -1,0 +1,18 @@
+<div data-role="navbar">
+    <ul>
+      <li><a id="levelreport" href="index.php?module=partner&func=levelreport">Level</a></li>
+      <li><a id="salesreport" href="index.php?module=partner&func=salesreport">Sales</a></li>
+      <li><a id="itemreport" href="index.php?module=partner&func=itemreport">Item</a></li>
+      <li><a id="history" href="index.php?module=partner&func=history">History</a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#{$smarty.request.func}").addClass("ui-btn-active");
+    });
+</script>
+<style>
+    .ui-table-columntoggle-btn {
+        display: none;
+    }
+</style>

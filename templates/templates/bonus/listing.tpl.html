@@ -1,0 +1,38 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th colspan="7">
+				<form action='index.php?module=bonus&func=listing' method='post'>
+                Company:<select name="id_company">
+					{html_options options=$company selected=$id_company}
+				</select>
+				<input type='submit' value="Go">
+				</form>
+            </th>
+        </tr>
+        <tr>
+            <th>ID</th><th>Name</th><th>Start Date</th><th>End Date</th><th>Quantity</th><th>Free</th><th>Action</th>
+        </tr>
+    </thead>
+    {foreach from=$bonus item=mod}
+    <tr>
+        <td>{$mod.id_product}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.startdate}</td>
+        <td>{$mod.enddate}</td>
+        <td>{$mod.qty}</td>
+        <td>{$mod.free}</td>
+        <td><a class="bonus" href="index.php?module=bonus&func=edit&id={$mod.id_bonus}&id_company={$id_company}&ce=0"><div class="edit_bg">&nbsp;</div></a>
+            <!---
+			<a href="index.php?module=bonus&func=delete&id={$mod.id_bonus}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a>
+			-->
+		</td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("bonus");
+        tbl_handler();
+    });
+</script>

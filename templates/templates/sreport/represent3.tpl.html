@@ -1,0 +1,26 @@
+{$gvat=0}
+{$gtotal=0}
+<table border="1" width="40%">
+     <tr>
+        <th>Representative Name</th>
+        <th>No of bills</th>
+        <th class="right">Tax</th>
+        <th class="right">Total</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+        <tr>
+            <td>{$v.rname}</td>
+            <td>{$v.bills}</td>
+            <td align="right">{$v.vat|string_format:"%.2f"}</td>
+            <td align="right">{$v.total|string_format:"%.2f"}</td>
+        </tr>
+        {$gvat = $gvat + $v.vat}
+        {$gtotal = $gtotal + $v.total}
+    {/foreach}
+    <tr>
+        <th>&nbsp;</th>
+        <th class="right"> Total</th>
+        <th align="right">{$gvat|string_format:"%.2f"}</th>
+        <th align="right">{$gtotal|string_format:"%.2f"}</th>
+    </tr>
+</table>

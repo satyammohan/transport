@@ -1,0 +1,99 @@
+{if $data}
+{$qty=0}{$free=0}{$amount=0}{$ltr=0}{$price=0}{$tax_amount=0}{$net_amount=0}
+{$rqty=0}{$rfree=0}{$rltr=0}{$ramount=0}{$rprice=0}{$rtax_amount=0}{$rnet_amount=0}
+{$party=$data[0].party}
+<table id="report" border="1">
+    <tr>
+        <th>Party Name</th>
+        <th>Item Name</th>
+        <th>Qty</th>
+        <th>Free</th>
+        {if isset($smarty.request.pricedifference)}
+            <th align="right">Rate</th>
+            <th align="right">Disc.Rate</th>
+            <th align="right">Net Disc.</th>
+        {/if}
+        <th>Ltr/Kg</th>
+        <th>Amount</th>
+        <th>Tax Amount</th>
+        <th>Net Amount</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+    {if $party!=$v.party}
+        <tr>
+            <th class="right" colspan="2">Party Total</th>
+            <th align="right">{$qty}</th>
+            <th align="right">{$free}</th>
+            {if isset($smarty.request.pricedifference)}
+                <th colspan="3" align="right">{$price|string_format:"%.2f"}</th>
+            {/if}
+            <th align="right">{$ltr|string_format:"%.3f"}</th>
+            <th align="right">{$amount|string_format:"%.2f"}</th>
+            <th align="right">{$tax_amount|string_format:"%.2f"}</th>
+            <th align="right">{$net_amount|string_format:"%.2f"}</th>
+        </tr>
+        {$qty=0}{$free=0}{$amount=0}{$ltr=0}{$price=0}{$tax_amount=0}{$net_amount=0}
+    {/if}
+    {if $v.discounted_seller_price}
+        {$p = $v.discounted_seller_price}
+    {else}
+        {$p = $v.rate}
+    {/if}
+    <tr>
+        <td>{if $data[$k-1].party!=$v.party}{$v.party}{/if}</td>
+        <td>{$v.iname}</td>
+        <td align="right">{$v.qty}</td>
+        <td align="right">{$v.free}</td>
+        {if isset($smarty.request.pricedifference)}
+            <td align="right">{$v.rate}</td>
+            <td align="right">{$p}</td>
+            <td align="right">{(($v.rate-$p)*$v.qty)|string_format:"%.2f"}</td>
+        {/if}
+        <td align="right">{(($v.qty+$v.free)*$v.case)|string_format:"%.3f"}</td>
+        <td align="right">{$v.amount|string_format:"%.2f"}</td>
+        <td align="right">{$v.tax_amount|string_format:"%.2f"}</td>
+        <td align="right">{$v.net_amount|string_format:"%.2f"}</td>
+    </tr>
+    {$ltr=$ltr+(($v.qty+$v.free)*$v.case)}
+    {$qty=$qty+$v.qty}
+    {$free=$free+$v.free}
+    {$amount=$amount+$v.amount}
+    {$tax_amount=$tax_amount+$v.tax_amount}
+    {$net_amount=$net_amount+$v.net_amount}
+    {$price=$price+(($v.rate-$p)*$v.qty)}
+
+    {$rltr=$rltr+(($v.qty+$v.free)*$v.case)}
+    {$rqty=$rqty+$v.qty}
+    {$rfree=$rfree+$v.free}
+    {$ramount=$ramount+$v.amount}
+    {$rtax_amount=$rtax_amount+$v.tax_amount}
+    {$rnet_amount=$rnet_amount+$v.net_amount}
+    {$rprice=$rprice+(($v.rate-$p)*$v.qty)}
+    {$party=$v.party}
+    {/foreach}
+    <tr>
+        <th class="right" colspan="2">Party Total</th>
+        <th align="right">{$qty}</th>
+        <th align="right">{$free}</th>
+        {if isset($smarty.request.pricedifference)}
+            <th colspan="3" align="right">{$price|string_format:"%.2f"}</th>
+        {/if}
+        <th align="right">{$ltr|string_format:"%.3f"}</th>
+        <th align="right">{$amount|string_format:"%.2f"}</th>
+        <th align="right">{$tax_amount|string_format:"%.2f"}</th>
+        <th align="right">{$net_amount|string_format:"%.2f"}</th>
+    </tr>
+    <tr>
+        <th class="right" colspan="2">Grand Total</th>
+        <th align="right">{$rqty}</th>
+        <th align="right">{$rfree}</th>
+        {if isset($smarty.request.pricedifference)}
+            <th colspan="3" align="right">{$rprice|string_format:"%.2f"}</th>
+        {/if}
+        <th align="right">{$rltr|string_format:"%.3f"}</th>
+        <th align="right">{$ramount|string_format:"%.2f"}</th>
+        <th align="right">{$rtax_amount|string_format:"%.2f"}</th>
+        <th align="right">{$rnet_amount|string_format:"%.2f"}</th>
+    </tr>
+</table>
+{/if}

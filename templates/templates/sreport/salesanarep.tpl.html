@@ -1,0 +1,91 @@
+<table border="1" id="rpt">
+    <tr>
+        <th rowspan="2">Sl.No.</th>
+        <th rowspan="2">Name</th>
+        {$c=2}{if isset($smarty.request.case)}{$c=3}{/if}
+        {foreach item=i from=$month}
+        <th colspan="{$c}">{$i}</th>
+        {/foreach}
+        <th colspan="{$c}">Total</th>
+    </tr>
+    <tr>
+        {foreach item=i from=$month}
+        <th>Qty</th>
+        {if isset($smarty.request.case)}<th>Case</th>{/if}
+        <th>Amount</th>
+        {/foreach}
+        <th>Qty</th>{if isset($smarty.request.case)}<th>Case</th>{/if}<th>Amount</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+        <tr>
+            <td colspan="100"><b>Name : {$k}</b></td>
+        </tr>
+        {$sl=1}
+        {$sec_itotal=0}
+        {$sec_ctotal=0}
+        {$sec_total=0}
+        {foreach item=v1 key=k1 from=$data[$k]}
+        <tr>
+            <td>{$sl}{$sl=$sl+1}</td>
+            <td>{$k1}</td>
+            {$total=0}{$itotal=0}{$ctotal=0}
+            {foreach item=i from=$month}
+            <td align="right">
+                {if isset($v1[$i])}
+                    {$v1[$i].qty|string_format:"%.0f"}
+                    {$itotal = $itotal + $v1[$i].qty}
+                    {$sec_itotal[$i] = $sec_itotal[$i] + $v1[$i].qty}
+                {else}
+                    {0|string_format:"%.0f"}
+                {/if}
+            </td>
+            {if isset($smarty.request.case)}
+            <td align="right">
+                {if isset($v1[$i])}
+                    {$v1[$i].case|string_format:"%.2f"}
+                    {$ctotal = $ctotal + $v1[$i].case}
+                    {$sec_ctotal[$i] = $sec_ctotal[$i] + $v1[$i].case}
+                {else}
+                    {0|string_format:"%.0f"}
+                {/if}
+            </td>
+            {/if}
+            <td align="right">
+                {if isset($v1[$i])}
+                    {$v1[$i].total|string_format:"%.2f"}
+                    {$total = $total + $v1[$i].total}
+                    {$sec_total[$i] = $sec_total[$i] + $v1[$i].total}
+                {else}
+                    {0|string_format:"%.2f"}
+                {/if}
+            </td>
+            {/foreach}
+            <td align="right">{$itotal|string_format:"%.0f"}</td>
+            {if isset($smarty.request.case)}
+                <td align="right">{$ctotal|string_format:"%.2f"}</td>
+            {/if}
+            <td align="right">{$total|string_format:"%.2f"}</td>
+        </tr>
+        {/foreach}
+        <tr>
+            {$total=0}{$itotal=0}{$ctotal=0}
+            <th colspan="2"><b>Total</b></th>
+            {foreach item=i from=$month}
+                <th align="right">{$sec_itotal[$i]|string_format:"%.0f"}</th>
+                {if isset($smarty.request.case)}
+                    <th align="right">{$sec_ctotal[$i]|string_format:"%.2f"}</th>
+                    {$ctotal=$ctotal+$sec_ctotal[$i]}
+                {/if}
+                <th align="right">{$sec_total[$i]|string_format:"%.2f"}</th>
+                {$total=$total+$sec_total[$i]}
+                {$itotal=$itotal+$sec_itotal[$i]}
+            {/foreach}
+            <th align="right">{$itotal|string_format:"%.0f"}</th>
+            {if isset($smarty.request.case)}
+                <th align="right">{$ctotal|string_format:"%.2f"}</th>
+            {/if}
+            <th align="right">{$total|string_format:"%.2f"}</th>
+        </tr>
+    <tr><td colspan="100">&nbsp;</td></tr>
+    {/foreach}
+</table>

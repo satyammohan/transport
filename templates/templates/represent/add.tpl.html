@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_reps").validate({
+            rules:{
+                'reps[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=represent&func=check_reps&id={$data.id_represent}", async:false }
+                }
+            },
+            messages: { 
+                'reps[name]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>Representative already exists"
+                }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form name="zone" id="add_reps" method="post" action="index.php?module=represent&func={if $data.id_represent}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_represent}Edit{else}Add{/if} Representative</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="reps[name]" id="name" value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Address:</b></td>
+                <td><textarea name="reps[address]">{$data.address}</textarea></td>
+            </tr>
+            <tr>
+                <td><b>Email:</b></td>
+                <td><textarea name="reps[email]">{$data.email}</textarea></td>
+            </tr>
+            <tr>
+                <td><b>Phone:</b></td>
+                <td><textarea name="reps[phone]">{$data.phone}</textarea></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_represent}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

@@ -1,0 +1,287 @@
+<script type="text/javascript">
+    var fvalid;
+    function updatetcs(myapp) {
+        if (myapp==0) {
+            $("#tcsper").val("").attr("readonly", true);
+        } else {
+            $("#tcsper").attr("readonly", false);
+        }
+    }
+	function showdet() {
+		id = $("#gstin").val();
+		url = "index.php?module=head&func=getgstdetails&gstin="+id;
+		if (id) {
+			$.post( url, function( res ) {
+				$("#detail").html(res);
+			});
+		}
+	}
+    function form_valid() {
+        var fvalid=$("#add_head").validate({
+            rules:{
+                'head[code]': { required: true },
+                gname: { required: true },
+                'head[name]': { required: true }
+            },
+            messages: { 
+                'head[code]': { required: "<br/>This Field is Required" },
+                gname: { required: "<br/>This Field is Required" },
+                'head[name]': { required: "<br/>This Field is Required" }  
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    function show_detail() {
+            if ($("#debtor").attr('checked') || $("#creditor").attr('checked')){
+                    $("#sh").show();
+            } else {
+                    $("#sh").hide();
+            }
+    }
+    $(document).ready(function() {
+        callauto("gname", "index.php?module=head&func=getgroup&ce=0", "id_group");
+        $(".cst_date").datepicker({
+            dateFormat:js_date
+        });
+        show_detail();
+        $("#name").focus();
+    });
+</script>
+<form name="head" id="add_head" method="post" action="index.php?module=head&func={if $data.id_head}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_head}Edit{else}Add{/if} Head</legend>
+        <table  border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td valign="top">
+                    <fieldset>
+                        <table>
+                            <tr>
+                                <td><b>Code:</b></td>
+                                <td><input type="text" name="head[code]" value="{$data.code}"/>
+                                    <label for="code"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Name:</b></td>
+                                <td><input type="text" name="head[name]" id="name" value="{$data.name}" size="30"/>
+                                    <label for="name"></label></td>
+                            </tr>
+                            <tr>
+                                <td><b>Group:</b></td>
+                                <td> <select name="head[id_group]" id="group">
+                                        {html_options  options=$group selected=$data.id_group } 
+                                    </select></td>
+                            </tr>
+                            <tr>
+                                <td><b>Debtor:</b></td>
+                                <td><input type="checkbox" value="1" name="head[debtor]" id="debtor" {if $data.debtor==1}checked="checked"{/if} value="{$data.debtor}" onchange="show_detail()" /></td>
+                            </tr>
+                            <tr>
+                                <td><b>Creditor:</b></td>
+                                <td><input type="checkbox" value="1" name="head[creditor]" id="creditor" {if $data.creditor==1}checked="checked"{/if} value="{$data.creditor}" onchange="show_detail()" /></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address1:</b></td>
+                                <td><input type="text"  name="head[address1]" value='{$data.address1}'></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address2:</b></td>
+                                <td><input type="text"  name="head[address2]" value='{$data.address2}'></td>
+                            </tr>
+                            <tr>
+                                <td><b>Address3:</b></td>
+                                <td><input type="text"  name="head[address3]" value='{$data.address3}'></td>
+                            </tr>
+                            <tr>
+                                <td><b>Opening Balance:</b></td>
+                                <td><spam><input type="text" size="12" name="head[opening_balance]" value="{$data.opening_balance}"/></spam>
+                                    <spam><select name="head[otype]" >
+                                    {html_options  options=$ini.balance_type selected=$data.otype } 
+                                </select></spam>
+                            </tr>
+<!--
+                            <tr>
+                                <td><b>Second Opening Balance:</b></td>
+                                <td><spam><input type="text" size="12" name="head[sopening_balance]" value="{$data.sopening_balance}"/></spam>
+                                    <spam><select name="head[sotype]" >
+                                    {html_options  options=$ini.balance_type selected=$data.sotype } 
+                                </select></spam>
+                            </tr>-->
+                            <tr>
+                                <td><b style="color: red">State Code:</b></td>
+                                <td><input type="text" name="head[statecode]" value="{$data.statecode}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b style="color: red">State :</b></td>
+                                <td><input type="text" name="head[state]"  value="{$data.state}" /></td>
+                            </tr>
+                            <tr>
+                                <td><b style="color: red">Pin Code:</b></td>
+                                <td><input type="text" name="head[pincode]" value="{$data.pincode}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b style="color: red">Location:</b></td>
+                                <td><input type="text" name="head[location]" value="{$data.location}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b style="color: red">GSTIN :</b></td>
+                                <td><input type="text" name="head[gstin]" id="gstin"  value="{$data.gstin}"  style="color: red"/><input type="button" onclick="showdet();" value="Check GSTIN"></td>
+                            </tr>
+                            <tr>
+                                <td><b>Pan No:</b></td>
+                                <td><input type="text" name="head[panno]" value="{$data.panno}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Adhar Card:</b></td>
+                                <td><input type="text" name="head[adhar]" value="{$data.adhar}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Tan No:</b></td>
+                                <td><input type="text" name="head[tanno]" value="{$data.tanno}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b style="color: red">TCS Applicable:</b></td>
+                                <td><select name="head[tcs]" onchange="updatetcs(this.value)">
+                                        <option {if $data.tcs!=1}selected="selected"{/if} value="0">No</option>
+                                        <option {if $data.tcs==1}selected="selected"{/if} value="1">Yes</option>
+                                    </select>
+                                    <input {if $data.tcs!=1}readonly="readonly"{/if} type="text" style="text-align: right;" name="head[tcsper]" value="{$data.tcsper}" size="3" id="tcsper" />%
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Date of Birth:</b></td>
+                                <td><input type="text" name="head[dob]" class="dtpickno" value="{$data.dob|date_format:$smarty_date}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Date of Anniversary:</b></td>
+                                <td><input type="text" name="head[doa]" class="dtpickno" value="{$data.doa|date_format:$smarty_date}"/></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>         
+                {if ($data.id_group==18||$data.id_group==20)}
+                <td>{else}
+                <td id="sh" style="display: none; float: right">
+                    {/if} <fieldset>
+                        <table>
+                            <tr>
+                                <td><b>Dealer Type:</b></td>
+                                <td><select id="dealer" name="head[dealer]" >
+                                     <option value="0">Distributor/Retailer</option>
+                                     <option value="1">Super-Distributor</option>
+                                     <option value="2">Modern Trade</option>
+                                    </select>
+                                </td>
+                                <script>
+                                    $("#dealer").val({$data.dealer});
+                                </script>
+                            </tr>     
+                            <tr>
+                                <td><b>Vat :</b></td>
+                                <td><select name="head[vattype]" id="vattype">
+                                        <option name="Tin">Tin</option>
+                                        <option name="Srin">Srin</option>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $("#vattype").val("{$data.vattype}");
+                                    </script>
+                                    <input type="text" name="head[vatno]"  value="{$data.vatno}"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Area:</b></td>
+                                <td>  <select name="head[id_area]" id="area">
+                                        <option>Select</option>
+                                        {html_options  options=$area selected=$data.id_area } 
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Transport:</b></td>
+                                <td>
+                                    <input type="text" name="head[transport]" value="{$data.transport}"/>
+				    <!--<select name="head[id_transport]" id="area">
+                                        <option> Select</option>
+                                        {html_options  options=$transport selected=$data.id_transport } 
+                                    </select>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Station:</b></td>
+                                <td><input type="text" name="head[station]" value="{$data.station}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Banker:</b></td>
+                                <td><input type="text" name="head[banker]" value="{$data.banker}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>A/C No:</b></td>
+                                <td><input type="text" name="head[acno]" value="{$data.acno}"/>
+                            </tr>
+                            <tr>
+                                <td><b>IFSC code:</b></td>
+                                <td><input type="text" name="head[acifsc]" value="{$data.acifsc}"/>
+                            </tr>
+                            <tr>
+                                <td><b>Name of Account Holder:</b></td>
+                                <td><input type="text" name="head[acname]" value="{$data.acname}"/>
+                            </tr>
+                            <tr>
+                                <td><b>Account Type:</b></td>
+                                <td><input type="text" name="head[actype]" value="{$data.actype}"/>
+                            </tr>
+                            <tr>
+                                <td><b>Drug Licence #:</b></td>
+                                <td><input type="text" name="head[dlicence]" value="{$data.dlicence}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Food Licence #:</b></td>
+                                <td><input type="text" name="head[flicence]" value="{$data.flicence}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Contact Person:</b></td>
+                                <td><input type="text" name="head[contact_person]" value="{$data.contact_person}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Phone:</b></td>
+                                <td><input type="text" name="head[phone]"  value="{$data.phone}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Mobile:</b></td>
+                                <td><input type="text" name="head[mobile]"  value="{$data.mobile}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>E-mail:</b></td>
+                                <td><input type="text" name="head[email]"  value="{$data.email}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Credit Limits:</b></td>
+                                <td><input type="text" name="head[credit_limit]" value="{$data.credit_limit}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Credit Days:</b></td>
+                                <td><input type="text" name="head[credit_days]" value="{$data.credit_days}"/></td>
+                            </tr>
+                            <tr>
+                                <td><b>Local:</b></td>
+                                <td> <select name="head[local]" id="area">
+                                        {html_options  options=$ini.local selected=$data.local} 
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </td>
+		<td><div id="detail"></div></td>
+            </tr>
+
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_head}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

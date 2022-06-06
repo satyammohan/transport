@@ -1,0 +1,52 @@
+{$gtotal=0}
+<table border="1">
+    <tr class="total">
+        <th>Party Name</th>
+        {foreach item=v key=k from=$month}
+            <th>{$v}</th>
+        {/foreach}
+        <th>Total</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+        {$party = $sales[$k]}
+        {if $party}
+        <tr class="subtotal">
+            {$total = 0}
+            <td colspan="100">Representative : <b>{$v}</b></td>
+        </tr>
+        {$stotal=0}
+        {foreach item=pv key=pk from=$party}
+            <tr>
+            <td>{$pv['name']}</td>
+		{$total=0}
+                {foreach item=v1 key=k1 from=$month}
+                    <td align="right">{$pv[$v1]|string_format:"%.2f"}</td>
+                    {$total = $total + $pv[$v1]}
+                    {$gtotal[$v1] = $gtotal[$v1] + $pv[$v1]}
+                    {$stotal[$v1] = $stotal[$v1] + $pv[$v1]}
+                {/foreach}
+            <td align="right">{$total|string_format:"%.2f"}</td>
+            </tr>
+        {/foreach}
+        <tr class="subtotal">
+            <th>Total</th>
+            {$total = 0}
+            {foreach item=v1 key=k1 from=$month}
+                <td align="right">{$stotal[$v1]|string_format:"%.2f"}</td>
+                {$total = $total + {$stotal[$v1]}}
+            {/foreach}
+            <th align="right">{$total|string_format:"%.2f"}</th>
+        </tr>
+        <tr><td colspan="13">&nbsp;</td></tr>
+        {/if}
+    {/foreach}
+    <tr class="total">
+        <th>Grand Total</th>
+        {$total = 0}
+        {foreach item=v1 key=k1 from=$month}
+            <td align="right">{$gtotal[$v1]|string_format:"%.2f"}</td>
+            {$total = $total + {$gtotal[$v1]}}
+        {/foreach}
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

@@ -1,0 +1,182 @@
+<script>
+    function downloadJson() {
+	var text=$("#json-input").text();
+	var filename="B2BsalesInvoice.json";
+	var a = document.createElement('a');
+	a.setAttribute('href', 'data:text/plain;charset=utf-8,'+encodeURIComponent(text));
+	a.setAttribute('download', filename);
+	a.click()
+	return false;
+    }
+</script>
+
+<fieldset>
+    <legend>B2B Sales E-Invoice</legend>
+    <form method="post" action="index.php?module=gst&func=saleseinvoicew">
+        <table>
+            <tr>
+                <td>Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Company:
+                    <select name="company">
+                        <option value=" ">All</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td>
+                    <button type="submit" name="submit" value="print">Go</button>
+                    <button type="submit" name="submit" value="json">ShowJson</button>&nbsp;&nbsp;
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="B2BsalesInvoice" />
+                    <input type="button" class="excel" value="Download As Excel" />
+                    {if $json}
+                        <input type="button" onclick="downloadJson()" value="Download As Json" />
+                    {/if}
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    B2B Sales E-Invoice for {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}<br /><br />
+    {if $data}
+    <table id='report' border="1">
+        <tr>
+            <td>SUPPLY_TYPE_CODE</td><td>REVERSE_CHARGE</td><td>EComm_GSTIN</td><td>IGST_ON_INTRA</td>
+            <td>DOCUMENT_TYPE</td><td>DOCUMENT_NUMBER</td><td>DOCUMENT_DATE</td>
+            <td>BUYER_GSTIN</td><td>BUYER_LEGAL_NAME</td><td>BUYER_TRADE_NAME</td><td>BUYER_POS</td><td>BUYER_ADD1</td><td>BUYER_ADD2</td><td>BUYER_LOCATION</td><td>BUYER_PIN_CODE</td><td>BUYER_STATE</td><td>BUYER_PHONE_NUMBER</td><td>BUYER_EMAIL_ID</td>
+            <td>DISPATCH_NAME</td><td>DISPATCH_ADD1</td><td>DISPATCH_ADD2</td><td>DISPATCH_LOCATION</td><td>DISPATCH_PIN_CODE</td><td>DISPATCH_STATE</td>
+            <td>SHIPPING_GSTIN</td><td>SHIPPING_LEGAL_NAME</td><td>SHIPPING_TRADE_NAME</td><td>SHIPPING_ADD1</td><td>SHIPPING_ADD2</td><td>SHIPPING_LOCATION</td><td>SHIPPING_PIN_CODE</td><td>SHIPPING_STATE</td>
+            <td>SL_NO</td><td>PRODUCT_DESCRIPTION</td><td>IS_SERVICE</td><td>HSN_CODE</td><td>BARCODE</td><td>QUANTITY</td><td>FREE_QUANTITY</td><td>UNIT</td><td>UNIT_PRICE</td>
+            <td>GROSS_AMOUNT</td><td>DISCOUNT</td><td>PER_TAX_VALUE</td><td>TAXABLE_VALUE</td><td>GST_perc</td><td>SGST_AMOUNT</td><td>CGST_AMOUNT</td><td>IGST_AMOUNT</td><td>CESS_perc</td><td>CESS_AMOUNT</td>
+            <td>CESS_NONADVAL_AMT</td><td>STATE_RATE_CESS_perc</td><td>STATE_CESS_ADVAL_AMNT</td><td>STATE_CESS_NON_ADVAL_AMNT</td><td>OTHER_CHARGES</td><td>ITEM_TOTAL</td><td>BATCH_NAME</td><td>BATCH_EXPIRY_DATE</td>
+            <td>WARRENTY_DATE</td><td>TOTAL_TAXABLE_VALUE</td><td>SGST_AMOUNT1</td><td>CGST_AMOUNT1</td><td>IGST_AMOUNT1</td><td>CESS_AMOUNT1</td><td>STATE_CESS_AMOUNT</td><td>DISCOUNT_AMOUNT</td><td>OTHER_CHARGES1</td>
+            <td>ROFF_AMOUNT</td><td>TOTAL_INVOICE_VALUE</td><td>Shipping_BillNo</td><td>Shipping_BillDt</td><td>port_</td><td>Refund_claim</td><td>foreign_Currency</td><td>Country_Code</td><td>Export_Duty_Amount</td>
+            <td>Trans_ID</td><td>Trans_Mode</td><td>Distance</td><td>Trans_Doc_No</td><td>Trans_Doc_Date</td><td>Vehicle_No</td><td>Vehicle_Type</td>
+        </td>
+        </tr>
+        {foreach item=x name=it from=$data}
+        <tr>
+            <td>{$x.SUPPLY_TYPE_CODE}</td>
+            <td>{$x.REVERSE_CHARGE}</td>
+            <td>{$x.EComm_GSTIN}</td>
+            <td>{$x.IGST_ON_INTRA}</td>
+            <td>{$x.DOCUMENT_TYPE}</td>
+            <td>{$x.DOCUMENT_NUMBER}</td>
+            <td>{$x.DOCUMENT_DATE|date_format:'d-m-Y'}</td>
+            <td>{$x.BUYER_GSTIN}</td>
+            <td>{$x.BUYER_LEGAL_NAME}</td>
+            <td>{$x.BUYER_TRADE_NAME}</td>
+            <td>{$x.BUYER_POS}</td>
+            <td>{$x.BUYER_ADD1}</td>
+            <td>{$x.BUYER_ADD2}</td>
+            <td>{$x.BUYER_LOCATION}</td>
+            <td>{$x.BUYER_PIN_CODE}</td>
+            <td>{$x.BUYER_STATE}</td>
+            <td>{$x.BUYER_PHONE_NUMBER}</td>
+            <td>{$x.BUYER_EMAIL_ID}</td>
+            <td>{$x.DISPATCH_NAME}</td>
+            <td>{$x.DISPATCH_ADD1}</td>
+            <td>{$x.DISPATCH_ADD2}</td>
+            <td>{$x.DISPATCH_LOCATION}</td>
+            <td>{$x.DISPATCH_PIN_CODE}</td>
+            <td>{$x.DISPATCH_STATE}</td>
+            <td>{$x.SHIPPING_GSTIN}</td>
+            <td>{$x.SHIPPING_LEGAL_NAME}</td>
+            <td>{$x.SHIPPING_TRADE_NAME}</td>
+            <td>{$x.SHIPPING_ADD1}</td>
+            <td>{$x.SHIPPING_ADD2}</td>
+            <td>{$x.SHIPPING_LOCATION}</td>
+            <td>{$x.SHIPPING_PIN_CODE}</td>
+            <td>{$x.SHIPPING_STATE}</td>
+            
+            <td>{$x.SL_NO}</td>
+            <td>{$x.PRODUCT_DESCRIPTION}</td>
+            <td>{$x.IS_SERVICE}</td>
+            <td>{$x.HSN_CODE}</td>
+            <td>{$x.BARCODE}</td>
+            <td>{$x.QUANTITY}</td>
+            <td>{$x.FREE_QUANTITY}</td>
+            <td>{$x.UNIT}</td>
+            <td>{$x.UNIT_PRICE}</td>
+            
+            <td>{$x.GROSS_AMOUNT}</td>
+            <td>{$x.DISCOUNT}</td>
+            <td>{$x.PER_TAX_VALUE}</td>
+            <td>{$x.TAXABLE_VALUE}</td>
+            <td>{$x.GST_perc}</td>
+            <td>{$x.SGST_AMOUNT}</td>
+            <td>{$x.CGST_AMOUNT}</td>
+            <td>{$x.IGST_AMOUNT}</td>
+            <td>{$x.CESS_perc}</td>
+            <td>{$x.CESS_AMOUNT}</td>
+            
+            <td>{$x.CESS_NONADVAL_AMT}</td>
+            <td>{$x.STATE_RATE_CESS_perc}</td>
+            <td>{$x.STATE_CESS_ADVAL_AMNT}</td>
+            <td>{$x.STATE_CESS_NON_ADVAL_AMNT}</td>
+            <td>{$x.OTHER_CHARGES}</td>
+            <td>{$x.ITEM_TOTAL}</td>
+            <td>{$x.BATCH_NAME}</td>
+            <td>{$x.BATCH_EXPIRY_DATE}</td>
+            <td>{$x.WARRENTY_DATE}</td>
+            <td>{$x.TOTAL_TAXABLE_VALUE}</td>
+            <td>{$x.SGST_AMOUNT1}</td>
+            <td>{$x.CGST_AMOUNT1}</td>
+            <td>{$x.IGST_AMOUNT1}</td>
+            <td>{$x.CESS_AMOUNT1}</td>
+            <td>{$x.STATE_CESS_AMOUNT}</td>
+            <td>{$x.DISCOUNT_AMOUNT}</td>
+            <td>{$x.OTHER_CHARGES1}</td>
+            <td>{$x.ROFF_AMOUNT}</td>
+            <td>{$x.TOTAL_INVOICE_VALUE}</td>
+            <td>{$x.Shipping_BillNo}</td>
+            <td>{$x.Shipping_BillDt}</td>
+            <td>{$x.port_}</td>
+            <td>{$x.Refund_claim}</td>
+            <td>{$x.foreign_Currency}</td>
+            <td>{$x.Country_Code}</td>
+            <td>{$x.Export_Duty_Amount}</td>
+            <td>{$x.Trans_ID}</td>
+            <td>{$x.Trans_Mode}</td>
+            <td>{$x.Distance}</td>
+            <td>{$x.Trans_Doc_No}</td>
+            <td>{$x.Trans_Doc_Date}</td>
+            <td>{$x.Vehicle_No}</td>
+            <td>{$x.Vehicle_Type}</td>
+        </tr>
+        {/foreach}
+    </table>
+    {/if}
+    {if $json}
+        {$jsurl = "{$source}js/jquery.json-editor.min.js"}
+        <script type="text/javascript" src="{$jsurl}"></script>
+        {$css = "{$source}js/jquery.json-viewer.css"}
+        <link rel="stylesheet" type="text/css" href="{$css}" media="all" />
+
+        <textarea id="json-input">{$json}</textarea>
+        <div style="height: 200px;overflow: scroll;"><pre id="json-display"></pre></div>
+        <!-- <button id="translate">Translate</button> -->
+        <script>
+            function getJson() {
+                try {
+                    return JSON.parse($('#json-input').val());
+                } catch (ex) {
+                    alert('Wrong JSON Format: ' + ex);
+                }
+            }
+            var editor = new JsonEditor('#json-display', getJson());
+            $('#translate').on('click', function () {
+                editor.load(getJson());
+            });
+        </script>
+    {/if}
+    <style>
+        #json-input {
+            width: 100% !important;
+            height: 300px !important;
+        }
+    </style>
+</div>

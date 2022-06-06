@@ -1,0 +1,46 @@
+<b>Mapping of Order <a target="_new" href="index.php?module=partner&func=history">::</a></b>
+<table border="1" cellpadding="0" cellspacing="0">
+    <thead><tr><th>Sl.</th><th>Party</th><th>Order Time & Items<th>Approe Time & Items</th></tr></thead>
+    <tbody>
+    {$sl=1}
+    {foreach from=$orders item=m key=k}
+        <tr>
+            {$cntpo = $m['o']|@count}
+            {$cntao = $m['a']|@count}
+            {if $cntpo!=0 && ($smarty.request.all || $cntao!=0)}
+            <td>{$sl++}</td>
+            <td>
+                <a href="index.php?module=partner&func=markorder&ce=0&all=1&id_head={$k}">{$k}</a>.{$heads[$k]}<br>Party Orders-{$m['o']|@count}<br>Approved Orders-{$m['a']|@count}
+            </td>
+            <td style="vertical-align:top">
+            {foreach from=$m['o'] item=inm key=ink}
+                {if !$inm['order_approve_time'] || $smarty.request.all}
+                    <input size='20' value="{$inm.approve_time}" />
+                    {$inm['product']}
+                    {if $inm['approve_time'] && $inm['order_approve_time']==1}*{/if}<br>
+                {/if}
+            {/foreach}
+            </td>
+            <td style="vertical-align:top">
+            {foreach from=$m['a'] item=inm key=ink}
+                {if !$inm['order_approve_time'] || $smarty.request.all}
+                    <input size='20' onblur="saveme('{$k}', '{$ink}', this.value)" value="{$inm.order_approve_time}" />
+                    {$inm['date']|date_format:"%d-%m"}&nbsp;&nbsp;&nbsp;
+                    {$inm['product']}&nbsp;&nbsp;&nbsp;
+                    <br>
+                {/if}
+            {/foreach}
+            </td>
+            {/if}
+        </tr>
+    {/foreach}
+    </tbody>
+</table>
+<script type="text/javascript">
+    function saveme(id_head, id_salesorder, t) {
+        var url = "index.php?module=partner&func=savetime&id_head=" + id_head + "&id_salesorder=" + id_salesorder + "&t=" + t;
+        $.post(url, function(res){
+            console.log(res);
+        });
+    }
+</script>

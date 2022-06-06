@@ -1,0 +1,25 @@
+<table id='report' border="1">
+    <tr style='color:'>
+       	<th>Type</th><th>Place Of Supply</th><th>Rate</th><th>Taxable Value</th><th>Cess Amount</th><th>E-Commerce GSTIN</th>
+    </tr>
+    {$total=0}{$taxamt=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>OE</td>
+        <td>{if $x.state}{$x.state}{else}21-Odisha{/if}</td>
+        <td align="right">{$x.tax_per}</td>
+        <td align="right">{$x.tax_amount}</td>
+        <td align="right">{$x.cessamt}</td>
+        <td>&nbsp;</td>
+        {$taxamt=$taxamt+$x.tax_amount}
+        {$cess=$cess+$x.cessamt}
+    </tr>
+    {/foreach}
+    <tr>
+       	<th colspan="2">Total :</th>
+        <td>&nbsp;</td>
+       	<th align="right">{$taxamt|string_format:"%.2f"}</th>
+       	<th align="right">{$cess|string_format:"%.2f"}</th>
+        <td>&nbsp;</td>
+    </tr>
+</table>

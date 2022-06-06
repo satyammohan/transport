@@ -1,0 +1,35 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr> 
+            <th colspan="4">
+                 <select  id="list_status" onchange="update_listing('area', this.value);">
+                     {html_options options=$ini.status_all selected=$smarty.request.status}
+                 </select>
+            </th>
+            <th><a class="area" href="index.php?module=area&func=edit&ce=0">
+                    <div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>Area Name</th><th>Description</th><th>Zone Name</th><th>Representative</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$area item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.description}</td>
+        <td>{$mod.zone_name}</td>
+        <td>{$mod.represent_name}</td>
+        <td ><select  onchange="update_status('area', '{$mod.id_area}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td><a class="area" href="index.php?module=area&func=edit&id={$mod.id_area}"><div class="edit_bg">&nbsp;</div></a>
+            <a href="javascript:void(0);" id="index.php?module=area&func=delete&id={$mod.id_area}" onclick="del(this.id)"><div class="delete_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("areai");
+        tbl_handler();
+    });
+</script>

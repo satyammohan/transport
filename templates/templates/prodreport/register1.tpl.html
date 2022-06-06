@@ -1,0 +1,29 @@
+<table border="1">
+    <tr>
+       	<th>Sl.No.</th><th>Prod Sl. No.</th><th>Date</th><th>Ref.No.</th><th>Ref.date</th><th>Shift</th>
+        <th>Item</th><th>Batch</th><th>Type</th><th>Quantity</th><th>Free</th>
+    </tr>
+    {$slno = 1}
+    {$no = ""}
+    {section name=x loop=$data}
+    <tr>
+        {if $no != $data[x].slno}
+        <td>{$slno}</td>
+        <td>{$data[x].slno}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].reference_no}</td>
+        <td>{$data[x].reference_date|date_format:$smarty_date}</td>
+        <td>{$data[x].shift}</td>
+        {$slno = $slno + 1}
+        {else}
+        <td colspan="6">&nbsp;</td>
+        {/if}
+        {$no = $data[x].slno}
+        <td>{$data[x].name}</td>
+        <td>{$data[x].batch_name}</td>
+        <td>{$data[x].type}</td>
+        <td align="right">{$data[x].qty|string_format:"%.3f"}</td>
+        <td align="right">{$data[x].free|string_format:"%.3f"}</td>
+    </tr>
+    {/section}
+</table>

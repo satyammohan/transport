@@ -1,0 +1,25 @@
+{$gtotal=0}
+<table border="1">
+    <tr>
+        <th>Party</th><th>Address</th><th>No of Cash bills</th><th>No of Credit bills</th><th>Cash Sale</th><th>Credit Sale</th><th align="right">Total</th>
+    </tr>
+    {foreach item=v key=k from=$data}
+    {$total=0}
+    {foreach item=v1 key=k1 from=$v}
+    <tr>
+        <td>{$party[$k]}</td>
+        <td>{$v1.party_address}&nbsp;&nbsp;&nbsp;{$v1.party_address1}</td>
+        <td>{$v1.cashbills}</td>
+        <td>{$v1.creditbills}</td>
+        <td align="right">{$v1.cashtotal|string_format:"%.2f"}</td>
+        <td align="right">{$v1.credittotal|string_format:"%.2f"}</td>
+        <td align="right">{$v1.total|string_format:"%.2f"}</td>
+    </tr>
+    {$total = $total + $v1.total}
+    {/foreach}
+    {$gtotal = $gtotal + $total}
+    {/foreach}
+    <tr>
+        <th colspan="6">Grand Total:</th><th>{$gtotal|string_format:"%.2f"}</th>
+    </tr>
+</table>

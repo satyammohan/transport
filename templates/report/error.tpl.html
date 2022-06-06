@@ -1,0 +1,61 @@
+<fieldset>
+    <legend><h3>Error Report<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="GST" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Error Report Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    <table id='report' border="1">
+        <thead>
+        <tr>
+            <th>Sl</th><th>Bill No</th><th>Bill Date</th><th>In Date</th><th>Ref No</th><th>GRC</th><th>Name</th>
+            <th>Days Stay</th><th>Rent</th>
+            <th>Discount</th>
+            <th>Detail GST</th>
+            <th>Detail Amount</th>
+            <th>Summary GST</th>
+            <th>Summary Total</th>
+            <th>Remark</th>
+        </tr>
+        </thead>
+        {$s=1}
+        {foreach item=x name=it from=$data}
+            <tr>
+                <td>{$s}{$s=$s+1}</td>
+                <td>{$x.billno}</td>
+                <td>{$x.depature_date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.no}</td><td>{$x.grcno}</td><td>{$x.name}</td>
+                <td>{$x.daysstay}</td>
+                <td align="right">{$x.rent|string_format:"%.2f"}</td>
+                <td align="right">{$x.discount|string_format:"%.2f"}</td>
+                {$gst = $x.gst_5+$x.gst_12+$x.gst_18}
+                {$tot = $x.goodsamount_0+$x.goodsamount_5+$x.goodsamount_12+$x.goodsamount_18}
+                <td align="right">{$gst|string_format:"%.2f"}</td>
+                <td align="right">{($tot+$gst)|string_format:"%.2f"}</td>
+
+                <td align="right">{$x.gstamt|string_format:"%.2f"}</td>
+                <td align="right">{$x.total|string_format:"%.2f"}</td>
+                <td>
+                    {if $gst!=$x.gstamt}<!--{$gst}-{$x.gstamt}=-->{($gst-$x.gstamt)|string_format:"%.6f"}.Gst Not Matching<br>{/if}
+                    {if $x.total!=$tot+$gst}<!--{$tot+$gst}-{$x.total}=-->{($x.total-($tot+$gst))|string_format:"%.6f"}.Total Not Matching{/if}
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</div>

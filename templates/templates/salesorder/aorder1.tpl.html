@@ -1,0 +1,85 @@
+<table border="1">
+    <tr>
+        <th>Sl.No.</th>
+        <th>Invno</th>
+        <th>Date</th>
+        <th>Approve<br>Date</th>
+        <th>Company</th>
+        <th>Party</th>
+        <th>Address</th>
+        <th>Weight</th>
+        <th align="right">Total Before Tax</th>
+        <th align="right">Tax</th>
+        <th align="right">Total</th>
+        <th>Representative</th>
+        <th>Details</th>
+        <th>Convert to Bill</th>
+        <th>Cancel Approval</th>
+    </tr>
+    {$vattot=0} {$cash=0}
+    {$total=0} {$credit=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].invno}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].approve_date|date_format:$smarty_date}</td>
+        <td>{$data[x].cname}</td>
+        <td>{$data[x].party_name}</td>
+        <td>{$data[x].party_address}&nbsp;{$data[x].party_address1}</td>
+        <td align="right">{$weight[$data[x].id_salesorder]|string_format:"%.2f"}</td>
+        <td align="right">{($data[x].total-($data[x].totalcess+$data[x].vat))|string_format:"%.2f"}</td>
+        <td align="right">{($data[x].totalcess+$data[x].vat)|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].total}</td>
+        <td>{$salesman[$data[x].id_represent]}</td>
+        <td><a class="salesorder" href="index.php?module=salesorder&func=prsale&id={$data[x].id_salesorder}&ce=0">
+                <div title="Print Bill" class="report_bg">&nbsp;</div></a></td>
+        <td><a href="index.php?module=sales&func=edit&order_id={$data[x].id_salesorder}">Convert to Bill</a></td>
+        <td><a href="index.php?module=salesorder&func=cancelapprove&id={$data[x].id_salesorder}"
+                onclick="return confirm('Do you want to Cancel Approval?');">Cancel Approval</a></td>
+    </tr>
+    {$vat = $vat + ($data[x].totalcess+$data[x].vat)}
+    {$total = $total + $data[x].total}
+    {/section}
+    <tr>
+        <th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th>
+        <th>&nbsp;</th><th>Total</th>
+        <th align="right">{($total-$vat)|string_format:"%.2f"}</th>
+        <th align="right">{$vat|string_format:"%.2f"}</th>
+        <th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        fancy_handler("salesorder");
+        fancy_handler_iframe("pdf");
+        tbl_handler();
+    });
+</script>
+<table border="1">
+    <tr>
+        <th>Sl.No.</th>
+        <th>Item Name</th>
+        <th>Quantity</th>
+        <th>Free</th>
+        <th>Total</th>
+    </tr>
+	{$c1=0}{$c2=0}
+    {section name=x loop=$isum}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$isum[x].name}</td>
+        <td align="right">{$isum[x].quantity|string_format:"%.4f"}</td>
+        <td align="right">{$isum[x].free|string_format:"%.4f"}</td>
+        <td align="right">{($isum[x].quantity+$isum[x].free)|string_format:"%.4f"}</td>
+	{$c1 = $c1 + $isum[x].quantity}
+	{$c2 = $c2 + $isum[x].free}
+    </tr>
+    {/section}
+	<tr>
+		<th colspan="2">Total</th>
+	        <th>{$c1|string_format:"%.4f"}</th>
+	        <th>{$c2|string_format:"%.4f"}</th>
+	        <th>{($c1+$c2)|string_format:"%.4f"}</th>
+	</tr>
+</table>

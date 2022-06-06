@@ -1,0 +1,76 @@
+<fieldset>
+    <legend>Ledger Confirmation</legend>
+    <form method="post" action="index.php?module=accounts&func=confirmation">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.session.sdate|date_format:"01/04/%Y"}{/if}' /></td>
+                <td>End Date :</td>
+                <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+				<td>Print Date :</td>
+                <td><input type="text" autocomplete=false name="printdate" size="10" class="dtpick" value='{if isset($smarty.request.printdate)}{$smarty.request.printdate}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>Account :
+                    <select name="id" id="head" ><option value="{$smarty.request.id}">{$head[$smarty.request.id]}</option></select>
+                    <script type="text/javascript">
+                        $('#head').tokenize({
+                            placeholder: "Account Head",
+                            maxElements: 1,
+                            datas: "index.php?module=accounts&func=gethead"
+                        });
+                    </script>
+                </td>
+                <td align="center">
+                    <input type="submit" value="Go" />&nbsp;
+                    <input type="button" class="print" value="Print" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {if $data }
+<div style="float:right">Printed on : <b>{$smarty.request.printdate}</b></div>
+<br>
+<center><h2>CONFIRMATION OF ACCOUNTS</h2></center>
+From : <b>{$smarty.session.name}&nbsp;{$smarty.session.address1}&nbsp;{$smarty.session.address2}&nbsp;GSTIN:{$smarty.session.gstin}</b>
+<br>
+To : <b>{$head1[0].name}&nbsp;{$head1[0].address1}&nbsp;{$head1[0].address2}&nbsp;GSTIN:{$head1[0].gstin}</b>
+<br><br>
+Dear Sir,
+<br>
+I/We give below a statement of your account from {$smarty.session.sdate|date_format:$smarty_date} to {$smarty.session.edate|date_format:$smarty_date} which please confirm stating your IncomeTax File No and kindly return three copies of this letter. Our I.T. Permanent A/c is <b>: {$smarty.session.panno}</b>
+<br><br>
+    <table border="1">
+    <tr>
+       	<th colspan="4" width="50%">Debit</th>
+       	<th colspan="4" width="50%">Credit</th>
+    </tr>
+    <tr>
+       	<th>Date</th><th>Particular</th><th>Remarks</th><th>Amount</th>
+       	<th>Date</th><th>Particular</th><th>Remarks</th><th>Amount</th>
+    </tr>
+    {$debit=0} {$total=0} {$credit=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$data[x].dd}</td>
+        <td>{$data[x].dp}</td>
+		<td>{$data[x].dr}</td>
+        <td align="right">{if $data[x].dt}{$data[x].dt|string_format:"%.2f"}{/if}</td>
+        <td>{$data[x].cd}</td>
+        <td>{$data[x].cp}</td>
+		<td>{$data[x].cr}</td>
+        <td align="right">{if $data[x].ct}{$data[x].ct|string_format:"%.2f"}{/if}</td>
+		{$debit=$debit+$data[x].dt}
+		{$credit=$credit+$data[x].ct}
+    </tr>
+    {/section}
+    <tr>
+        <td colspan="3">Total</td>
+        <td align="right">{$debit|string_format:"%.2f"}</td>
+		<td colspan="3">Total</td>
+        <td align="right">{$credit|string_format:"%.2f"}</td>
+    </tr>
+</table>
+    {/if}
+</div>

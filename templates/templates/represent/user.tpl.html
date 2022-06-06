@@ -1,0 +1,24 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Address</th><th>User Name<th>Password</th>
+        </tr>
+    </thead>
+    {foreach from=$represent item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address} Phone: {$mod.phone}</td>
+        <td><input size='15' value='{$mod.username}' onblur="saveme('username', this.value, {$mod.id_represent} )"></td>
+        <td><input size='15' value='{$mod.password}' onblur="saveme('password', this.value, {$mod.id_represent} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function saveme(fld, fvalue, id) {
+        var url = "index.php?module=represent&func=setfieldvalue&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+</script>

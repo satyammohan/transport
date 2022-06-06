@@ -1,0 +1,167 @@
+<fieldset>
+    <legend>GSTR Sales JSON</legend>
+    <form method="post" action="index.php?module=gst&func=gstrJSON">
+        <table>
+            <tr>
+                <td>Start Date :</td>
+                <td>
+                    <select name="formonth" id="formonth">
+                        {html_options options=$period selected=$current}
+                    </select>
+                </td>
+                <td>
+                    <input type="checkbox" name="showjson" {if isset($smarty.request.showjson)}checked="checked"{/if} />Show JSON Data
+                </td>
+                <td>
+                    <input type="submit" value="Go" />&nbsp;
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    GSTR Sales JSON : {$current}<br>
+    <div id="tabs">
+        <ul>
+            <li><a href="#all">All</a></li>
+            <li><a href="#b2cs">B2CS</a></li>
+            <li><a href="#b2b">B2B</a></li>
+            <li><a href="#nil">Nil</a></li>
+            <li><a href="#doc_issue">Doc_Issue</a></li>
+            <li><a href="#hsn">HSN</a></li>
+        </ul>
+        <div id="all">
+            <p>{json_encode($data)}</p>
+        </div>
+        <div id="b2cs">
+            <p>
+                {if $smarty.request.showjson}{json_encode($data['b2cs'])}{/if}
+            <table border=1>
+                <tr>
+                    <th>sply_ty</th>
+                    <th>rt</th>
+                    <th>typ</th>
+                    <th>pos</th>
+                    <th>txval</th>
+                    <th>camt</th>
+                    <th>samt</th>
+                    <th>csamt</th>
+                </tr>
+                {$doc = $data['b2cs']}
+                {foreach item=x name=it from=$doc}
+                <tr>
+                    <td>{$x['sply_ty']}</td>
+                    <td align="right">{$x['rt']}</td>
+                    <td>{$x['typ']}</td>
+                    <td align="right">{$x['pos']}</td>
+                    <td align="right">{$x['txval']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['camt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['samt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['csamt']|string_format:"%.2f"}</td>
+                </tr>
+                {/foreach}
+            </table>
+
+            </p>
+        </div>
+        <div id="b2b">
+            <p>
+                {if $smarty.request.showjson}{json_encode($data['b2b'])}{/if}
+                <br><br><br><b>Under Construction</b>
+            </p>
+        </div>
+        <div id="nil">
+            <p>
+                {if $smarty.request.showjson}{json_encode($data['nil'])}{/if}
+            <table border=1>
+                <tr>
+                    <th>sply_ty</th>
+                    <th>expt_amt</th>
+                    <th>nil_amt</th>
+                    <th>ngsup_amt</th>
+                </tr>
+                {$doc = $data['nil']['inv']}
+                {foreach item=x name=it from=$doc}
+                <tr>
+                    <td>{$x['sply_ty']}</td>
+                    <td align="right">{$x['expt_amt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['nil_amt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['ngsup_amt']|string_format:"%.2f"}</td>
+                </tr>
+                {/foreach}
+            </table>
+            </table>
+            </p>
+        </div>
+        <div id="doc_issue">
+            <p>
+                {if $smarty.request.showjson}{json_encode($data['doc_issue'])}{/if}
+            <table border=1>
+                <tr>
+                    <th>num</th>
+                    <th>from</th>
+                    <th>to</th>
+                    <th>totnum</th>
+                    <th>cancel</th>
+                    <th>net_issue</th>
+                    <th>missing</th>
+                </tr>
+                {$doc = $data['doc_issue']['doc_det'][0]['docs']}
+                {foreach item=x name=it from=$doc}
+                <tr>
+                    <td>{$x['num']}</td>
+                    <td align="right">{$x['from']}</td>
+                    <td align="right">{$x['to']}</td>
+                    <td align="right">{$x['totnum']}</td>
+                    <td align="right">{$x['cancel']}</td>
+                    <td align="right">{$x['net_issue']}</td>
+                    <td align="right">{$x['missing']}</td>
+                </tr>
+                {/foreach}
+            </table>
+            </p>
+        </div>
+        <div id="hsn">
+            <p>
+                {if $smarty.request.showjson}{json_encode($data['hsn'])}{/if}
+            <table border=1>
+                <tr>
+                    <th>num</th>
+                    <th>hsn_sc</th>
+                    <th>desc</th>
+                    <th>uqc</th>
+                    <th>qty</th>
+                    <th>val</th>
+                    <th>iamt</th>
+                    <th>samt</th>
+                    <th>camt</th>
+                    <th>csamt</th>
+                </tr>
+                {$hsn = $data['hsn']['data']}
+                {foreach item=x name=it from=$hsn}
+                <tr>
+                    <td>{$x['num']}</td>
+                    <td>{$x['hsn_sc']}</td>
+                    <td>{$x['desc']}</td>
+                    <td>{$x['uqc']}</td>
+                    <td align="right">{$x['qty']}</td>
+                    <td align="right">{$x['val']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['iamt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['samt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['camt']|string_format:"%.2f"}</td>
+                    <td align="right">{$x['csamt']|string_format:"%.2f"}</td>
+                </tr>
+                {/foreach}
+            </table>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

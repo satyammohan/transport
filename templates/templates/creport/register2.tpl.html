@@ -1,0 +1,36 @@
+<table border="1">
+    <thead>
+    <tr>
+       	<th>Sl.No.</th>
+       	<th>Date</th>
+       	<th align="right">Goods Value</th>
+       	<th align="right">GST</th>
+       	<th align="right">Cess</th>
+       	<th align="right">Total</th>
+    </tr>
+    </thead>
+    {$vattot=0}
+    {$total=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td align="right">{$data[x].totalamt}</td>
+        <td align="right">{$data[x].vat}</td>
+        <td align="right">{$data[x].totalcess}</td>
+        <td align="right">{$data[x].total}</td>
+    </tr>
+    {$cess = $cess + $data[x].totalcess}
+    {$amt = $amt + $data[x].totalamt}
+    {$vattot = $vattot + $data[x].vat}
+    {$total = $total + $data[x].total}
+    {/section}
+    <tr>
+       	<th></th>
+        <th>Total</th>
+        <th align="right">{$amt}</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$cess|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

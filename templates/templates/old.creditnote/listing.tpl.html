@@ -1,0 +1,51 @@
+<table id="dataTable">
+    <thead>    
+        <tr>
+            <td colspan="8" valign="top">
+                <form action="index.php?module=creditnote&func=listing" method="post">
+                    <fieldset><legend>Filter Credit Note List</legend>
+                        <p><span>
+                                Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></span>
+                                Company:
+                                <select name="company">
+                                    <option value=" ">All</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Sl. No.</th><th>Date</th><th>Ref.No.</th><th>Ref Date</th><th>Bill No.</th><th>Bill Date</th><th>Party Name</th><th>GST/Tax</th><th>Total</th>
+            <th>
+                <a  href="index.php?module=creditnote&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{$mod.no}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td>{$mod.reference}</td>
+        <td>{$mod.refdate|date_format:$smarty_date}</td>
+        <td>{$mod.billno}</td>
+        <td>{$mod.billdate|date_format:$smarty_date}</td>
+        <td>{$mod.pname}</td>			
+        <td align="right">{$mod.vat}</td>
+        <td align="right">{$mod.total}</td>
+        <td align="left">
+            <a href="index.php?module=creditnote&func=edit&id={$mod.id_creditnote}"><div class="edit_bg">&nbsp;</div></a>
+            <a href="index.php?module=creditnote&func=delete&id={$mod.id_creditnote}&ce=0" onclick="return confirm('Do you want to delete?');"><div class="delete_bg">&nbsp;</div></a></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        tbl_handler();
+    });
+</script>

@@ -1,0 +1,58 @@
+{include file='report.tpl.html'}
+<b>Level Sales Statement : </b>
+<form method="post" action="index.php?module=partner&func=levelreport">
+    <table width="100%">
+        <tr>
+            <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+            <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+            <td><input data-mini="true" type="submit" value="Go" /></td>
+        </tr>
+    </table>
+</form>
+<table data-filter="true" data-input="#searchP" data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th data-priority="2">Sl.</th>
+            <th>Name</th><th data-priority="1" class="right"># Bills</th>
+            <th data-priority="2" class="right">Taxes</th>
+            <th class="right">Total</th>
+        </tr>
+    </thead>
+    <tbody>
+    {$cnt=1} {$bills=0} {$tax=0} {$total=0}
+    {foreach from=$level item=m}
+        <tr>
+            <td>{$cnt++}</td>
+            <td>
+                {if $m.type!=5}
+                    <a href='index.php?module=partner&func=levelreport&start_date={$smarty.request.start_date}&end_date={$smarty.request.end_date}&id={$m.id_so}'>{$m.name}</a>
+                {else}
+                    {$m.name}
+                {/if}
+            </td>
+            {$hids = ','|explode:$m.id_heads}
+            {$pbills=0}{$ptax=0}{$ptotal=0}
+            {foreach from=$hids item=id_head}
+                {$pbills = $pbills + $sales[$id_head]['cnt']}
+                {$ptax = $ptax + $sales[$id_head]['tax']}
+                {$ptotal = $ptotal + $sales[$id_head]['total']}
+            {/foreach}
+            <td class="right">{$pbills}</td>
+            <td class="right">{$ptax|string_format:"%.2f"}</td>
+            <td class="right">{$ptotal|string_format:"%.2f"}</td>
+            {$bills=$bills+$pbills}
+            {$tax=$tax+$ptax}
+            {$total=$total+$ptotal}
+        </tr>
+    {/foreach}
+    </tbody>
+    <tfoot>
+        <tr>
+            <th>&nbsp;</th>
+            <th>Total : </th>
+            <td class="right">{$bills}</td>
+            <td class="right">{$tax|string_format:'%.2f'}</td>
+            <td class="right">{$total|string_format:'%.2f'}</td>
+        </tr>
+    </tfoot>
+</table>

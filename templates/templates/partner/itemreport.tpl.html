@@ -1,0 +1,49 @@
+{include file='report.tpl.html'}
+<b>Itemwise Sales Statement : </b>
+<form method="post" action="index.php?module=partner&func=itemreport">
+    <table width="100%">
+        <tr>
+            <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+            <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+            <td><input data-mini="true" type="submit" value="Go" /></td>
+        </tr>
+    </table>
+</form>
+<table data-filter="true" data-input="#searchP" data-role="table" data-mode="columntoggle" class="ui-responsive ui-shadow">
+    <thead>
+        <tr>
+            <th>Product Name</th>
+            {foreach from=$level item=m}
+                <th>
+                {$name=$m.name|substr:0:5}
+                {if $m.type!=5}
+                    <a href='index.php?module=partner&func=itemreport&start_date={$smarty.request.start_date}&end_date={$smarty.request.end_date}&id={$m.id_so}'>{$name}</a>
+                {else}
+                    {$name}
+                {/if}
+                </th>
+            {/foreach}
+        </tr>
+    </thead>
+    <tbody>
+    {$cnt=1} {$bills=0} {$tax=0} {$total=0}
+    {foreach from=$products key=k item=m}
+        <tr>
+            <td>
+                {$m}
+            </td>
+            {foreach from=$level item=m}
+                <td class="right">
+                    {$qty=0}
+                    {$hids = ','|explode:$m.id_heads}
+                    {foreach from=$hids item=id_head}
+                        {$id = $id_head|cat:'_'|cat:$k}
+                        {$qty = $qty + $salesdet[$id]['qty']}
+                    {/foreach}
+                    {$qty}
+                </td>
+            {/foreach}
+        </tr>
+    {/foreach}
+    </tbody>
+</table>

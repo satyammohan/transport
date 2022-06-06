@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Partner Login {$smarty.session.type} {$smarty.session.name}</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+
+
+<link rel="stylesheet" href="/js/jquery.mobile-1.4.5/demos/css/themes/default/jquery.mobile-1.4.5.min.css">
+<link rel="stylesheet" href="/js/jquery.mobile-1.4.5/demos/_assets/css/jqm-demos.css">
+<script src="/js/jquery.mobile-1.4.5/demos/js/jquery.js"></script>
+<script src="/js/jquery.mobile-1.4.5/demos/_assets/js/index.js"></script>
+<script src="/js/jquery.mobile-1.4.5/demos/js/jquery.mobile-1.4.5.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="/js/jspdf.js"></script>
+
+</head>
+<script>
+  $( document ).ready(function() {
+    setTimeout(function(){
+      $('.err_msg').hide('slow');
+    }, 8000);
+  });
+</script>
+<!--Start of Tawk.to Script-->
+<!--
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/5b83cc7bafc2c34e96e7ef4b/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+-->
+<!--End of Tawk.to Script-->
+<style>
+body, table, td, tr, tbody, thead, th {
+  font-size: .9em !important;
+}
+th {
+    border-bottom: 1px solid #d6d6d6;
+}
+tr:nth-child(even) {
+    background: #e9e9e9;
+}
+.right {
+  text-align: right !important;
+}
+.bs {
+  width: 100% !important;
+  margin-top:10px;
+}
+.ns {
+  width:60px !important;
+}
+</style>
+
+<body>
+{$smarty_date='d-m-Y' scope="global"}
+<div data-role="page">
+  <div data-role="header">
+    {if $smarty.session.id_user}
+      <a href="index.php?module=partner&func=home" class="ui-btn ui-btn-left ui-corner-all ui-shadow ui-icon-home ui-btn-icon-left">Home</a>
+      <!--<h1><b>{$smarty.session.name} ({$smarty.session.type|ucfirst}) <a href="index.php?module=partner&func=notification"><i class="fa fa-bell"></i></a></b></h1>-->
+      <h1><b>{$smarty.session.name|strstr:' ':true} <a href="index.php?module=partner&func=notification"><i class="fa fa-bell"></i></a></b></h1>
+      <a href="#logout" data-transition="slide" data-role="button" class="ui-btn-right" data-icon="user">Logout</a>
+      <div data-role="navbar">
+        <ul>
+        {if $smarty.session.type=='party'}
+          <li><a href="index.php?module=partner&func=invoice">Bill</a></li>
+          <li><a href="index.php?module=partner&func=ledger">Ledger</a></li>
+          <li><a href="index.php?module=partner&func=createOrder">+Order</a></li>
+          <li><a href="index.php?module=partner&func=myOrders&approve=0">Order</a></li>
+          <li><a href="index.php?module=partner&func=myStock">Stock</a></li>
+        {else}
+          <li><a href="index.php?module=partner&func=myparty">Party</a></li>
+          <li><a href="index.php?module=partner&func=approveOrder&approve=0">Approve</a></li>
+          <li><a href="index.php?module=partner&func=report">Report</a></li>
+          <li><a href="index.php?module=partner&func=adminsales">Sales</a></li>
+          <li><a href="index.php?module=partner&func=unbilledOrder">Un-Billed</a></li>
+        {/if}
+        </ul>
+      </div>
+    {else}
+      <h1>Welcome To Partner Site</h1>
+    {/if}
+  </div>
+
+  <div data-role="main" class="ui-content">
+    <div class="err_msg"><b>{$smarty.session.msg}</b></div>
+    {include file=$page}
+  </div>
+</div> 
+<div data-role="page" data-dialog="true" id="logout">
+  <div data-role="main" class="ui-content">
+    <h3>Are you sure to Logout!</h3>
+    <p>You pressed to Logout from the System. Press <b>Ok</b> to Logout else close the Box to carry on your current work.</p>
+    <a href="index.php?module=partner&func=logout" class="ui-btn ui-btn-b ui-btn-inline ui-shadow ui-corner-all ui-mini ui-icon-check ui-btn-icon-left">Ok</a>
+    <a href="#" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-mini ui-icon-delete ui-btn-icon-left" data-rel="back">Cancel</a>
+  </div>
+</div>
+<script>
+$(".pdf").on("click", function () {
+    flname = $("#excelfile").val() ? $("#excelfile").val() : "accounts";
+    var doc = new jsPDF('l', 'pt', 'a4');
+    var res = doc.autoTableHtmlToJson(document.getElementById("pdf-table"));
+    doc.autoTable(res.columns, res.data, {
+      startY: 60,
+      styles: {
+       font: "courier",
+       fontSize: 10,
+       cellPadding: 0,
+       cellSpacing: 0,
+       halign: "left"
+     }
+    });
+    doc.save(flname);
+});
+</script>
+</body>
+</html>

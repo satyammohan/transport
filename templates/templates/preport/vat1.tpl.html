@@ -1,0 +1,87 @@
+<table id='report' border="1">
+    <tr>
+       	<th>Sl.No.</th>
+        <th>Type</th>
+       	<th>Invno</th>
+       	<th>Date</th>
+        <th>Party</th>
+        <th>Address</th>
+        {foreach item=t from=$tax}
+        <th>Goods Value<br>{$t.name}</th>
+        {if $t.tax_per!=0}
+        <th>VAT <br>{$t.name}</th>
+        {/if}
+        {/foreach}
+       	<th>Total Amount</th>
+       	<th>Total VAT</th>
+       	<th>Others</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0}
+    {$totalamt=0}
+    {$other=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>{$smarty.foreach.it.iteration}</td>
+        <td>{$ini.tax_type[$x.taxbill]}</td>
+        {if isset($smarty.request.debug)}
+        <td>{$x.id_purchase}-{$x.bill_no}</td>
+        {else}
+        <td>{$x.bill_no}</td>
+        {/if}
+        <td>{$x.bill_date|date_format:$smarty_date}</td>
+        <td>{$x.party_name}</td>
+        <td>{$x.party_address}&nbsp;{$x.party_address1}</td>
+        {$gm = 0}
+        {$tm = 0}
+        {foreach item=t from=$tax key=k}
+        <td align="right">
+            {if isset($detail[$x.id_purchase][$k].goods_amount)} 
+            {$detail[$x.id_purchase][$k].goods_amount} 
+            {$gm = $gm + $detail[$x.id_purchase][$k].goods_amount}
+            {$tax[$k]['gm'] = $tax[$k]['gm'] + $detail[$x.id_purchase][$k].goods_amount}
+            {else}
+            0.00
+            {/if}</td>
+        {if $t.tax_per!=0}
+        <td align="right">
+            {if isset($detail[$x.id_purchase][$k].tax_amount)}
+            {$detail[$x.id_purchase][$k].tax_amount}
+            {$tm = $tm + $detail[$x.id_purchase][$k].tax_amount}
+            {$tax[$k]['vm'] = $tax[$k]['vm'] + $detail[$x.id_purchase][$k].tax_amount}
+            {else}
+            0.00
+            {/if}
+        </td>
+        {/if}
+        {/foreach}
+        {if isset($smarty.request.debug)}
+        <td align="right">{if $gm|round:"2"!=$x.totalamt}<b>{$gm}<br>{$x.totalamt}</b>{else}{$x.totalamt}{/if}</td>
+        <td align="right">{if $tm|round:"2"!=$x.vat}<b>{$tm}<br>{$x.vat}</b>{else}{$x.vat}{/if}</td>
+        {else}
+        <td align="right">{$x.totalamt}</td>
+        <td align="right">{$x.vat}</td>
+        {/if}
+        <td align="right">{($x.add-$x.less+$x.round+$x.packing)|string_format:"%.2f"}</td>
+        <td align="right">{$x.total}</td>
+    </tr>
+    {$other = $other + ($x.add-$x.less+$x.round+$x.packing)}
+    {$totalamt = $totalamt + $x.totalamt}
+    {$vattot = $vattot + $x.vat}
+    {$total = $total + $x.total}
+    {/foreach}
+    <tr>
+        <th colspan="6">Total</th>
+        {foreach item=t from=$tax key=k}
+        <th align="right">{$tax[$k]['gm']|string_format:"%.2f"}</th>
+        {if $t.tax_per!=0}
+        <th align="right">{$tax[$k]['vm']|string_format:"%.2f"}</th>
+        {/if}
+        {/foreach}
+       	<th align="right">{$totalamt|string_format:"%.2f"}</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$other|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

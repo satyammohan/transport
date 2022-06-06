@@ -1,0 +1,39 @@
+<table id='report' border="1">
+    <tr>
+        <th>Type</th>
+       	<th>Start</th>
+       	<th>End</th>
+       	<th>No.Bills</th>
+       	<th>Goods Amount</th>
+       	<th>VAT</th>
+       	<th>Cess</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0}
+    {$totalamt=0}
+	{$cess=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>{$ini.tax_type[$x.taxbill]}</td>
+       	<th>{$x.min_invno}</th>
+       	<th>{$x.max_invno}</th>
+       	<th>{$x.bills}</th>
+        <td align="right">{$x.total-$x.vat}</td>
+        <td align="right">{$x.vat}</td>
+		<td align="right">{$x.totalcess}</td>
+        <td align="right">{$x.total}</td>
+    </tr>
+    {$totalamt = $totalamt + $x.total - $x.vat}
+    {$vattot = $vattot + $x.vat}
+    {$total = $total + $x.total}
+	{$cess = $cess + $x.totalcess}
+    {/foreach}
+    <tr>
+        <th colspan="4">Total</th>
+       	<th align="right">{$totalamt|string_format:"%.2f"}</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+		<th align="right">{$cess|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

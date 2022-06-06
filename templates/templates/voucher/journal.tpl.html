@@ -1,0 +1,158 @@
+<script type="text/javascript" src="jsmodule/account.js"></script>
+<script type="text/javascript" src="jsmodule/price.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#date").datepicker({
+            dateFormat:js_date,
+            minDate:"{$smarty.session.sdate|date_format:$ini.smarty_date}",
+            maxDate:"{$smarty.session.edate|date_format:$ini.smarty_date}"
+        });
+        $("#amt").priceField();
+        $("#no").focus();
+        $("#debit").blur(function(){
+            getsalebills();
+        })
+        {if isset($bill)}
+            getsalebills();
+        {/if}
+        $("#amt").blur(function(){
+            $("#billamt").html('<tr><td><input type="text" name="billno[]" value=""</td><td><input type="text" name="bamt[]" id="bamt"></td></tr>');
+            $("#billamt").show();
+            $("#bamt").val($("#amt").val());
+        })
+        $("#sub").click(function(){
+            var id=$("#hide").val();
+            if(id==''){
+                act = "insertmr";
+            } else {
+                act = "update";
+            }
+            document.add_voucher.action='index.php?module=voucher&func='+act;
+            if (form_valid()) {
+                $("form").submit();
+            }
+        });
+        $("#print").click(function(){ 
+            var id=$("#hide").val();
+            if(id==''){
+                act = "insertmr";
+            } else {
+                act = "update";
+            }
+            document.add_voucher.action='index.php?module=voucher&ce=0&func='+act;
+            document.add_voucher.target = '_blank';
+            if (form_valid()) {
+                $("form").submit();
+            }
+        });
+    })
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_voucher").validate({
+            rules:{
+                'vno'                 : { required: true },
+                'voucher[date]' : { required: true },
+                'debit'               : { required: true },
+                'credit'               : { required: true },
+                'voucher[id_head_credit]'     : { required: true },
+                'voucher[id_head_debit]'     : { required: true },
+                'voucher[total]'     : { required: true }
+            },
+            messages: {
+                'vno'                 : { required: "<br/>This Field is Required" },
+                'voucher[date]' : { required: "<br/>This Field is Required" },
+                'debit'               : { required: "<br/>This Field is Required" },
+                'credit'               : { required: "<br/>This Field is Required" },
+                'voucher[id_head_credit]'     : { required: "<br/>This Field is Required" },
+                'voucher[id_head_debit]'     : { required: "<br/>This Field is Required" },
+                'voucher[total]'     : { required: "<br/>This Field is Required" }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    
+</script>
+<table>
+    <tr><td  valign="top">
+            <form name="add_voucher" id="add_voucher"  method="post" action="" >
+                <fieldset>
+                    <legend>Journal</legend>
+                    <table>
+                        <tr>
+                            <td><b>Journal No :</b></td>
+                            <td><input type="text" onchange="check(this.value,this.id,'journal_add',1);" name="vno" id="no" value='{if $data}{$data.no}{else}{$nextno+1}{/if}'/>
+                                <label for="vno"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Date :</b></td>
+                            <td><input type="text" name="voucher[date]" id="date" value="{if $data}{$data.date|date_format:$ini.smarty_date}{else}{$smarty.now|date_format:$ini.smarty_date}{/if}"/>
+                                <label for="code"></label>
+                            </td>
+                        </tr>
+                        <tr style="display:none;">
+                            <td><b>Account Type:</b></td>
+                            <td>
+                                <select id="actype" name="voucher[account_type]">
+                                    {html_options options=$ini.account_type selected=1}
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Debit Account :</b></td>
+                            <td>
+                                <input type="text" name="debit" value='{if $data}{$head[$data.id_head_debit]}{/if}' id="debit" size="60"/>
+                                <input type="hidden" name="voucher[id_head_debit]" id="id_head_debit" value='{if $data}{$data.id_head_debit}{/if}'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Credit Account :</b></td>
+                            <td>
+                                <input type="text" name="credit" value='{if $data}{$head[$data.id_head_credit]}{/if}' id="credit" size="60"/>
+                                <input type="hidden" name="voucher[id_head_credit]" id="id_head_credit" value='{if $data}{$data.id_head_credit}{/if}'>
+                            </td>
+                        </tr>
+                        <tr >
+                            <td><b>Amount :</b></td>
+                            <td><input type="text"  name="voucher[total]" id="amt" value='{$data.total|string_format:"%.2f"}'>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Remark :</b></td>
+                            <td><textarea  name="voucher[memo]" cols="50" rows="5">{$data.memo}</textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <table border="1" cellspacing="0" id="billamt" align="center" {if $data } style="display:block;" {else} style="display:none;" {/if}>
+                                       <tr><th>Bill No</th><th>Amount</th></tr>
+                                        {if isset($bill)}
+                                        {foreach item=v1 key=k1 from=$bill}
+                                            <tr><td>{if $v1.cbill}<input type="text"  name="billno[]"  value="{$v1.cbill}">{else}&nbsp;{/if}</td>
+                                            <td><input type="text"  name="bamt[]" id="bamt" value="{$v1.total}"></td></tr>
+                                        {/foreach}
+                                        {else}
+                                            <tr><td><input type="text"  name="billno[]"  value=""</td>
+                                            <td><input type="text"  name="bamt[]" id="bamt"></td></tr>
+                                        {/if}
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center" colspan="2">
+                                <input type="hidden" id="hide" name="id" value="{$data.id}">
+                                <input type="button" value="Save"  id="sub"/>
+                                <input type="button" value="Save&print"  id="print"/>
+                                <input type="reset" value="Reset"/>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </form>
+        </td>
+        <td valign="top" width="650px">
+              <center><b>Bill Details</b><br>(Click on the Bill Number to Select)</center>
+              <table border="1" cellspacing="0" id="billdetail" style="width: 100%; font-size: 11px"></table>
+        </td>
+    </tr>
+</table>

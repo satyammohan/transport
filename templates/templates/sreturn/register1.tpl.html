@@ -1,0 +1,80 @@
+<table border="1">
+    <tr class="total">
+       	<th>Sl.No.</th>
+       	<th>Ref No.</th>
+       	<th>Ref Date</th>
+       	<th>Invno</th>
+       	<th>Date</th>
+        <th>GSTIN</th>
+        <th>Party</th>
+       	<th align="right">Goods Amount</th>
+       	<th align="right">GST %</th>
+       	<th align="right">GST</th>
+       	<th align="right">Cess</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0} {$cash=0}
+    {$total=0} {$cess=0} {$ga=0} {$p=0}
+    {section name=x loop=$data}
+    <tr>
+        <td>{$smarty.section.x.index_next}</td>
+        <td>{$data[x].slno}</td>
+        <td>{$data[x].date|date_format:$smarty_date}</td>
+        <td>{$data[x].challan_no}</td>
+        <td>{$data[x].challan_date|date_format:$smarty_date}</td>
+        <td>{$data[x].gstin}</td>
+        <td>{$data[x].name}</td>
+        <td align="right">{$data[x].gv|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].per}</td>
+        <td align="right">{$data[x].ta|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].totalcess}</td>
+        <td align="right">
+
+    {if $p != $data[x].id_sreturn}
+	 {$total = $total + $data[x].total}
+	 {$data[x].total|string_format:"%.2f"}
+    {else}
+	 {0|string_format:"%.2f"}
+    {/if}
+{$p= $data[x].id_sreturn}
+    </td>
+    </tr>
+	{if isset($smarty.request.itemdetails)}
+    {$det = $detail[$data[x].id_sreturn]}
+    <tr>
+        <td colspan="100">
+            <table width="100%">
+                {foreach item=di  key = k from=$det}
+                <tr>
+                    <td width="100px">&nbsp;</td>
+                    <td width="300px">{$di.name}</td>
+                    <td align="right">{$di.qty}</td>
+                    <td align="right">{$di.free}</td>
+                    <td align="right">{$di.rate}</td>
+                    <td align="right">{$di.goods_amount}</td>
+                    <td align="right">{($di.discount_amount1+$di.discount_amount2+$di.discount_amount3)|string_format:"%.2f"}</td>
+                    <td align="right">{$di.tax_per}</td>
+                    <td align="right">{$di.tax_amount}</td>
+                    <td align="right">{$di.cess|string_format:"%.2f"}</td>
+                    <td align="right">{$di.cessamt}</td>
+                    <td align="right">{$di.net_amount}</td>
+                </tr>
+                {/foreach}
+            </table>
+        </td>
+    </tr>
+    {/if}
+    {$cess = $cess + $data[x].totalcess}
+    {$vattot = $vattot + $data[x].ta}
+    {$gm = $gm + $data[x].gv}
+    {/section}
+    <tr class="total">
+        <th colspan="7">Total</th>
+       	<th align="right">{$gm|string_format:"%.2f"}</th>
+       	<th>&nbsp;</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$cess|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>
+

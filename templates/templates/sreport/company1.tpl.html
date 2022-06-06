@@ -1,0 +1,172 @@
+{if $smarty.request.group == 0}
+<table border="1" id="rpt">
+    <tr>
+       	<th>Sl.No.</th><th>Name</th><th>Party Name</th><th>Address</th><th>Invno</th><th>Date</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Discount</th><th>Spl. Discount</th><th>C.D.</th><th>Disc after VAT</th><th>VAT</th><th>Amount</th>
+    </tr>
+    {$curitem=""}{$discount_amount1=0}{$discount_amount2=0}{$discount_amount3=0}{$discount_amount4=0}{$qty=0}{$free=0}{$tax_amount=0}{$amount=0}{$x=0}
+    {section name=x loop=$data}
+        {if $curitem && $curitem!=$data[x].id_product}
+            <tr>
+                <th></th><th></th><th></th><th></th><th></th><th></th><th>TOTAL :</th>
+                <th>{$qty|string_format:"%.4f"}</th>
+                <th>{$free|string_format:"%.4f"}</th>
+                <th>{$discount_amount1|string_format:"%.2f"}</th>
+                <th>{$discount_amount2|string_format:"%.2f"}</th>
+                <th>{$discount_amount3|string_format:"%.2f"}</th>
+                <th>{$discount_amount4|string_format:"%.2f"}</th>
+                <th>{$tax_amount|string_format:"%.2f"}</th>
+                <th>{$amount|string_format:"%.2f"}</th>
+            </tr>
+            {$x=0}{$discount_amount1=0}{$discount_amount2=0}{$discount_amount3=0}{$discount_amount4=0}{$tax_amount=0}{$qty=0}{$free=0}{$amount=0}
+        {/if}
+        <tr>
+            <td>{$x=$x+1}{$x}</td>
+            <td>{if $x==1}{$data[x].name}{else}&nbsp;{/if}</td>
+            <td>{$data[x].pname}</td>
+            <td>{$data[x].address1}</td>
+            <td>{$data[x].invno}</td>
+            <td>{$data[x].date|date_format:$smarty_date}</td>
+            <td align="right">{$data[x].rate|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].qty|string_format:"%.4f"}</td>
+            <td align="right">{$data[x].free|string_format:"%.4f"}</td>
+            <td align="right">{$data[x].discount_amount1|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount2|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount3|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount4|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].tax_amount|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].amount|string_format:"%.2f"}</td>
+            {$discount_amount1=$discount_amount1+$data[x].discount_amount1}
+            {$discount_amount2=$discount_amount2+$data[x].discount_amount2}
+            {$discount_amount3=$discount_amount3+$data[x].discount_amount3}
+            {$discount_amount4=$discount_amount4+$data[x].discount_amount4}
+            {$tax_amount=$tax_amount+$data[x].tax_amount}
+            {$amount=$amount+$data[x].amount}
+            {$qty=$qty+$data[x].qty}
+            {$free=$free+$data[x].free}
+        </tr>
+        {$curitem=$data[x].id_product}
+    {/section}
+    <tr>
+        <th></th><th></th><th></th><th></th><th></th><th></th><th>TOTAL :</th>
+        <th>{$qty|string_format:"%.4f"}</th>
+        <th>{$free|string_format:"%.4f"}</th>
+        <th>{$discount_amount1|string_format:"%.2f"}</th>
+        <th>{$discount_amount2|string_format:"%.2f"}</th>
+        <th>{$discount_amount3|string_format:"%.2f"}</th>
+        <th>{$discount_amount4|string_format:"%.2f"}</th>
+        <th>{$tax_amount|string_format:"%.2f"}</th>
+        <th>{$amount|string_format:"%.2f"}</th>
+    </tr>
+</table>
+<script>
+    $.fn.removeCol = function(col) {
+        col = (!col) ? 1 : col;
+        $('tr td:nth-child(' + col + '), tr th:nth-child(' + col + ')', this).remove();
+        return this;
+    };
+    {if !isset($smarty.request.vat)}
+    $('#rpt').removeCol(14);
+    {/if}
+    {if !isset($smarty.request.vdisc)}
+    $('#rpt').removeCol(13);
+    {/if}
+    {if !isset($smarty.request.cash)}
+    $('#rpt').removeCol(12);
+    {/if}
+    {if !isset($smarty.request.spl)}
+    $('#rpt').removeCol(11);
+    {/if}
+    {if !isset($smarty.request.disc)}
+    $('#rpt').removeCol(10);
+    {/if}
+    {if !isset($smarty.request.address)}
+    $('#rpt').removeCol(4);
+    {/if}
+</script>
+{else}
+<table border="1" id="rpt">
+    <tr>
+       	<th>Sl.No.</th><th>Name</th><th>Invno</th><th>Date</th><th>Rate</th><th>Quantity</th><th>Free</th><th>Discount</th><th>Spl. Discount</th><th>C.D.</th><th>Disc after VAT</th><th>VAT</th><th>Amount</th>
+    </tr>
+    {$curitem=""}{$discount_amount1=0}{$discount_amount2=0}{$discount_amount3=0}{$discount_amount4=0}{$qty=0}{$free=0}{$tax_amount=0}{$amount=0}{$x=0}
+    {section name=x loop=$data}
+        {if $curitem!=$data[x].groupname}
+            {if $curitem}
+            <tr>
+                <th></th><th></th><th></th><th></th><th>TOTAL :</th>
+                <th>{$qty|string_format:"%.4f"}</th>
+                <th>{$free|string_format:"%.4f"}</th>
+                <th>{$discount_amount1|string_format:"%.2f"}</th>
+                <th>{$discount_amount2|string_format:"%.2f"}</th>
+                <th>{$discount_amount3|string_format:"%.2f"}</th>
+                <th>{$discount_amount4|string_format:"%.2f"}</th>
+                <th>{$tax_amount|string_format:"%.2f"}</th>
+                <th>{$amount|string_format:"%.2f"}</th>
+            </tr>
+            {$x=0}{$discount_amount1=0}{$discount_amount2=0}{$discount_amount3=0}{$discount_amount4=0}{$tax_amount=0}{$qty=0}{$free=0}{$amount=0}
+            {/if}
+             <tr><td colspan="20"><b>{$grouptitle|upper} :: {$data[x].groupname}</b></td></tr>
+        {/if}
+        <tr>
+            <td>{$x=$x+1}{$x}</td>
+            <td>{$data[x].name}</td>
+            <td>{$data[x].invno}</td>
+            <td>{$data[x].date|date_format:$smarty_date}</td>
+            <td align="right">{$data[x].rate|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].qty|string_format:"%.4f"}</td>
+            <td align="right">{$data[x].free|string_format:"%.4f"}</td>
+            <td align="right">{$data[x].discount_amount1|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount2|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount3|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].discount_amount4|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].tax_amount|string_format:"%.2f"}</td>
+            <td align="right">{$data[x].amount|string_format:"%.2f"}</td>
+            {$discount_amount1=$discount_amount1+$data[x].discount_amount1}
+            {$discount_amount2=$discount_amount2+$data[x].discount_amount2}
+            {$discount_amount3=$discount_amount3+$data[x].discount_amount3}
+            {$discount_amount4=$discount_amount4+$data[x].discount_amount4}
+            {$tax_amount=$tax_amount+$data[x].tax_amount}
+            {$amount=$amount+$data[x].amount}
+            {$qty=$qty+$data[x].qty}
+            {$free=$free+$data[x].free}
+        </tr>
+        {$curitem=$data[x].groupname}
+    {/section}
+    <tr>
+        <th></th><th></th><th></th><th></th><th>TOTAL :</th>
+        <th>{$qty|string_format:"%.4f"}</th>
+        <th>{$free|string_format:"%.4f"}</th>
+        <th>{$discount_amount1|string_format:"%.2f"}</th>
+        <th>{$discount_amount2|string_format:"%.2f"}</th>
+        <th>{$discount_amount3|string_format:"%.2f"}</th>
+        <th>{$discount_amount4|string_format:"%.2f"}</th>
+        <th>{$tax_amount|string_format:"%.2f"}</th>
+        <th>{$amount|string_format:"%.2f"}</th>
+    </tr>
+</table>
+<script>
+    $.fn.removeCol = function(col) {
+        col = (!col) ? 1 : col;
+        $('tr td:nth-child(' + col + '), tr th:nth-child(' + col + ')', this).remove();
+        return this;
+    };
+    {if !isset($smarty.request.vat)}
+    $('#rpt').removeCol(14);
+    {/if}
+    {if !isset($smarty.request.vdisc)}
+    $('#rpt').removeCol(13);
+    {/if}
+    {if !isset($smarty.request.cash)}
+    $('#rpt').removeCol(12);
+    {/if}
+    {if !isset($smarty.request.spl)}
+    $('#rpt').removeCol(11);
+    {/if}
+    {if !isset($smarty.request.disc)}
+    $('#rpt').removeCol(10);
+    {/if}
+    {if !isset($smarty.request.address)}
+    $('#rpt').removeCol(4);
+    {/if}
+</script>
+{/if}

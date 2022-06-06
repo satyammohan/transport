@@ -1,0 +1,93 @@
+<div class="print_content">
+	{$smarty.session.cname} {$smarty.session.fyear}<br>
+	Represeativewise Party Statement for the Period : Till {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+	<br /><br />
+	<table border="1">
+		<tr>
+			<th>Representative</th><th>Sl.No.</th><th>Party</th><th>Address</th><th>Debit</th><th>Credit</th>
+		</tr>
+		{$debit=0}{$credit=0}{$gdebit=0}{$gcredit=0}
+		{$next=0}
+		{$prev = ""}
+		{section name=x loop=$data}
+		<tr>
+			{if $prev!=$data[x].rname}
+				{if $next!=0}
+					<tr>
+						<th colspan='4'>&nbsp;</th>
+						<th align="right">{(-1*$debit)|string_format:"%.2f"}</th>
+						<th align="right">{$credit|string_format:"%.2f"}</th>
+					</tr>
+					<tr>
+					<th colspan='4'>Total:</th>
+					{if $debit+$credit<0}
+						<th align="right">{(-1*($debit+$credit))|string_format:"%.2f"}</th>
+						<th align="right">&nbsp;</th>					
+					{else}
+						<th align="right">&nbsp;</th>
+						<th align="right">{($debit+$credit)|string_format:"%.2f"}</th>
+					{/if}
+					</tr>
+					<tr><th colspan='6'>&nbsp;</th></tr>
+					{$debit=0}
+					{$credit=0}
+				{/if}
+				{$rname=$data[x].rname}
+				{$next=0}				
+			{else}
+				{$rname=''}
+			{/if}
+			<td>{$rname}</td>
+			{$next=$next+1}
+			<td align="right">{$next}</td>
+			<td>{$data[x].name}</td>
+			<td>{$data[x].address1}</td>
+			{if $data[x].balance<0}
+				<td align="right">{(-1*$data[x].balance)|string_format:"%.2f"}</td>
+				<td align="right">&nbsp;</td>					
+				{$debit = $debit + $data[x].balance}
+				{$gdebit = $gdebit + $data[x].balance}
+			{else}
+				<td align="right">&nbsp;</td>
+				<td align="right">{$data[x].balance|string_format:"%.2f"}</td>
+				{$credit = $credit + $data[x].balance}
+				{$gcredit = $gcredit + $data[x].balance}
+			{/if}
+		</tr>
+		{$prev = $data[x].rname}
+		{/section}
+		<tr>
+			<th colspan='4'>&nbsp;</th>
+			<th align="right">{(-1*$debit)|string_format:"%.2f"}</th>
+			<th align="right">{$credit|string_format:"%.2f"}</th>
+		</tr>
+		<tr>
+		<th colspan='4'>Total:</th>
+		{if $debit+$credit<0}
+			<th align="right">{(-1*($debit+$credit))|string_format:"%.2f"}</th>
+			<th align="right">&nbsp;</th>					
+		{else}
+			<th align="right">&nbsp;</th>
+			<th align="right">{($debit+$credit)|string_format:"%.2f"}</th>
+		{/if}
+		</tr>
+
+		<tr>
+			<th colspan='4'>&nbsp;</th>
+			<th align="right">{(-1*$gdebit)|string_format:"%.2f"}</th>
+			<th align="right">{$gcredit|string_format:"%.2f"}</th>
+		</tr>
+		<tr>
+		<th colspan='4'>Grand Total:</th>
+		{if $gdebit+$gcredit<0}
+				<th align="right">{(-1*($gdebit+$gcredit))|string_format:"%.2f"}</th>
+				<th align="right">&nbsp;</th>
+		{else}
+				<th align="right">&nbsp;</th>
+				<th align="right">{($gdebit+$gcredit)|string_format:"%.2f"}</th>
+		{/if}
+		</tr>
+
+	</table>
+</div>
+

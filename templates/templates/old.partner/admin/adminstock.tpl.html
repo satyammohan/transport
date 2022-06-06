@@ -1,0 +1,58 @@
+<fieldset>
+    <legend>Partner Stock Statement</legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start :</td>
+                <td><input type="text" name="start_date" size="6" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <td>End :</td>
+                <td><input type="text" name="end_date" size="6" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+                <!-- <td>
+                    <select name="represent">
+                        <option value=" ">All Representative</option>
+                        {html_options options=$salesman selected=$smarty.request.represent}
+                    </select>
+                </td> -->
+                <td>
+                    Company :<select name="company">
+                        <option value=" ">All Company</option>
+                        {html_options options=$company selected=$smarty.request.company}
+                    </select>
+                </td>
+                <td colspan="4" align="center">
+                    <input type="submit" value="Go" />
+                    <input type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="PartnerStock" />
+                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Partner Stock Statement Period {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+    {$pparty=""}
+    {$address1=""}
+    <table border="1">
+        <tr><th>Party Name</th><th>Address</th><th>Company</th><th>Item</th><th>Open</th><th>Purc</th><th>Sales</th><th>Close</th></tr>
+        {foreach from=$stock item=m key=k}
+            {if !($m.oqty==0 && $m.pqty==0 && $m.sqty==0)}
+                <tr>
+                    <td>{if $pparty==$m.hname && $address1==$m.address1}&nbsp;{else}{$m.hname}{/if}</td>
+                    <td>{if $pparty==$m.hname && $address1==$m.address1}&nbsp;{else}{$m.address1}{/if}</td>
+                    <td>{$m.cname}</td>
+                    <td>{$m.name}</td>
+                    <td align="right">{$m.oqty|string_format:'%.0f'}</td>
+                    <td align="right">{$m.pqty|string_format:'%.0f'}</td>
+                    <td align="right">{$m.sqty|string_format:'%.0f'}</td>
+                    <td align="right">{($m.oqty+$m.pqty-$m.sqty)|string_format:'%.0f'}</td>
+                </tr>
+                {$pparty=$m.hname}
+                {$address1=$m.address1}
+            {/if}
+        {/foreach}
+        {$sl = $sl + 1}
+    </table>
+</div>

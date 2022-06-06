@@ -1,0 +1,126 @@
+<script type="text/javascript">
+    function check() {
+        id_item = $("#item").val();
+        batchno= $("#batch_no").val();
+        id = $("#hide").val();
+        url = "index.php?module=batch&func=check_batch&id_item="+id_item+"&batch_no="+batchno+"&id="+id;
+        $.post(url, function(data) {
+            if (data >= 1) {
+                $("#msgbox").fadeTo(900, 0.1, function() {
+                    $(this).html('This Batch Number already exists.').removeClass().addClass('msgerror').fadeTo(900, 1);
+                    setTimeout(function() {
+                        $("#batch_no").focus();
+                    }, 1);
+                })
+                $("#submit").attr('disabled','disabled');
+            } else {
+                $("#msgbox").hide('slow');
+                $("#submit").removeAttr('disabled');
+            }
+        })
+        getprevrate();
+    }
+    function changeme(id) {
+    	window.location.href="index.php?module=batch&func=edit&id_company="+id;
+    }
+    function getprevrate() {
+        if (!$("#hide").val()) {
+            id = $("#item").val();
+            $.post("index.php?module=batch&func=getprevrate&id_product="+id, function(data) {
+                res  = JSON.parse(data);
+                $("#mrp_without_tax").val(res.mrp_without_tax);
+                $("#mrp").val(res.mrp);
+                $("#purchase_price").val(res.purchase_price);
+                $("#seller_price").val(res.seller_price);
+            })
+        }
+    }
+    $(document).ready(function(){
+	$("#batch_no").focus();
+        $(".mfg").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'M yy',
+            onClose: function(dateText, inst) { 
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).datepicker('setDate', new Date(year, month, 1));
+            }
+        });
+    });
+</script>
+{if $data.id_batch}{$id=$data.id_product}{else}{$id=$smarty.request.id_product}{/if}
+<fieldset>
+    <iframe style="border: none;" height="50px" width="600px" src="index.php?module=product&func=gethsn&id_product={$id}&ce=0&frombatch=0"></iframe>
+    <form name="trans" id="add_trans" method="post" action="index.php?module=batch&func={if $data.id_batch}update{else}insert{/if}">
+        <legend>{if $data.id_batch}Edit{else}Add{/if} Batch</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Company Name:</b></td>
+                <td><select onchange="changeme(this.value)" >
+                        {html_options options=$company selected=$smarty.request.id_company}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Item Name:</b></td>
+                <td><select id="item" name="batch[id_product]">
+                        {html_options options=$product selected=$id}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Batch No:</b></td>
+                <td><input type="text" name="batch[batch_no]" value="{$data.batch_no}" id="batch_no" onblur="check()"/>
+                    <br><span id="msgbox"></span>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Exp Date:</b></td>
+                <td><input type="text" name="batch[expiry_date]" class="dtpickno" value="{$data.expiry_date|date_format:$smarty_date}" autocomplete="off"/></td>
+            </tr>
+<!---
+            <tr>
+                <td><b>MRP:</b></td>
+                <td><input type="text" name="batch[mrp]"  value="{$data.mrp}" id="mrp"/></td>
+            </tr>--->
+            <tr>
+                <td><b>MRP:</b></td>
+                <td><input type="text" name="batch[mrp_without_tax]"  value="{$data.mrp_without_tax}" id="mrp_without_tax"/></td>
+            </tr>
+            <tr>
+                <td><b>Purchasing Price:</b></td>
+                <td><input type="text" name="batch[purchase_price]" value="{$data.purchase_price}" id="purchase_price"/></td>
+            </tr>
+            <tr>
+                <td><b>Selling Price:</b></td>
+                <td><input type="text" name="batch[seller_price]"  value="{$data.seller_price}" id="seller_price"/></td>
+            </tr>
+            <tr>
+                <td><b>Distributor Price/PTR:</b></td>
+                <td><input type="text" name="batch[distributor_price]"  value="{$data.distributor_price}" id="distributor_price"/></td>
+            </tr>
+            <tr>
+                <td><b>Modern Trade Price:</b></td>
+                <td><input type="text" name="batch[moderntrade_price]"  value="{$data.moderntrade_price}"/></td>
+            </tr>
+            <tr>
+                <td><b>Modern Trade Price:</b></td>
+                <td><input type="text" name="batch[moderntrade_price]"  value="{$data.moderntrade_price}"/></td>
+            </tr>
+            <tr>
+                <td><b>Mfg Date:</b></td>
+                <td><input type="text" name="batch[mfg_date]"  class="dtpickno" value="{$data.mfg_date}"/></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_batch}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <iframe style="border: none;" height="170px" width="600px" src="index.php?module=bonus&func=getbonus&id_product={$id}&ce=0&frombatch=0"></iframe>
+</fieldset>

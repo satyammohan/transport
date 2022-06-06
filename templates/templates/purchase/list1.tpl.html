@@ -1,0 +1,78 @@
+<script type="text/javascript">
+    $(function(){
+        $('#id_purchase').click(function(){
+            var val = [];
+            $(':checkbox:checked').each(function(i){
+                val[i] = $(this).val();
+            });
+            if(val==''){
+                
+                alert('There is no record selected for Report!');
+                
+            }else{
+                window.open('index.php?module=purchase&func=printpurchase&id='+val+'&ce=0','_new','scrollbars=yes,resizable=yes,width=720,height=450,top=50,left=250');
+            }
+        });
+        
+    });
+    
+</script>
+<table id="dataTable" border="1">
+    <thead>    
+        <tr>
+            <td colspan="9" align="left">
+                <form action="index.php?module=purchase&func=listing" method="post">
+                    <fieldset><legend>Filter Purchase List</legend>
+                        <p><span>
+                                Start Date:<input type="text" name="start_date" id="sd" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" id="ed" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></span>
+                            <span>Representative:
+                                <select name="represent">
+                                    <option value=" ">All</option>
+                                    {html_options options=$salesman selected=$smarty.request.represent}
+                                </select></span>
+                            <span>
+                                Company:
+                                <select name="company">
+                                    <option value=" ">All</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>Type</th><th>Sl No</th><th>Date</th><th>Party</th><th>Total Amount</th><th>Discount</th><th>Vat</th>
+            <th>
+                <a href="#" id="id_purchase"><img src="images/report2.png" alt="Purchase" width="35" title="report"></a>
+                <a  href="index.php?module=purchase&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{$mod.type}</td>
+        <td>{$mod.no}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td>{$mod.party_name}</td>
+        <td>{$mod.total|string_format:"%.2f"}</td>			
+        <td>{$mod.discount|string_format:"%.2f"}</td>			
+        <td>{$mod.vat|string_format:"%.2f"}</td>			
+        <td align="left">
+            <input type="checkbox" name="id_purchase[]" value="{$mod.id}"/>
+            <a href="#" id="index.php?module=purchase&func=delete&id={$mod.id_purchase}&ce=0" onclick="del(this.id)"><div title="Delete" class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=purchase&func=edit&id={$mod.id_purchase}"><div title="Edit" class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        tbl_handler();
+               
+    });
+</script>

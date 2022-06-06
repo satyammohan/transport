@@ -1,0 +1,117 @@
+<style type="text/css">
+    input, button, select{
+        padding: 5px;
+    }
+    table{
+        margin-bottom: 5px;
+        border-collapse: collapse;
+    }
+    table, th, td{
+        border: 1px solid #cdcdcd;
+    }
+    table th, table td{
+        padding: 5px;
+    }
+</style>
+<script type="text/javascript">
+	function showtotal() {
+		var totalamt = 0;
+		$("input[name='billtotal[]']").each(function(){
+			totalamt += +$(this).val();
+		});
+		$("#mtotal").html(parseFloat(totalamt).toFixed(2));
+	}
+    $(document).ready(function(){
+        $(".add-row").click(function() {
+            var invno = $("#invno").val();
+			$("#invno").val('');
+			if (invno!="") {
+				var date = $("#date").val();
+				$("#date").val('');
+				var saleamt = $("#saleamt").val();
+				saleamt = parseFloat(saleamt).toFixed(2);;
+				$("#saleamt").val('');
+				var represent = $("#represent option:selected").html();
+				var r = $("#represent").val();
+				var company = $("#company option:selected").html();
+				var c = $("#company").val();
+				var markup = "<tr>";
+				markup = markup + "<td><input type='checkbox' name='record'></td>" ;
+				markup = markup + "<td><input name='invno[]' value='" + invno + "'></td>";
+				markup = markup + "<td><input name='date[]' value='" + date + "' class='dtpickno'></td>";
+				markup = markup + "<td><input type='hidden' name='company[]' value='"+c+"'>"+company+"</td>";
+				markup = markup + "<td><input type='hidden' name='represent[]' value='"+r+"'>"+represent+"</td>";
+				markup = markup + "<td><input name='billtotal[]' value='" + saleamt + "'></td></tr>";
+				$("#billdetail tbody").append(markup);
+				showtotal();
+			} else {
+				alert("Please enter Invoice Number");
+			}
+			$("#invno").focus();
+        });
+
+        $(".delete-row").click(function(){
+            $("#billdetail tbody").find('input[name="record"]').each(function(){
+                if($(this).is(":checked")){
+                    $(this).parents("tr").remove();
+                }
+            });
+			showtotal();
+        });
+		$("#invno").focus();
+		showtotal();
+    });
+</script>
+<h2>Opening Balance Details : Ledger Balance : {$data.0.opening_balance}</h2>
+<input type="text" id="invno" placeholder="Invoice Name">
+<input type="text" id="date" placeholder="Date" class="dtpickno" >
+<input type="text" id="saleamt" placeholder="Total">
+<select name="head[id_represent]" id="represent">
+	<option>Select Representative</option>
+	{html_options  options=$salesman} 
+</select>
+<select name="head[id_company]" id="company">
+	<option>Select Company</option>
+	{html_options  options=$company}
+</select>
+<input type="button" class="add-row" value="Add Row">
+<br><br>
+<form method="post" action="index.php?module=head&func=saveobchange&id={$smarty.request.id}">
+	<input type="hidden" name='id_head' value="{$smarty.request.id}">
+	<input type="hidden" name='id_area' value="{$data.0.id_area}">
+
+    <table id="billdetail">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Invoice</th>
+                <th>Date</th>
+                <th>Company</th>
+                <th>Representative</th>
+                <th>Total<div id='mtotal'></div></th>
+                <th><input type="submit" value="Save"></th>
+            </tr>
+        </thead>
+        <tbody>
+		{foreach from=$data item=mod}
+            <tr>
+                <td><input type="checkbox" name="record"></td>
+                <td><input name='invno[]' value='{$mod.invno}'></td>
+                <td><input name='date[]' value='{{$mod.date|date_format:$smarty_date}}' class="dtpickno"></td>
+                <td>
+					<select name='company[]'>
+						{html_options  options=$company selected=$mod.id_company} 
+					</select>
+                </td>
+                <td>
+					<select name="represent[]">
+						{html_options  options=$salesman selected=$mod.id_represent}
+					</select>
+                </td>
+                <td><input name='billtotal[]' value='{$mod.total|string_format:"%.2f"}'></td>
+            </tr>
+		{/foreach}
+        </tbody>
+    </table>
+    <button type="button" class="delete-row">Delete Row</button>
+</form>

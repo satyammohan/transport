@@ -1,0 +1,69 @@
+<script>
+    function reload(type) {
+        let url = "index.php?module=partner&func=unbilledOrder";
+        let cond = "";
+        if (type) {
+            cond = "&type="+type;
+        }
+        $(location).attr('href', url+cond);
+    }
+</script>
+<lable for="type"><b>Un-Billed Orders</b> Show :</lable><select onchange="reload(this.value)" name="type"  data-inline="true">
+    <option value="" {if !isset($smarty.request.type)}selected=selected{/if}>All</option>
+    <option value="1" {if $smarty.request.type=="1"}selected=selected{/if}>Ready to Bill</option>
+    <option value="0" {if $smarty.request.type=="0"}selected=selected{/if}>Not Approved</option>
+</select>
+{if $data}
+<table data-role="table" data-mode="columntoggle" class="ui-responsive">
+    <thead>
+        <tr>
+            <th data-priority="5">Sl.</th>
+            <th>Order#</th>
+            <th>Date</th>
+            <th>Party</th>
+            <th data-priority="6">Address</th>
+            <th>Total</th>
+            <th>Product</th>
+            <th data-priority="1">Qty</th>
+            <th data-priority="4">Free</th>
+            <th data-priority="3">Rate</th>
+            <th data-priority="2">Net</th>
+        </tr>
+    </thead>
+    {$total=0}
+    {$prev=0}
+    {$sl=1}
+    <tbody>
+    {section name=x loop=$data}
+    <tr>
+        {if $prev!=$data[x].id_salesorder}
+            <td>{$sl}</td>
+                {$sl = $sl + 1}
+            <td>{$data[x].invno}<br><font size="-2">{if $data[x].is_approve}Ready to Bill{else}<font color="red">Not Approved{/if}</font></font></td>
+            <td>{$data[x].date|date_format:$smarty_date}</td>
+            <td>{$data[x].party_name}</td>
+            <td>{$data[x].party_address}</td>
+            <td align="right">{$data[x].total}</td>
+        {else}
+            <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+        {/if}
+        <td>{$data[x].name}</td>
+        <td align="right">{$data[x].qty|string_format:"%.0f"}</td>
+        <td align="right">{$data[x].free|string_format:"%.0f"}</td>
+        <td align="right">{$data[x].rate|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].net_amount|string_format:"%.2f"}</td>
+    </tr>
+    {$total = $total + $data[x].total}
+    {$prev=$data[x].id_salesorder}
+    {/section}
+    <tr>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><th>Total</th><td>&nbsp;</td>
+       	<th>{$total|string_format:"%.2f"}</th>
+        <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+
+     </tr>
+    </tbody>
+</table>
+{else}
+    <br>No Order History for this Party.
+{/if}

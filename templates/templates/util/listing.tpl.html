@@ -1,0 +1,49 @@
+<legend>Manage Backup/Restore</legend><br>
+<table id="dataTable" border="1">
+     <thead>
+        <tr> 
+            <th colspan="5"></th>
+            <th><a title="Create Backup" href='index.php?module=util&func=backup'><div class="backup_bg"></div></a></th>
+        </tr>
+        <tr><th>Name</th><th>Date & Time</th><th>Restore</th><th>Download SQL</th><th>Download Zip</th><th>Delete</th></tr>
+    </thead>
+    {section name=x loop=$file}
+    <tr>
+        <td>{$file[x].filename}</td>
+        <td>{$file[x].date}</td>
+        <td><a href="javascript:void(0);" id='index.php?module=util&func=restore&id={$file[x].filename}' onclick="jrestore(this.id);">Restore</a></td>
+        <td><a href='index.php?module=util&func=downsql&id={$file[x].filename}.sql'>Download SQL</a></td>
+        <td><a href='index.php?module=util&func=downzip&id={$file[x].filename}.sql'>Download ZIP</a></td>
+        <td><a href="javascript:void(0);" id='index.php?module=util&func=delete&id={$file[x].filename}' onclick="jdelete(this.id);" class="delete_bg" title="Delete" ></a></td>
+    </tr>
+    {/section}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        tbl_handler();
+    });
+    function jrestore(id){
+        jConfirm('Do u want To Restore the Selected Backup?', 'Confirmation Restore of Backup', function(r) {
+            if (r==false) {
+                return false;
+            } else {
+                jConfirm('Do u  Really want To Restore the Selected Backup?', 'Confirmation Restore of Backup', function(r) {
+                    if (r==false) {
+                        return false;
+                    } else {
+                        window.location.href = id;
+                    }
+                });
+            }
+        });
+    }
+    function jdelete(id){
+        jConfirm('Do u want to Delete the Selected Backup?', 'Confirmation Delete of Backup', function(r) {
+            if (r==false) {
+                return false;
+            } else {
+                window.location.href = id;
+            }
+        });
+    }
+</script>

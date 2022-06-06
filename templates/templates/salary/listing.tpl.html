@@ -1,0 +1,40 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr> 
+            <th colspan="8">
+                 <select  id="list_status" onchange="update_listing('salary', this.value);">
+                     {html_options options=$ini.status_all selected=$smarty.request.status}
+                 </select>
+            </th>
+            <th><a href="index.php?module=salary&func=edit"><div class="add_bg"></div></a></th>
+        </tr>
+        <tr>
+            <th>No.</th><th>Link</th><th>Employee Name</th><th>Function</th><th>Designation</th><th>Location</th><td>ESI</td><th>Basic</th><th>Status</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$employee item=mod}
+    <tr>
+        <td>{$mod.no}</td>
+        <td>{$mod.id_head}</td>
+        <td>{$mod.name}</td>
+        <td>{$mod.function}</td>
+        <td>{$mod.designation}</td>
+        <td>{$mod.location}</td>
+	<td>{if $mod.esiflag==1}No{else}Yes{/if}</td>
+        <td>{$mod.basic}</td>
+        <td ><select  onchange="update_status('employee', '{$mod.id_employee}', this.value, $('#list_status').val());">
+                {html_options options=$ini.status selected=$mod.status}
+            </select></td>
+        <td>
+            <a href="javascript:void(0);" id="index.php?module=salary&func=delete&id={$mod.id_employee}&ce=0" onclick="del(this.id)"><div class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=salary&func=edit&id={$mod.id_employee}"><div class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("employee");
+        tbl_handler();
+    });
+</script>

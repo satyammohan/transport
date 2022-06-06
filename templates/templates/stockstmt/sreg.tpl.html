@@ -1,0 +1,82 @@
+<script type="text/javascript">
+    $(function() {
+        $("#type").val("{$smarty.request.type}");
+    });
+</script>
+<table width="100%">
+    <thead>    
+        <tr>
+            <td colspan="9" valign="top">
+                <form action="index.php?module=stockstmt&func=sreg" method="post">
+                    <fieldset><legend>Filter Stock Register</legend>
+                        Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.session.sdate|date_format:"%d/%m/%Y"}{/if}' />
+                        End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' />
+                        Company:
+                        <select name="company" onchange="this.form.submit();">
+                            <option value=" ">All</option>
+                            {html_options options=$company selected=$smarty.request.company}
+                        </select>
+                        Item:
+                        <select name="id_product">
+                            <option value="0">Select</option>
+                            {html_options options=$item selected=$smarty.request.id_product}
+                        </select>
+                        <select name="type" id="type">
+                            <option value="1">Pieces</option>
+                            <option value="12">Dozen</option>
+                            <option value="case">Cases</option>
+                            <option value="weight">Weight</option>
+                            <option value="meter">Meters</option>
+                        </select>
+                        <input type="submit" value="Go" />
+                        <input type="button" class="print" value="Print" />
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="9">
+                {if $sdata}
+                <div class="print_content">
+                    <table border="1" width="100%">
+                        <tr>
+                            <th>Date</th><th>Description</th><th>Type</th><th>Ref.No.</th><th>Conv.</th><th>Stock-In</th><th>Stock-Out</th><th>Balance</th>
+                        </tr>
+                        {$totqty = 0}
+                        {foreach from=$sdata item=mod key=k}
+                            {if isset($smarty.request.type)}
+                            {if is_numeric($smarty.request.type)}
+                            {$type = $smarty.request.type}
+                            {else}
+                            {$type = $smarty.request.type}
+                            {$type = $mod.$type}
+                            {/if}
+                            {else}
+                            {$type = 1}
+                            {/if}
+                        <tr>
+                            <td>{$mod.date|date_format:$ini.smarty_date}</td>
+                            <td>{if $mod.date}{$mod.name}{else}Opening Balance{/if}</td>
+                            <td>{$mod.ttype}</td>
+                            <td>{if $mod.date}{$mod.type}-{$mod.refno}{/if}</td>
+                            <td class="ra">{$type}</td>
+                            {$qty = $mod.qty+$mod.free}
+                            {$totqty = $totqty + $qty}
+                            {if $qty<0}
+                            <td class="ra">&nbsp;</td>
+                            <td class="ra">{(-1*$qty)|convert:$type}</td>
+                            {else}
+                            <td class="ra">{$qty|convert:$type}</td>
+                            <td class="ra">&nbsp;</td>
+                            {/if}
+                            <td class="ra">{$totqty|convert:$type}</td>
+                        </tr>
+                        {/foreach}
+                    </table>
+                </div>
+                {else}
+                No record Found with this match!
+                {/if}
+            </td>
+        </tr>
+</table>

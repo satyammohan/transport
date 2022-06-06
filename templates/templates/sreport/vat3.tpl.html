@@ -1,0 +1,75 @@
+<table id='report' border="1">
+    <tr>
+       	<th>Sl.No.</th>
+       	<th>Date</th>
+        {foreach item=t from=$tax}
+            <th>Goods Value<br>{$t.name}</th>
+            {if $t.tax_per!=0}
+                <th>VAT <br>{$t.name}</th>
+            {/if}
+        {/foreach}
+       	<th>Total Amount</th>
+       	<th>Total VAT</th>
+       	<th>Others</th>
+       	<th align="right">Total</th>
+    </tr>
+    {$vattot=0}
+    {$total=0}
+    {$totalamt=0}
+    {$other=0}
+    {foreach item=x name=it from=$data}
+    <tr>
+        <td>{$smarty.foreach.it.iteration}</td>
+        <td>{$x.month}</td>
+        {$gm = 0}
+        {$tm = 0}
+        {foreach item=t key=k from=$tax}
+        <td align="right">
+            {if isset($detail[$x.month][$k].goods_amount)} 
+            {$detail[$x.month][$k].goods_amount} 
+            {$gm = $gm + $detail[$x.month][$k].goods_amount}
+            {$tax[$k]['gm'] = $tax[$k]['gm'] + $detail[$x.month][$k].goods_amount}
+            {else}
+            0.00
+            {/if}</td>
+        {if $t.tax_per!=0}
+        <td align="right">
+            {if isset($detail[$x.month][$k].tax_amount)}
+            {$detail[$x.month][$k].tax_amount}
+            {$tm = $tm + $detail[$x.month][$k].tax_amount}
+            {$tax[$k]['vm'] = $tax[$k]['vm'] + $detail[$x.month][$k].tax_amount}
+            {else}
+            0.00
+            {/if}
+        </td>
+        {/if}
+        {/foreach}
+        {if isset($smarty.request.debug)}
+        <td align="right">{if $gm|round:"2" !=$x.totalamt}<b>{$gm}<br>{$x.totalamt}</b>{else}{$x.totalamt}{/if}</td>
+        <td align="right">{if $tm|round:"2" !=$x.vat}<b>{$tm}<br>{$x.vat}</b>{else}{$x.vat}{/if}</td>
+        {else}
+        <td align="right">{$x.totalamt}</td>
+        <td align="right">{$x.vat}</td>
+        {/if}
+        <td align="right">{($x.add-$x.less+$x.round+$x.packing)|string_format:"%.2f"}</td>
+        <td align="right">{$x.total}</td>
+    </tr>
+    {$other = $other + ($x.add-$x.less+$x.round+$x.packing)}
+    {$totalamt = $totalamt + $x.totalamt}
+    {$vattot = $vattot + $x.vat}
+    {$total = $total + $x.total}
+    {/foreach}
+    <tr>
+        <th colspan="2">Total</th>
+        {foreach item=t from=$tax key=k}
+        <th align="right">{$tax[$k]['gm']}</th>
+        {if $t.tax_per!=0}
+        <th align="right">{$tax[$k]['vm']}</th>
+        {/if}
+        {/foreach}
+       	<th align="right">{$totalamt|string_format:"%.2f"}</th>
+       	<th align="right">{$vattot|string_format:"%.2f"}</th>
+       	<th align="right">{$other|string_format:"%.2f"}</th>
+       	<th align="right">{$total|string_format:"%.2f"}</th>
+    </tr>
+</table>

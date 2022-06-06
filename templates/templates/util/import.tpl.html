@@ -1,0 +1,23 @@
+<script type="text/javascript">
+    function checkaccept() {
+        var cacc = $("#confirm").is(':checked');
+        if (!cacc) {
+            alert("Please Check the 'Confirm updating the Current data.'");
+        }
+        return cacc;
+    }
+</script>
+<fieldset>
+    <legend>Data Import Setup</legend>
+    <form enctype="multipart/form-data" action="index.php?module=util&func=upload" onsubmit="return checkaccept();" method="post">
+        <input type="hidden" name="MAX_FILE_SIZE" value="1073741824" />
+        Choose a file : <input type="file" name="upload">
+        <br><br>
+        <input type="checkbox" name="type" value="srsk"><label for="confirm">Rate in Billing is in Cases.</label>
+        <br><br>
+        <input type="checkbox" id="confirm" name="confirm"><label for="confirm">Confirm updating the Current data.</label>
+        <br><br>
+        <b>The current data will be overwritten by the uploaded Zip file. <br>No revert will be possible. Please be very very careful before pressing Upload.<br><br></b>
+        <input type="submit" value="Upload">
+    </form>
+</fieldset>

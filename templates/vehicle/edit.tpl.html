@@ -1,0 +1,37 @@
+<form method="post" action="index.php?module=vehicle&func={if $data.id_vehicle}update{else}insert{/if}">
+    <fieldset>
+        <legend>{if $data.id_vehicle}Edit{else}Add{/if} Vehicle</legend>
+        <table>
+            <tr>
+                <td><b>Vehicle No:</b></td>
+                <td><input type="text" class="form-control" name="vehicle[vehno]" value="{$data.vehno}" size="40"/>
+            </tr>
+            <tr>
+                <td><b>Vehicle Type:</b></td>
+                <td><input type="text" class="form-control" name="vehicle[vehtype]" value="{$data.vehtype}" size="40"/>
+            </tr>
+            <tr>
+                <td><b>Owner:</b></td>
+                <td><select class="form-control" name="vehicle[id_vowner]" required>
+                    <option>Select Vehicle Owner</option>
+                        {html_options options=$vowner selected=$data.id_vowner}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Status:</b></td>
+                <td><select name="vehicle[status]" class="form-control">
+                        {html_options selected={$data.status} options=$ini.status}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_vehicle}">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+                    <input class="btn btn-danger" type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

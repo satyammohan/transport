@@ -1,0 +1,26 @@
+<table id="dataTable" border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Address</th><th>Party User Name<th>Party Password</th>
+        </tr>
+    </thead>
+    {foreach from=$head item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.address1} {$mod.address2}<br>
+            {$mod.contact_person} Phone: {$mod.phone}
+            </td>
+        <td><input size='15' value='{$mod.partyuser}' onblur="savehead('partyuser', this.value, {$mod.id_head} )"></td>
+        <td><input size='15' value='{$mod.partypass}' onblur="savehead('partypass', this.value, {$mod.id_head} )"></td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        tbl_handler();
+    });
+    function savehead(fld, fvalue, id) {
+        var url = "index.php?module=head&func=setcreditlimit&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url);
+    }
+</script>

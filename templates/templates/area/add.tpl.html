@@ -1,0 +1,71 @@
+<script type="text/javascript">
+    function form_valid() {
+        var fvalid=$("#add_area").validate({
+            rules:{
+                'area[name]': {
+                    required: true,
+                    remote: { url:"index.php?module=area&func=check_area&id={$data.id_area}", async:false }
+                },
+                'name': { required:true }
+            },
+            messages: { 
+                'area[name]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>area already exists"
+                },
+                'name': { required:"<br/>This Field is Required" }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+    $(document).ready(function() {
+        callauto("zone", "index.php?module=zone&func=getzone&ce=0", "id_zone");
+    });
+</script>
+<form id="add_area" method="post" action="index.php?module=area&func={if $data.id_area}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_area}Edit{else}Add{/if} Area</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Name:</b></td>
+                <td><input type="text" name="area[name]" id="name" value="{$data.name}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td><b>Description:</b></td>
+                <td><textarea name="area[description]">{$data.description}</textarea></td>
+            </tr>
+            <tr>
+                <td><b>Representative:</b></td>
+                <td>
+                    <select name="area[id_represent]">
+                        <option value="0">Select</option>
+                        {html_options selected={$data.id_represent} options=$represent}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Zone:</b></td>
+                <td><input type="text" id="zone" name="name" value="{$data.zone_name}" />
+                    <input type="hidden" id="id_zone" name="area[id_zone]" value="{$data.id_zone}" />
+                    <label for="name"></label></td>
+            </tr>
+
+            <tr>
+                <td><b>Status:</b></td>
+                <td><select name="area[status]">
+                        {html_options selected={$data.status} options=$ini.status}
+                    </select>
+                </td>
+            </tr> 
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_area}" />
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>

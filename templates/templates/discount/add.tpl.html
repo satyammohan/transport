@@ -1,0 +1,64 @@
+<script type="text/javascript">
+    var fvalid;
+    function form_valid() {
+        var fvalid=$("#add_trans").validate({
+            rules:{
+                'discount[id_company]': {
+                    required: true,
+                    remote: { url:"index.php?module=discount&func=check_discount&id={$data.id_discount}&id_head="+$("#head").val(), async:false }
+                },
+                'discount[id_head]': {
+                    required: true
+                }
+                  
+            },
+            messages: { 
+                'discount[id_company]':{
+                    required: "<br/>This Field is Required",
+                    remote:"<br/>Record with same Party & Company exists"
+                },
+                'discount[id_head]':{
+                    required: "<br/>This Field is Required"
+                }
+            }
+        });
+        var x = fvalid.form();
+        return x;
+    }
+</script>
+<form name="trans" id="add_trans" method="post" action="index.php?module=discount&func={if $data.id_discount}update{else}insert{/if}" onsubmit="return form_valid();">
+    <fieldset>
+        <legend>{if $data.id_discount}Edit{else}Add{/if} Discount</legend>
+        <table border="0" cellspacing="2" cellpadding="2">
+            <tr>
+                <td><b>Party Name:</b></td>
+                <td><select id="head" name="discount[id_head]">
+                        <option value="">--Select--</option>
+                        {html_options options=$head selected=$data.id_head}
+                    </select>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <th><b>Company Name:</b></th>
+                <td><select id="company" name="discount[id_company]">
+                        <option value="">--Select--</option>
+                        {html_options options=$company selected=$data.id_company}
+                    </select>
+                    <label for="name"></label>
+                </td>
+            </tr>
+            <tr>
+                <td><b>Discount(in %age):</b></td>
+                <td><input type="text" name="discount[discount]"  value="{$data.discount}"/>
+                    <label for="name"></label></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2">
+                    <input type="hidden" id="hide" name="id" value="{$data.id_discount}">
+                    <input type="submit" id="submit" value="Submit" />
+                    <input type="reset" name="res" value="Reset"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form> 

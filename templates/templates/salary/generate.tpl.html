@@ -1,0 +1,177 @@
+<br>
+<script type="text/javascript" src="{$source}jsmodule/salary.js?a=3"></script>
+{if !$smarty.request.Date_Month}
+    <h3>Generate Salary</h3>
+    <form method="get" action="index.php">
+        <input type="hidden" name="module" value="salary" />
+        <input type="hidden" name="func" value="generate" />
+        Month : {html_select_date start_year='-1' end_year='+1' display_days=false} 
+        <input type="submit" id="submit" value="Submit" />
+    </form>
+{else}
+    <h3>Salary for {$smarty.request.Date_Month} - {$smarty.request.Date_Year}</h3>
+    <input type="hidden" name="month" id="month" value="{$smarty.request.Date_Month}">
+    <input type="hidden" name="year" id="year" value="{$smarty.request.Date_Year}">
+    <table border="1" >
+        <thead>
+            <tr>
+                <th>No.</th><th>Employee Name</th><th>Working Days</th><th>Basic</th><th>Days Worked</th><th>Earning</th><th>Net Salary</th>
+                <th>Employee's Deduction</th>
+                <!-- <th>Gross Payable</th> -->
+                <th>Advance Deduction</th>
+                <th>Take Home Salary</th>
+                <th style="width:60px;">Option</th>
+            </tr>
+        </thead>
+        {foreach from=$employee item=mod name=emp}
+        <tr>
+            <td>{$mod.no}</td>
+            <td style='font-size: 11px'>{$mod.name}-{$mod.id_employee}</td>
+            <td align="center">
+                <input type="hidden" value="{$mod.id_employee}" name="row[{$mod.id_employee}][id_employee]">
+                <input type="hidden" value="{$mod.id_salary}" name="row[{$mod.id_employee}][id_salary]">
+                <input id="days{$smarty.foreach.emp.index}" type="text" value="{$mod.days}" name="row[{$mod.id_employee}][days]" size="3" onblur="updrow('{$mod.id_employee}')">
+            </td>
+            <td>
+                <table id="basic_{$mod.id_employee}" {if $mod.id_salary}style="display: none"{/if}>
+                    <tr>
+                        <td>Basic:</td><td><input type="text" name="row[{$mod.id_employee}][cbasic]" size="3" tabindex="-1" value="{$mod.cbasic}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>DA:</td><td><input type="text" name="row[{$mod.id_employee}][cda]" size="3" tabindex="-1" value="{$mod.cda}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>HRA:</td><td><input type="text" name="row[{$mod.id_employee}][chra]" size="3" tabindex="-1" value="{$mod.chra}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Medical:</td><td><input type="text" name="row[{$mod.id_employee}][cmedical]" size="3" value="{$mod.cmedical}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Convency:</td><td><input type="text" name="row[{$mod.id_employee}][cconvency]" size="3" value="{$mod.cconvency}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Spl.Allowance:</td><td><input type="text" name="row[{$mod.id_employee}][cspecial]" size="3" value="{$mod.cspecial}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Others:</td><td><input type="text" name="row[{$mod.id_employee}][cothers]" size="3" value="{$mod.cothers}" onblur="showgross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Gross:</td><td><input type="text" name="row[{$mod.id_employee}][cgross]" size="3" tabindex="-1" value="{$mod.cgross}"></td>
+                    </tr>
+                </table>
+            </td>
+            <td align="center">
+                <input type="text" name="row[{$mod.id_employee}][daysworked]"  value="{$mod.daysworked}" size="3" onblur="updrowearning('{$mod.id_employee}')">
+            </td>
+            <td>
+                <table id="earning_{$mod.id_employee}" {if $mod.id_salary}style="display: none"{/if}>
+                    <tr>
+                        <td>Basic:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][basic]" size="3" tabindex="-1" value="{$mod.basic}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>DA:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][da]" size="3" tabindex="-1" value="{$mod.da}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>HRA:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][hra]" size="3" tabindex="-1" value="{$mod.hra}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Medical:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][medical]" size="3" tabindex="-1" value="{$mod.medical}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Convency:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][convecy]" size="3" tabindex="-1" value="{$mod.convecy}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Spl.Allowance:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][special]" size="3" value="{$mod.special}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>OT Amount:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][otamt]" size="3" value="{$mod.otamt}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Others:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][others]" size="3" value="{$mod.others}" onblur="pregross('{$mod.id_employee}')"></td>
+                    </tr>
+                </table>
+            </td>
+            <td align="center"><input type="text" tabindex="-1" name="row[{$mod.id_employee}][net]" size="10" onfocus="prenet('{$mod.id_employee}');"  value="{$mod.net}"></td>
+            <td>
+                <table id="employee_{$mod.id_employee}" {if $mod.id_salary}style="display: none"{/if}>
+                    <tr>
+                        <td>Employee ESIC:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][esic]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.esic}"></td>
+                    </tr>
+                    <tr>
+                        <td>Employee EPF:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][pf]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.pf}"></td>
+                    </tr>
+                    <tr>
+                        <td>Health Insurance:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][insurance]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.insurance}"></td>
+                    </tr>
+                    <tr>
+                        <td>Prof.Tax:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][pt]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.pt}"></td>
+                    </tr>
+                    <tr>
+                        <td>TDS:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][tds]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.tds}"></td>
+                    </tr>
+                    <tr>
+                        <td>Ed.Cess:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][ec]" size="3" onblur="pregross('{$mod.id_employee}')" value="{$mod.ec}"></td>
+                    </tr>
+                </table>
+            </td>
+            <td style="display: none;" align="center"><input type="text" tabindex="-1" name="row[{$mod.id_employee}][gross]" size="10" value="{$mod.gross}"></td>
+            <td>
+                <table id="advance_{$mod.id_employee}" {if $mod.id_salary}style="display: none"{/if}>
+                    <tr>
+                        <td>Previous Adv.:</td>
+                        <td><input type="text" tabindex="-1" name="row[{$mod.id_employee}][padvance]" size="3" value="{$mod.padvance}"></td>
+                    </tr>
+                    <tr>
+                        <td>Adv.Taken:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][advance]" size="3" value="{$mod.advance}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Total Advance:</td>
+                        <td><input type="text" tabindex="-1" name="row[{$mod.id_employee}][totaladvance]" size="3" value="{$mod.totaladvance}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Deduction Amount:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][deduct_adv]" size="3" value="{$mod.deduct_adv}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                    <!-- <tr>
+                        <td>TA/DA:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][deduct_tada]" size="3" value="{$mod.deduct_tada}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Allowance (-):</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][deduct_allow]" size="3" value="{$mod.deduct_allow}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                    <tr>
+                        <td>Allowance (+):</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][add_allow]" size="3" value="{$mod.deduct_allow}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr> -->
+                    <tr>
+                        <td>Others:</td>
+                        <td><input type="text" name="row[{$mod.id_employee}][deduct_other]" size="3" value="{$mod.deduct_other}" onblur="takehome('{$mod.id_employee}')"></td>
+                    </tr>
+                </table>
+            </td>
+            <td align="center"><input type="text" name="row[{$mod.id_employee}][total]" size="10" value="{$mod.total}"></td>
+            <td>
+                <button id="save_{$mod.id_employee}" onclick="saverow('{$mod.id_employee}')" {if $mod.id_salary}style="display:none"{/if}>Save</button>
+                <button id="button_{$mod.id_employee}" onclick="showrow('{$mod.id_employee}')" {if !$mod.id_salary}style="display:none"{/if}>{if $mod.id_salary}Detail{else}Hide{/if}</button><br>
+                <button id="delete_{$mod.id_employee}" onclick="deleterow('{$mod.id_employee}')" style="display:none">Delete</button>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+{/if}

@@ -1,0 +1,140 @@
+<fieldset>
+  <legend>Ledger</legend>
+  <form method="post" action="index.php?module=accounts&func=gledger">
+    <table>
+      <tr>
+        <td>Start Date :</td>
+        <td><input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.session.sdate|date_format:"01/%m/%Y"}{/if}' /></td>
+        <td>End Date :</td>
+        <td><input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></td>
+        <td>Group :<select name="id"><option value="0">All</option>{html_options options=$group selected=$smarty.request.id} </select></td>
+        <td><input type="checkbox" name="option" value="1" {if $smarty.request.option}checked="checked"{/if}><label for="confirm">Transaction</label>
+        </td>
+        <td align="center">
+          <input type="submit" value="Go" />&nbsp;
+          <input type="button" class="print" value="Print" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</fieldset>
+<br />
+<div class="print_content">
+  {$smarty.session.cname} {$smarty.session.fyear}<br>
+  Ledger Summary for <b>{if $smarty.request.id}{$group[$smarty.request.id]}{else}All Groups{/if}</b><br>Period
+  {if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if} - {if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}
+  <br /><br />
+  {if $data}
+  {if $smarty.request.option}
+    <table border="1">
+      <tr>
+        <th>Sl.No.</th><th>Id</th><th>Account Head</th><th>Address</th><th>Opening</th><th>Debit</th><th>Credit</th><th>Balance</th>
+      </tr>
+      {$opening=0} {$debit=0} {$closing=0} {$credit=0}
+      {section name=x loop=$data}
+      <tr>
+        <th>{$smarty.section.x.index_next}</th>
+        <td>{$data[x].id_head}</td>
+        <td>{$data[x].name}</td>
+        <td>{$data[x].address1}</td>
+        <td align="right">
+          {if $data[x].opening<0}
+          {abs($data[x].opening)|string_format:"%.2f"} DB
+          {else}
+          {$data[x].opening|string_format:"%.2f"} CR
+          {/if}
+        </td>
+        <td align="right">{$data[x].debit|string_format:"%.2f"}</td>
+        <td align="right">{$data[x].credit|string_format:"%.2f"}</td>
+        <td align="right">
+          {if $data[x].closing<0}
+          {abs($data[x].closing)|string_format:"%.2f"} DB
+          {else}
+          {$data[x].closing|string_format:"%.2f"} CR
+          {/if}
+        </td>
+        {$opening=$opening+$data[x].opening}
+        {$debit=$debit+$data[x].debit}
+        {$credit=$credit+$data[x].credit}
+        {$closing=$closing+$data[x].closing}
+      </tr>
+      {/section}
+      <tr>
+        <th colspan="4">Total</th>
+        <th align="right">
+          {if $opening<0}
+          {abs($opening)|string_format:"%.2f"} DB
+          {else}
+          {$opening|string_format:"%.2f"} CR
+          {/if}        
+        </th>
+        <th align="right">{$debit|string_format:"%.2f"}</th>
+        <th align="right">{$credit|string_format:"%.2f"}</th>
+        <th align="right">
+          {if $closing<0}
+          {abs($closing)|string_format:"%.2f"} DB
+          {else}
+          {$closing|string_format:"%.2f"} CR
+          {/if}
+        </th>
+      </tr>
+    </table>
+  {else}
+    <table border="1">
+      <tr>
+        <th>Sl.No.</th><th>Id</th><th>Account Head</th><th>Address</th><th>Debit</th><th>Credit</th>
+      </tr>
+      {$debit=0} {$closing=0} {$credit=0}
+      {section name=x loop=$data}
+      <tr>
+        <th>{$smarty.section.x.index_next}</th>
+        <td>{$data[x].id_head}</td>
+        <td>{$data[x].name}</td>
+        <td>{$data[x].address1}</td>
+        <td align="right">
+          {if $data[x].closing<0}
+          {abs($data[x].closing)|string_format:"%.2f"}
+          {$debit=$debit+$data[x].closing}
+          {/if}
+        </td>
+        <td align="right">
+          {if $data[x].closing>0}
+          {$data[x].closing|string_format:"%.2f"}
+          {$credit=$credit+$data[x].closing}
+          {/if}
+        </td>
+        {$closing=$closing+$data[x].closing}
+      </tr>
+      {/section}
+      <tr>
+        <th colspan="4">Total</th>
+        <th align="right">
+          {if $debit<0}
+          {abs($debit)|string_format:"%.2f"}
+          {/if}
+        </th>
+        <th align="right">
+          {if $credit>0}
+          {$credit|string_format:"%.2f"}
+          {/if}
+        </th>
+      </tr>
+      <tr>
+        <th colspan="3">Net Total</th>
+        <th align="right">
+          {if $closing<0}
+          {abs($closing)|string_format:"%.2f"}
+          {/if}
+        </th>
+        <th align="right">
+          {if $closing>0}
+          {$closing|string_format:"%.2f"}
+          {/if}
+        </th>
+      </tr>
+    </table>    
+  {/if}
+  {else}
+  <b>No Record Found!</b>
+  {/if}
+</div>

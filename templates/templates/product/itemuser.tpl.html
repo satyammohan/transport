@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+        $(".list_temp").change(function() {
+            $("form").submit();
+        })
+    });
+</script>
+<form action="index.php" method="get" id="product_list">
+    <table>
+        <tr>
+            <td valign="top">
+                <input type="hidden" name="module" value="product">
+                <input type="hidden" name="func" value="itemuser">
+                Select Company:<select name="id_company" class="list_temp">
+                    <option value="0">Select Company</option>
+                    {html_options options=$company selected=$smarty.request.id_company}
+                </select>
+            </td>
+        </tr>
+    </table>
+</form>
+<br>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th><th>Pack</th><th>Show Item to Party</th>
+        </tr>
+    </thead>
+    {foreach from=$data item=mod}
+    <tr>
+        <td>{$mod.name}</td>
+        <td>{$mod.pack} {$mod.unit}</td>
+        <td>
+            <select onchange ="saveproduct('showtoparty', this.value, {$mod.id_product} )">
+                <option value="">No</option>
+                <option {if $mod.showtoparty=="YES"}selected=selected{/if} value="YES">Yes</option>            
+            </select>        
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("comp");
+        tbl_handler();
+    });
+    function saveproduct(fld, fvalue, id) {
+        var url = "index.php?module=product&func=saveproduct&field=" + fld + "&fvalue=" + fvalue + "&id=" + id;
+        $.post(url, function(res) { } );
+    }
+</script>
+

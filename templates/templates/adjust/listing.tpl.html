@@ -1,0 +1,52 @@
+<table id="dataTable">
+    <thead>    
+        <tr>
+            <td colspan="11" valign="top">
+                <form action="index.php?module=adjust&func=listing" method="post">
+                    <fieldset><legend>Filter Stock Adjustment List</legend>
+                        <p><span>
+                                Start Date:<input type="text" name="start_date" size="10" class="dtpick" value='{if isset($smarty.request.start_date)}{$smarty.request.start_date}{else}{$smarty.now|date_format:"01/%m/%Y"}{/if}' />
+                            </span>
+                            <span>End Date:<input type="text" name="end_date" size="10" class="dtpick" value='{if isset($smarty.request.end_date)}{$smarty.request.end_date}{else}{$smarty.now|date_format:"%d/%m/%Y"}{/if}' /></span>
+                            <span>
+                                Company:
+                                <select name="company">
+                                    <option>All</option>
+                                    {html_options options=$company selected=$smarty.request.company}
+                                </select>
+                            </span>
+                            <span><input type="submit" value="Go" /></span>
+                        </p>   
+                    </fieldset>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>No</th><th>Date</th><th>Ref.No</th><th>Ref.Date</th><th>Total Value</th>
+            <th>
+                Manage
+                <a title="Add Stock Adjustment" href="index.php?module=adjust&func=edit"><div class="add_bg"></div></a>
+            </th>
+        </tr>
+    </thead>
+    {foreach from=$sdata item=mod}
+    <tr>
+        <td>{$mod.no}</td>
+        <td>{$mod.date|date_format:$smarty_date}</td>
+        <td>{$mod.bill_no}</td>
+        <td>{$mod.bill_date|date_format:$smarty_date}</td>
+        <td>{$mod.total}</td>
+        <td width="150px" align="left">
+            <a class="stockadj" href="index.php?module=adjust&func=prsale&id={$mod.id_adjust}&ce=0" ><div title="Print Bill" class="report_bg">&nbsp;</div></a>&nbsp;
+            <a href="index.php?module=adjust&func=delete&id={$mod.id_adjust}&ce=0" onclick="return confirm('Do you want to delete?');"><div title="Delete" class="delete_bg">&nbsp;</div></a>
+            <a href="index.php?module=adjust&func=edit&id={$mod.id_adjust}"><div title="Edit" class="edit_bg">&nbsp;</div></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+<script type="text/javascript">
+    $(document).ready(function() {
+        fancy_handler("stockadj");
+        tbl_handler();
+    });
+</script>

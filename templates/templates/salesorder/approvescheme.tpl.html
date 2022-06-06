@@ -1,0 +1,35 @@
+<form method="post" name="approve" action="">
+    <fieldset>
+        <legend>Sales Order Approve</legend>
+        <table border="0" cellspacing="0" cellpadding="0" width="100%">
+            <tr>
+                <input type="hidden" name="salesorder[is_approve]" value="1" />
+                <td><b>Order Number :</b> {$sdata.invno}</td>
+            </tr>
+            <tr>
+                <td><b>Order Date :</b> {$sdata.date}</td>
+            </tr>
+            <tr>
+                <td><b>Party Name :</b> {$sdata.party_name}</td>
+            </tr>
+            <tr>
+                <td><b>Total :</b> {$sdata.total}</td>
+            </tr>
+            <tr>
+                <td><b>Description:</b><textarea name="salesorder[schemeapprove]" rows="3">{$sdata.schemeapprove}</textarea></td>
+            </tr>
+            <tr>
+                <input type="hidden" name="id" value="{$sdata.id_salesorder}" />
+                <td align="center" colspan="3">
+                    <input type="button" value="Save" id="sub" style="cursor: pointer" name="save"/>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+<script>
+    $("#sub").click(function() {
+        document.approve.action = 'index.php?module=salesorder&func=saveappprove';
+        $("form").submit();
+    });
+</script>

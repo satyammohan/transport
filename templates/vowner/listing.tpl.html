@@ -1,0 +1,24 @@
+<h3>Vehicle Owner Master<hr></h3>
+<table id="dataTable" class="table table-striped table-bordered" width="100%">
+    <thead>    
+        <tr> 
+            <th colspan="5"></th>
+            <th><a title="Add Vehicle Owner" href="index.php?module=vowner&func=edit"><i class="fa fa-plus fa-2x"></i></a></th>
+        </tr>
+        <tr>
+            <th>Name</th><th>Address</th><th>Address1</th><th>Regi.Date</th><th>Pan</th><th>&nbsp;</th>
+        </tr>
+    </thead>
+    {foreach from=$vowner item=mod}
+    <tr>
+        <td>{$mod.name}</td>			
+        <td>{$mod.address}</td>
+        <td>{$mod.address1}</td>
+        <td>{$mod.registration_date}</td>
+        <td>{$mod.pan}</td>
+        <td><a title="Edit Vehicle Owner" href="index.php?module=vowner&func=edit&id={$mod.id_vowner}"><i class="fa fa-edit fa-2x"></i></a>
+            <a title="Delete Vehicle Owner" href="index.php?module=vowner&func=delete&id={$mod.id_vowner}" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
+        </td>
+    </tr>
+    {/foreach}
+</table>

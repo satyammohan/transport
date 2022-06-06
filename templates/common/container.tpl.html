@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Transport Management System
+            {if isset($smarty.session.companyname)}
+                :: &nbsp;{$smarty.session.companyname}&nbsp;({$smarty.session.sdate|date_format:$smarty_date}-{$smarty.session.edate|date_format:$smarty_date})
+            {/if}
+        </title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+        <link rel="stylesheet" href="js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+
+        <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+		<link rel="stylesheet" href="js/jquery.mobile-1.4.5/demos/_assets/css/jqm-demos.css">
+		<script src="js/jquery.mobile-1.4.5/demos/_assets/js/index.js"></script>
+
+        <link rel="stylesheet" href="css/common.css">
+        <script type="text/javascript" src="js/jqprint.js"></script>
+        <script type="text/javascript" src="js/table2excel.js"></script>
+        <script src="js/common.js?time=1"></script>
+
+        {$smarty_date=$ini.smarty_date scope="global"}
+        <script language="javascript" type="text/javascript">
+            var js_date = "{$ini.js_date}";
+            var sdate = "{$smarty.session.sdate|date_format:$smarty_date}";
+            var edate = "{$smarty.session.edate|date_format:$smarty_date}";
+        </script>
+    </head>
+    <body>
+        {if $smarty.session.msg}
+            <div class="row w-100">
+                <div class="err_msg">{$smarty.session.msg}</div>
+            </div>
+        {/if}
+        {if isset($smarty.session.id_user) && isset($smarty.session.id_info)}
+            <div class="row w-100">
+                <div class="col-12">
+                    {include file="common/header.tpl.html"}
+                </div>
+            </div>
+        {/if}
+        <div class="row grow w-100 h-100">
+            {if isset($smarty.session.id_user) && isset($smarty.session.id_info)}
+                <div class="col-2 h-100">
+                    <br><br>
+                    {include file="common/menu.tpl.html"}
+                </div>
+                <div class="col-10 w-100 h-100"  style="left: 20px !important;">
+                    <br><br><br>
+                    {include file=$page}
+                    <br><br>
+                </div>
+            {else}
+                <div class="col-12 w-100 h-100">
+                    {include file=$page}
+                </div>
+            {/if}
+            {include file="common/footer.tpl.html"}
+        </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="btn" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+		<div tabindex="-1" class="modal bs-logout-modal-sm" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered modal-sm">
+			  <div class="modal-content">
+				<div class="modal-header"><h4>Are you sure you want to logout ?</h4></div>
+				<div class="modal-footer">
+					<a class="btn btn-danger btn-xl" href="index.php?module=user&func=logout">Logout</a>
+					<a class="btn btn-primary btn-xl" data-dismiss="modal">Close</a>
+				</div>
+			  </div>
+			</div>
+		</div>
+    </body>
+</html>
