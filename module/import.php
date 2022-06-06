@@ -67,6 +67,7 @@ class import extends common {
         // $this->make_head($prefix);
         // $this->make_company($prefix);
         // $this->make_book($prefix);
+        $this->make_product($prefix);
         // $this->make_item($prefix);
         // $this->make_advance($prefix);
         // $this->make_mode($prefix);
@@ -78,7 +79,6 @@ class import extends common {
         $this->make_vehicle($prefix);
 echo "done";exit;
 
-        $this->make_product($prefix);
         $this->make_purc($prefix);
         $this->make_sale($prefix);
         $this->make_cashsale($prefix);
