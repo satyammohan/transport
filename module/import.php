@@ -19,10 +19,10 @@ class import extends common {
         }
         print("Tables for <b>{$prefix}</b> removed Successfully.<br>");
     }
-    function make_mode($prefix) {
-        $sql = "ALTER TABLE `{$prefix}_mode` DROP `consider`";
+    function make_vomaster($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_vomaster` DROP `consider`";
         $this->m->query($sql);
-        $sql = "ALTER TABLE `{$prefix}_mode` ADD `id_mode` INT (11) NOT NULL,
+        $sql = "ALTER TABLE `{$prefix}_vomaster` ADD `id_vomaster` INT (11) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -30,16 +30,11 @@ class import extends common {
             ADD `id_modify` INT( 11 ) NOT NULL,
             ADD `modify_date` TIMESTAMP NOT NULL ";
         $this->m->query($sql);
-        
-        echo "Mood converted Successfully<br>";
+        echo "Vehicle converted Successfully<br>";
     }
-    function make_rates($prefix) {
-        $sql = "ALTER TABLE `{$prefix}_rates` DROP `consider`";
-        $this->m->query($sql);
-        $sql = "ALTER TABLE `{$prefix}_rates` ADD `id_rates` INT (11) NOT NULL,
-            ADD `from_area` INT( 11 ) NOT NULL,
-            ADD `to_area` INT( 11 ) NOT NULL,
-            ADD `id_mode` INT( 11 ) NOT NULL,
+    function make_vehicle($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_vehicle` ADD `id_vehicle` INT (11) NOT NULL,
+            ADD `id_vomaster` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -47,13 +42,9 @@ class import extends common {
             ADD `id_modify` INT( 11 ) NOT NULL,
             ADD `modify_date` TIMESTAMP NOT NULL ";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_mood` a SET h.id_mood = a.id_mood WHERE h.mood = a.mood";
+        $sql = "UPDATE `{$prefix}_vehicle` h, `{$prefix}_vomaster` a SET h.id_vomaster = a.id_vomaster WHERE h.vocode = a.code";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_area` a SET h.from_area = a.id_area WHERE h.area = a.code";
-        $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_area` a SET h.to_area = a.id_area WHERE h.area = a.code";
-        $this->m->query($sql);
-        echo "Mood converted Successfully<br>";
+        echo "Vehicle converted Successfully<br>";
     }
     function convert_all() {
         set_time_limit(6000);
@@ -83,8 +74,8 @@ class import extends common {
         $this->make_rates($prefix);
         $this->make_transport($prefix);
         $this->make_vdetail($prefix);
-        $this->make_vehicle($prefix);
         $this->make_vomaster($prefix);
+        $this->make_vehicle($prefix);
 echo "done";exit;
 
         $this->make_product($prefix);
@@ -158,23 +149,11 @@ echo "done";exit;
             $fullpath = $dir . "/" . $file;
             $file = strtolower($file);
             switch (strtolower($file)) {
-                case "product":
-                    $file = "product_old";
-                    break;
-                case "item":
-                    $file = "product";
-                    break;
                 case "purc":
                     $file = "purchase";
                     break;
-                case "purcdet":
-                    $file = "purchasedetail";
-                    break;
                 case "salesman":
                     $file = "represent";
-                    break;
-                case "saledet":
-                    $file = "saledetail";
                     break;
                 case "tax_stru":
                     $file = "taxmaster";
@@ -1503,6 +1482,53 @@ echo "done";exit;
         $sql = "ALTER TABLE `{$prefix}_book` DROP `head`";
         $this->m->query($sql);
         echo "Advance converted Successfully<br>";
+    }
+    function make_mode($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_mode` DROP `consider`";
+        $this->m->query($sql);
+        $sql = "ALTER TABLE `{$prefix}_mode` ADD `id_mode` INT (11) NOT NULL,
+            ADD `status` TINYINT( 1 ) NOT NULL,
+            ADD `ip` VARCHAR( 30 ) NOT NULL,
+            ADD `id_create` INT( 11 ) NOT NULL,
+            ADD `create_date` TIMESTAMP NOT NULL,
+            ADD `id_modify` INT( 11 ) NOT NULL,
+            ADD `modify_date` TIMESTAMP NOT NULL ";
+        $this->m->query($sql);
+        
+        echo "Mood converted Successfully<br>";
+    }
+    function make_rates($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_rates` DROP `consider`";
+        $this->m->query($sql);
+        $sql = "ALTER TABLE `{$prefix}_rates` ADD `id_rates` INT (11) NOT NULL,
+            ADD `from_area` INT( 11 ) NOT NULL,
+            ADD `to_area` INT( 11 ) NOT NULL,
+            ADD `id_mode` INT( 11 ) NOT NULL,
+            ADD `status` TINYINT( 1 ) NOT NULL,
+            ADD `ip` VARCHAR( 30 ) NOT NULL,
+            ADD `id_create` INT( 11 ) NOT NULL,
+            ADD `create_date` TIMESTAMP NOT NULL,
+            ADD `id_modify` INT( 11 ) NOT NULL,
+            ADD `modify_date` TIMESTAMP NOT NULL ";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_mood` a SET h.id_mood = a.id_mood WHERE h.mood = a.mood";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_area` a SET h.from_area = a.id_area WHERE h.area = a.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_rates` h, `{$prefix}_area` a SET h.to_area = a.id_area WHERE h.area = a.code";
+        $this->m->query($sql);
+        echo "Mood converted Successfully<br>";
+    }
+    function make_vdetail($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_vdetail` ADD `id_vdetail` INT (11) NOT NULL,
+            ADD `status` TINYINT( 1 ) NOT NULL,
+            ADD `ip` VARCHAR( 30 ) NOT NULL,
+            ADD `id_create` INT( 11 ) NOT NULL,
+            ADD `create_date` TIMESTAMP NOT NULL,
+            ADD `id_modify` INT( 11 ) NOT NULL,
+            ADD `modify_date` TIMESTAMP NOT NULL ";
+        $this->m->query($sql);
+        echo "Vehicle detail converted Successfully<br>";
     }
 }
 ?>
