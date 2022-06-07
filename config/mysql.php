@@ -27,6 +27,9 @@ class database {
 
     function query($sql) {
         $this->rs = $rs = mysqli_query($this->conn, $sql);
+        if (!$rs) {
+            echo("Error in query: " . mysqli_error($this->conn)."----".$sql."<br><br>");
+        }
         return $rs;
     }
     function num_rows($rs) {

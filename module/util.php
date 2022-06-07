@@ -7,31 +7,7 @@ class util extends common {
         parent:: __construct();
     }
 
-    function tcs() {
-        $this->addfield('tcsper', $this->prefix . 'sale', 'ADD `tcsper` decimal(9,3)');
-        $this->addfield('tcsamt', $this->prefix . 'sale', 'ADD `tcsamt` decimal(15,2)');
-        $this->addfield('tcsper', $this->prefix . 'purchase', 'ADD `tcsper` decimal(9,3)');
-        $this->addfield('tcsamt', $this->prefix . 'purchase', 'ADD `tcsamt` decimal(15,2)');
-        $this->addfield('tanno', $this->prefix . 'head', 'ADD `tanno` varchar(20)');
-        $this->addfield('tcsper', $this->prefix . 'head', 'ADD `tcsper` decimal(9,3)');
-        $this->addfield('tcs', $this->prefix . 'head', 'ADD `tcs` int(1)');
-        $this->changefield('tcsper', $this->prefix . 'sale', 'CHANGE `tcsper` `tcsper` decimal(9,3) ');
-        $this->changefield('tcsper', $this->prefix . 'purchase', 'CHANGE `tcsper` `tcsper` decimal(9,3) ');
-        $this->changefield('tcsper', $this->prefix . 'head', 'CHANGE `tcsper` `tcsper` decimal(9,3) ');
-        $_SESSION['msg'] = "TCS Upgraded Successful.";
-        $this->redirect("index.php");
-    }
-
     function upgrade() {
-	$files = Array("adjustdetail", "creditnotedetail", "preturndetail", "sreturndetail", "purchasedetail", "saledetail", "salesorderdetail");
-	foreach ($files as $key => $file) {
-		$sql = "ALTER TABLE `{$this->prefix}$file` ADD INDEX ( `batch_no` )";
-		$this->m->query($sql);
-		$sql = "UPDATE `{$this->prefix}$file` t,`{$this->prefix}batch` m SET t.id_batch=m.id_batch
-				WHERE m.batch_no=t.batch_no AND m.id_product=t.id_product AND t.id_batch!=0;";
-		//$sql = "UPDATE `{$this->prefix}$file` t,`{$this->prefix}batch` m SET t.id_batch=m.id_batch WHERE m.batch_no=t.batch_no AND m.id_product=t.id_product";
-		$this->m->query($sql);
-	}
         $sql = "SHOW COLUMNS FROM `user` LIKE 'uid'";
         $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
         if ($uid == 1) {
@@ -99,112 +75,7 @@ class util extends common {
                         (15, 'series'), (16, 'sreturn'), (17, 'taxmaster'), (18, 'transport'), (19, 'voucher'), (20, 'zone'),
                         (21, 'debitnote'), (22, 'creditnote'), (23, 'production'), (24, 'salesorder'), (25, 'salary');";
         $this->m->query($sql);
-
-
-	$sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}debitnote` (`id_debitnote` int(11) NOT NULL)";
-	$this->m->query($sql);
-
-
-        $sql = "SHOW COLUMNS FROM `{$this->prefix}debitnote` LIKE 'date'";
-        $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
-        if ($uid == 0) {
-			$sql = "RENAME TABLE {$this->prefix}debitnote TO {$this->prefix}debitnoteold";
-			$data = $this->m->query($sql);
-			$sql = "CREATE TABLE `{$this->prefix}debitnote` (`id_debitnote` int(11) NOT NULL AUTO_INCREMENT,
-				`price` tinyint(4) NOT NULL, `saletype` tinyint(4) NOT NULL, `no` varchar(20) NOT NULL, `date` date NOT NULL,
-				`id_head` int(11) NOT NULL, `id_company` int(11) NOT NULL, `id_area` int(11) NOT NULL, `id_represent` int(11) NOT NULL,
-				`ref_no` varchar(20) NOT NULL, `ref_date` date NOT NULL, `invno` varchar(20) NOT NULL, `inv_date` date NOT NULL,
-				`totalamt` decimal(16,2) NOT NULL, `discount` decimal(16,2) NOT NULL, `vat` decimal(16,2) NOT NULL, `totalcess` decimal(16,2) NOT NULL,
-				`adjust` decimal(16,2) NOT NULL, `total` decimal(16,2) NOT NULL, `memo` text NOT NULL, `ip` varchar(30) NOT NULL,`id_create` int(11) NOT NULL,
-				`create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,`id_modify` int(11) NOT NULL,
-				`modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',`cd` decimal(5,2) NOT NULL,`cdamt` decimal(16,2) NOT NULL, 
-				PRIMARY KEY (`id_debitnote`)) ENGINE=InnoDB;";
-			$data = $this->m->query($sql);
-
-			$sql = "CREATE TABLE `{$this->prefix}debitnotedetail` (`id_debitnotedetail` int(11) NOT NULL AUTO_INCREMENT, `saletype` tinyint(4) NOT NULL,
-					`no` varchar(20) NOT NULL, `date` date NOT NULL, `id_product` int(11) NOT NULL, `rate` decimal(15,4) NOT NULL, `case` decimal(12,4) NOT NULL,
-					`qty` decimal(12,4) NOT NULL, `free` decimal(12,4) NOT NULL, `discount_type1` tinyint(2) NOT NULL, 
-					`discount1` decimal(10,4) NOT NULL, `discount_amount1` decimal(10,2) NOT NULL, `discount_type2` tinyint(2) NOT NULL,
-					`discount2` decimal(10,4) NOT NULL, `discount_amount2` decimal(10,2) NOT NULL, `discount_type3` tinyint(2) NOT NULL,
-					`discount3` decimal(10,4) NOT NULL, `discount_amount3` decimal(10,2) NOT NULL, `discount_type4` tinyint(2) NOT NULL,
-					`discount4` decimal(10,4) NOT NULL, `discount_amount4` decimal(10,2) NOT NULL, `amount` decimal(15,2) NOT NULL,
-					`goods_amount` decimal(15,2) NOT NULL, `id_taxmaster` int(11) NOT NULL, `tax_per` decimal(8,2) NOT NULL, `tax_amount` decimal(15,2) NOT NULL,
-					`net_amount` decimal(15,2) NOT NULL, `cess` float(10,2) NOT NULL, `cessamt` decimal(15,2) NOT NULL, `id_debitnote` int(11) NOT NULL,
-					`id_company` int(11) NOT NULL, `id_head` int(11) NOT NULL, `id_represent` int(11) NOT NULL, `id_area` int(11) NOT NULL,
-					`id_batch` int(11) NOT NULL, `batch_no` varchar(15) NOT NULL, `code` varchar(5) NOT NULL, `exp_date` varchar(15) NOT NULL,
-					`status` tinyint(1) NOT NULL, `ip` varchar(30) NOT NULL, `id_create` int(11) NOT NULL, `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-					`id_modify` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00', PRIMARY KEY (`id_debitnotedetail`) ) ENGINE=InnoDB;";
-			$data = $this->m->query($sql);
-		}
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}creditnote` (
-                    `id_creditnote` int(11) NOT NULL AUTO_INCREMENT,
-                    `no` varchar(20) NOT NULL,
-                    `date` date NOT NULL,
-                    `reference` varchar(20) NOT NULL,
-                    `description` varchar(30) NOT NULL,
-                    `id_head` int(11) NOT NULL,
-                    `id_company` int(11) NOT NULL,
-                    `id_area` int(11) NOT NULL,
-                    `id_represent` int(11) NOT NULL,
-                    `totalamt` decimal(16,2) NOT NULL,
-                    `discount` decimal(16,2) NOT NULL,
-                    `vat` decimal(16,2) NOT NULL,
-                    `packing` decimal(16,2) NOT NULL,
-                    `add` decimal(16,2) NOT NULL,
-                    `less` decimal(16,2) NOT NULL,
-                    `round` decimal(16,2) NOT NULL,
-                    `total` decimal(16,2) NOT NULL,
-                    `memo` text NOT NULL,
-                    `ip` VARCHAR( 30 ) NOT NULL,
-                    `id_create` INT( 11 ) NOT NULL,
-                    `create_date` TIMESTAMP NOT NULL,
-                    `id_modify` INT( 11 ) NOT NULL,
-                    `modify_date` TIMESTAMP NOT NULL,
-                    `party_name` varchar (30) NOT NULL,
-                    `party_address` varchar (30) NOT NULL,
-                    `party_address1` varchar (30) NOT NULL,
-                    `party_vattype` varchar (5) NOT NULL,
-                    `party_vatno` varchar (20) NOT NULL,            
-                    `company` varchar (2) NOT NULL,
-                    `cust` varchar (4) NOT NULL,
-                    `salesman` varchar (2) NOT NULL,
-                    `area` varchar (2) NOT NULL,
-                    PRIMARY KEY (`id_creditnote`) ) ENGINE=MyISAM";
-        $this->m->query($sql);
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}creditnotedetail` (
-                    `id_creditnotedetail` int(11) NOT NULL AUTO_INCREMENT,
-                    `no` varchar(20) NOT NULL,
-                    `date` date NOT NULL,
-                    `id_product` int(11) NOT NULL,
-                    `rate` decimal(15,4) NOT NULL,
-                    `qty` decimal(12,4) NOT NULL,
-                    `free` decimal(12,4) NOT NULL,
-                    `amount` decimal(15,2) NOT NULL,
-                    `goods_amount` decimal(15,2) NOT NULL,
-                    `id_taxmaster` int(11) NOT NULL,
-                    `tax_per` decimal(8,2) NOT NULL,
-                    `tax_amount` decimal(15,2) NOT NULL,
-                    `net_amount` decimal(15,2) NOT NULL,
-                    `id_creditnote` int(11) NOT NULL,
-                    `id_company` int(11) NOT NULL,
-                    `id_head` int(11) NOT NULL,
-                    `id_represent` int(11) NOT NULL,
-                    `id_area` int(11) NOT NULL,
-                    `id_batch` int(11) NOT NULL,
-                    `batch_no` varchar(15) NOT NULL,
-                    `code` varchar (5) NOT NULL,
-                    `exp_date` varchar(15) NOT NULL,
-                    `status` TINYINT( 1 ) NOT NULL,
-                    `ip` VARCHAR( 30 ) NOT NULL,
-                    `id_create` INT( 11 ) NOT NULL,
-                    `create_date` TIMESTAMP NOT NULL,
-                    `id_modify` INT( 11 ) NOT NULL,
-                    `modify_date` TIMESTAMP NOT NULL,
-                    PRIMARY KEY (`id_creditnotedetail`) ) ENGINE=MyISAM";
-        $this->m->query($sql);
         $_SESSION['msg'] = "Database Upgraded Successful.";
-        //$this->redirect("index.php?module=util&func=check");
     }
 
     function changefield($fld, $tbl, $qstring) {
@@ -216,179 +87,6 @@ class util extends common {
         }
     }
     function check() {
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}voucher_details` (
-                    `id_voucher_details` int(11) NOT NULL AUTO_INCREMENT,
-                    `date` date NOT NULL,
-                    `no` varchar(11) NOT NULL,
-                    `total` decimal(16,2) NOT NULL,
-                    `id_head_debit` int(11) NOT NULL, `id_head_credit` int(11) NOT NULL,
-                    `id_voucher` int(11) NOT NULL,
-                    `id_sale` int(11) NOT NULL,
-                    `amt` decimal(16,2) NOT NULL,
-                    `billno` varchar(20) NOT NULL,
-                    `memo` text NOT NULL,
-                    `ip` varchar(30) NOT NULL,
-                    `id_create` int(11) NOT NULL,
-                    `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                    `id_modify` int(11) NOT NULL,
-                    `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                     PRIMARY KEY (`id_voucher_details`) ) ENGINE=MyISAM;";
-        $this->m->query($sql);
-        $this->updatepending();
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}preturn` (
-              `id` int(11) NOT NULL AUTO_INCREMENT, `slno` int(11) NOT NULL COMMENT 'Serial No', `billdate` date NOT NULL COMMENT 'Bill Date',
-              `billno` varchar(35) NOT NULL COMMENT 'Bill No', `date` date NOT NULL COMMENT 'Purchase Date', `id_head` int(10) NOT NULL COMMENT 'Party Id',
-              `id_area` int(10) NOT NULL COMMENT 'Area ', `id_represent` int(10) NOT NULL COMMENT 'Salesman', `id_company` int(10) NOT NULL,
-              `party_name` varchar(45) NOT NULL COMMENT 'Party Name', `party_address` tinytext NOT NULL COMMENT 'Party Address',
-              `party_address1` tinytext NOT NULL COMMENT 'Party Address1', `party_vattype` varchar(5) NOT NULL COMMENT 'Party vattype',
-              `party_vatno` varchar(20) NOT NULL COMMENT 'Party vatno', `discount` decimal(10,4) NOT NULL, `vat` decimal(10,4) NOT NULL,
-              `add` decimal(10,4) NOT NULL, `less` decimal(10,4) NOT NULL, `packing` decimal(10,4) NOT NULL, `roundoff` decimal(10,2) NOT NULL,
-              `total` decimal(10,4) NOT NULL, `cash` tinyint(2) NOT NULL, `memo` tinytext NOT NULL, `lr_no` varchar(35) NOT NULL,
-              `lr_date` date NOT NULL, `trmr_date` date NOT NULL, `id_transport` int(10) NOT NULL, `transport_no` varchar(45) NOT NULL COMMENT 'Transport',
-              `gate` varchar(35) NOT NULL, `vehicle_no` varchar(35) NOT NULL, `bales` int(10) NOT NULL, `freight` decimal(10,4) NOT NULL,
-              `ent_no` varchar(35) NOT NULL,
-              `ent_date` date NOT NULL,
-              `ent_amount` decimal(10,4) NOT NULL,
-              `frm_type` varchar(20) NOT NULL,
-              `id_form` int(10) NOT NULL,
-              `frm_date` date NOT NULL,
-              `frm_no` varchar(20) NOT NULL,
-              `frm_amount` decimal(10,4) NOT NULL,
-              `waybill_no` varchar(25) NOT NULL,
-              `waybill_date` date NOT NULL,
-              `waybill_amount` decimal(10,4) NOT NULL,
-              `ip` varchar(35) NOT NULL,
-              `printed` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-              `id_create` int(10) NOT NULL,
-              `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-              `id_modify` int(10) NOT NULL,
-              `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`id`)
-              ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        $this->m->query($sql);
-
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}preturndetail` (
-              `id` int(11) NOT NULL AUTO_INCREMENT,
-              `slno` int(11) NOT NULL,
-              `date` date NOT NULL,
-              `id_product` int(10) NOT NULL,
-              `rate` decimal(15,4) NOT NULL,
-              `qty` decimal(12,4) NOT NULL,
-              `free` decimal(12,4) NOT NULL,
-              `amount` decimal(15,2) NOT NULL,
-              `distype1` tinyint(2) NOT NULL,
-              `distype2` tinyint(2) NOT NULL,
-              `distype3` tinyint(2) NOT NULL,
-              `dis1` decimal(10,4) NOT NULL,
-              `dis2` decimal(10,2) NOT NULL,
-              `dis3` decimal(10,2) NOT NULL,
-              `disamt1` decimal(10,2) NOT NULL,
-              `disamt2` decimal(10,2) NOT NULL,
-              `disamt3` decimal(10,2) NOT NULL,
-              `tax` int(10) NOT NULL COMMENT 'Tax',
-              `taxamt` decimal(10,2) NOT NULL,
-              `taxon` decimal(15,4) NOT NULL,
-              `id_preturn` int(10) NOT NULL COMMENT 'Purchase Id',
-              `id_head` int(10) NOT NULL,
-              `id_batch` int(11) NOT NULL,
-              `batch_name` varchar(25) NOT NULL COMMENT 'Batch name',
-              `exp_date` varchar(55) NOT NULL COMMENT 'Expiry Date',
-              `ip` varchar(11) NOT NULL,
-              `date_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-              PRIMARY KEY (`id`)
-            ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        $this->m->query($sql);
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}sreturn` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `slno` int(20) NOT NULL,
-                `date` date NOT NULL,
-                `id_head` int(10) NOT NULL,
-                `id_company` int(10) NOT NULL,
-                `id_area` int(10) NOT NULL,
-                `id_represent` int(10) NOT NULL,
-                `challan_no` varchar(35) NOT NULL,
-                `challan_date` date NOT NULL,
-                `id_transport` int(10) NOT NULL,
-                `lr_no` varchar(35) NOT NULL,
-                `lr_date` date NOT NULL,
-                `station` varchar(55) NOT NULL,
-                `cases` varchar(35) NOT NULL,
-                `weight` varchar(35) NOT NULL,
-                `discount` decimal(10,2) NOT NULL,
-                `vat` decimal(10,2) NOT NULL,
-                `pack_forward` decimal(10,4) NOT NULL,
-                `add` decimal(10,4) NOT NULL,
-                `less` decimal(10,4) NOT NULL,
-                `round` decimal(2,2) NOT NULL,
-                `total` decimal(10,2) NOT NULL,
-                `pending` decimal(15,2) NOT NULL,
-                `cash` tinyint(2) NOT NULL,
-                `memo` tinytext NOT NULL,
-                `cheque_no` varchar(25) NOT NULL,
-                `cheque_date` date NOT NULL,
-                `bank` varchar(35) NOT NULL,
-                `chq_amount` decimal(10,2) NOT NULL,
-                `id_form` int(10) NOT NULL,
-                `frm_type` varchar(25) NOT NULL,
-                `frm_no` varchar(25) NOT NULL,
-                `frm_date` date NOT NULL,
-                `frm_amount` decimal(10,4) NOT NULL,
-                `waybill_no` varchar(25) NOT NULL,
-                `waybill_date` date NOT NULL,
-                `waybill_amount` decimal(10,4) NOT NULL,
-                `ip` varchar(35) NOT NULL,
-                `transport` varchar(50) NOT NULL,
-                `payment` varchar(35) NOT NULL,
-                `form` varchar(35) NOT NULL,
-                `waybill` varchar(35) NOT NULL,
-                `party_name` varchar(45) NOT NULL COMMENT 'Party Name',
-                `party_address` tinytext NOT NULL COMMENT 'Party Address1',
-                `party_address1` tinytext NOT NULL COMMENT 'Party Address2',
-                `party_vattype` varchar(5) NOT NULL,
-                `party_vatno` varchar(20) NOT NULL,
-                `printed` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `id_create` int(10) NOT NULL,
-                `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                `id_modify` int(10) NOT NULL,
-                `modify_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                PRIMARY KEY (`id`)
-              ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        $this->m->query($sql);
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}sreturndetail` (
-                `id` int(11) NOT NULL AUTO_INCREMENT,
-                `slno` int(15) NOT NULL,
-                `date` date NOT NULL,
-                `id_product` int(10) NOT NULL,
-                `rate` decimal(15,4) NOT NULL,
-                `qty` decimal(12,4) NOT NULL,
-                `free` decimal(12,4) NOT NULL,
-                `amount` decimal(15,2) NOT NULL,
-                `distype1` tinyint(2) NOT NULL,
-                `distype2` tinyint(2) NOT NULL,
-                `distype3` tinyint(2) NOT NULL,
-                `dis1` decimal(10,4) NOT NULL,
-                `dis2` decimal(10,2) NOT NULL,
-                `dis3` decimal(10,2) NOT NULL,
-                `disamt1` decimal(10,2) NOT NULL,
-                `disamt2` decimal(10,2) NOT NULL,
-                `disamt3` decimal(10,2) NOT NULL,
-                `tax` int(10) NOT NULL,
-                `taxamt` decimal(10,2) NOT NULL,
-                `taxon` decimal(15,4) NOT NULL,
-                `id_sreturn` int(10) NOT NULL,
-                `id_head` int(10) NOT NULL,
-                `id_batch` int(11) NOT NULL,
-                `batch_name` varchar(25) NOT NULL,
-                `exp_date` varchar(55) NOT NULL,
-                `ip` varchar(11) NOT NULL,
-                `date_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                PRIMARY KEY (`id`)
-              ) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
-        $this->m->query($sql);
-
         $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}taxmaster` (
                 `id_taxmaster` int(11) NOT NULL AUTO_INCREMENT,
                 `name` varchar(30) DEFAULT NULL,
@@ -404,127 +102,6 @@ class util extends common {
               ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1";
         $this->m->query($sql);
 
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}salesorder` (
-                `id_salesorder` int(11) NOT NULL AUTO_INCREMENT, `invno` varchar(20) NOT NULL, `date` date NOT NULL,
-                `id_head` int(11) NOT NULL, `id_company` int(11) NOT NULL, `id_area` int(11) NOT NULL,
-                `id_represent` int(11) NOT NULL, `challan_no` varchar(20) NOT NULL, `challan_date` date NOT NULL,
-                `totalamt` decimal(16,2) NOT NULL, `vat` decimal(16,2) NOT NULL, `total` decimal(16,2) NOT NULL,
-                `pending` decimal(16,2) NOT NULL, `memo` text NOT NULL, `ip` varchar(30) NOT NULL,
-                `id_create` int(11) NOT NULL, `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                `id_modify` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                PRIMARY KEY (`id_salesorder`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
-        $this->m->query($sql);
-
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}salesorderdetail` (
-                `id_salesorderdetail` int(11) NOT NULL AUTO_INCREMENT, `invno` varchar(20) NOT NULL, `date` date NOT NULL,
-                `id_product` int(11) NOT NULL, `rate` decimal(15,4) NOT NULL, `qty` decimal(12,4) NOT NULL,
-                `free` decimal(12,4) NOT NULL, `amount` decimal(15,2) NOT NULL, `goods_amount` decimal(15,2) NOT NULL,
-                `id_taxmaster` int(11) NOT NULL, `tax_per` decimal(8,2) NOT NULL, `tax_amount` decimal(15,2) NOT NULL,
-                `net_amount` decimal(15,2) NOT NULL, `id_salesorder` int(11) NOT NULL, `id_company` int(11) NOT NULL,
-                `id_head` int(11) NOT NULL, `id_represent` int(11) NOT NULL, `id_area` int(11) NOT NULL,
-                `id_batch` int(11) NOT NULL, `batch_no` varchar(15) NOT NULL, `exp_date` varchar(15) NOT NULL,
-                `ip` varchar(30) NOT NULL, `id_create` int(11) NOT NULL, `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                `id_modify` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-                PRIMARY KEY (`id_salesorderdetail`)
-                ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;";
-        $this->m->query($sql);
-        $sql = "SHOW COLUMNS FROM `{$this->prefix}saledetail` LIKE 'cessper'";
-        $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
-        if ($uid == 0) {
-            $sql = "SHOW COLUMNS FROM `{$this->prefix}saledetail` LIKE 'cess'";
-            $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
-            if ($uid == 0) {
-                $sql = "ALTER TABLE `{$this->prefix}saledetail` ADD `cess` FLOAT(10,2) NOT NULL AFTER `discount_amount4`";
-                $this->m->query($sql);
-            }
-        } else {
-            $sql = "ALTER TABLE `{$this->prefix}saledetail` CHANGE `cessper` `cess` FLOAT(10,2) NOT NULL;";
-            $this->m->query($sql);
-        }
-        $this->addfield('case', $this->prefix . 'saledetail', 'ADD `case` decimal(15,2)');
-        $this->addfield('totalamt', $this->prefix . 'sreturn', 'ADD `totalamt` decimal(15,2)');
-        $this->addfield('totalcess', $this->prefix . 'sreturn', 'ADD `totalcess` decimal(15,2)');
-        $this->addfield('id_taxmaster', $this->prefix . 'sreturndetail', 'ADD `id_taxmaster` INT (11)');
-        $this->addfield('goods_amount', $this->prefix . 'sreturndetail', 'ADD `goods_amount` FLOAT(14,2) NOT NULL');
-        $this->addfield('net_amount', $this->prefix . 'sreturndetail', 'ADD `net_amount` FLOAT(14,2) NOT NULL');
-        $this->addfield('batch_no', $this->prefix . 'sreturndetail', 'ADD `batch_no` varchar(15)');
-        $this->addfield('cessamt', $this->prefix . 'sreturndetail', 'ADD `cessamt` FLOAT(12,2) NOT NULL');
-        $this->addfield('cess', $this->prefix . 'sreturndetail', 'ADD COLUMN `cess` FLOAT(6,2)');
-
-        $salarysql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}salary` (
-                        `id_salary` int(11) NOT NULL AUTO_INCREMENT, `id_employee` int(11) NOT NULL DEFAULT '0',
-                        `days` int(3) NOT NULL, `month` decimal(2,0) NOT NULL, `year` int(4) NOT NULL, `daysworked` int(3) NOT NULL,
-                        `cbasic` decimal(15,2) NOT NULL, `cda` decimal(15,2) NOT NULL, `chra` decimal(15,2) NOT NULL, `cmedical` decimal(15,2) NOT NULL,
-                        `cconvency` decimal(15,2) NOT NULL, `ctelephone` decimal(15,2) NOT NULL, `chealth` decimal(15,2) NOT NULL, `basic` decimal(15,2) NOT NULL,
-                        `da` decimal(15,2) NOT NULL, `hra` decimal(15,2) NOT NULL, `medical` decimal(15,2) NOT NULL, `convecy` decimal(15,2) NOT NULL,
-                        `telephone` decimal(15,2) NOT NULL, `health` decimal(15,2) NOT NULL, `net` decimal(15,2) NOT NULL, `esic` decimal(15,2) NOT NULL, `pf` decimal(15,2) NOT NULL,
-                        `eesic` decimal(15,2) NOT NULL, `epf` decimal(15,2) NOT NULL, `insurance` decimal(15,2) NOT NULL,
-                        `pt` decimal(15,2) NOT NULL, `tds` decimal(15,2) NOT NULL, `ec` decimal(15,2) NOT NULL, `gross` decimal(15,2) NOT NULL,
-                        `padvance` decimal(15,2) NOT NULL, `advance` decimal(15,2) NOT NULL, `totaladvance` decimal(15,2) NOT NULL, `deduct_adv` decimal(15,2) NOT NULL,
-                        `deduct_tada` decimal(15,2) NOT NULL, `deduct_allow` decimal(15,2) NOT NULL, `total` decimal(15,2) NOT NULL, `ip` varchar(30) NOT NULL,
-                        `id_create` int(11) NOT NULL, `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                        `id_modify` int(11) NOT NULL, `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00', PRIMARY KEY (`id_salary`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
-        $this->m->query($salarysql);
-        $sql = "SHOW COLUMNS FROM `{$this->prefix}salary` LIKE 'cconvency'";
-        $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
-        if ($uid == 0) {
-            $sql = "DROP TABLE `{$this->prefix}salary`";
-            $this->m->query($sql);
-            $this->m->query($salarysql);
-        }
-        $sql = "CREATE TABLE IF NOT EXISTS `{$this->prefix}employee` (
-                            `id_employee` int(11) NOT NULL, `name` varchar(60) NOT NULL, `function` varchar(60) NOT NULL, `designation` varchar(60) NOT NULL, 
-                            `location` varchar(60) NOT NULL, `bank` varchar(60) NOT NULL, `doj` date NOT NULL, `pan` varchar(30) NOT NULL, 
-                            `pfdetails` varchar(60) NOT NULL, `esidetails` varchar(60) NOT NULL, `prdetails` varchar(60) NOT NULL, `no` varchar(10) NOT NULL, 
-                            `active` tinyint(1) NOT NULL, `basic` decimal(15,2) NOT NULL, `da` decimal(15,2) NOT NULL, `hra` decimal(15,2) NOT NULL, 
-                            `medical` decimal(15,2) NOT NULL, `convency` decimal(15,2) NOT NULL, `telephone` decimal(15,2) NOT NULL, 
-                            `ta` decimal(15,2) NOT NULL, `other` decimal(15,2) NOT NULL, `esi` decimal(15,2) NOT NULL, `epf` decimal(15,2) NOT NULL, 
-                            `lic` decimal(15,2) NOT NULL, `advance` decimal(15,2) NOT NULL, `ip` varchar(30) NOT NULL, `id_create` int(11) NOT NULL, 
-                            `create_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, `id_modify` int(11) NOT NULL, 
-                            `modify_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00', `acno` varchar(30) DEFAULT NULL, `health` decimal(15,2) DEFAULT NULL,
-                            PRIMARY KEY (`id_employee`) ) ENGINE=InnoDB DEFAULT CHARSET=latin1;";
-        $this->m->query($sql);
-        $this->changefield('tax', $this->prefix . 'sreturndetail', 'CHANGE `tax` `tax_per` decimal(8,2)	');
-        $this->changefield('taxamt', $this->prefix . 'sreturndetail', 'CHANGE `taxamt` `tax_amount` decimal(15,2)');
-        $this->changefield('distype1', $this->prefix . 'sreturndetail', 'CHANGE `distype1` `discount_type1` TINYINT (2)');
-        $this->changefield('distype2', $this->prefix . 'sreturndetail', 'CHANGE `distype2` `discount_type2` TINYINT (2)');
-        $this->changefield('distype3', $this->prefix . 'sreturndetail', 'CHANGE `distype3` `discount_type3` TINYINT (2)');
-        $this->changefield('dis1', $this->prefix . 'sreturndetail', 'CHANGE `dis1` `discount1` decimal(10,2)');
-        $this->changefield('dis2', $this->prefix . 'sreturndetail', 'CHANGE `dis2` `discount2` decimal(10,2)');
-        $this->changefield('dis3', $this->prefix . 'sreturndetail', 'CHANGE `dis3` `discount3` decimal(10,2)');
-        $this->changefield('disamt1', $this->prefix . 'sreturndetail', 'CHANGE `disamt1` `discount_amount1` decimal(10,2)');
-        $this->changefield('disamt2', $this->prefix . 'sreturndetail', 'CHANGE `disamt2` `discount_amount2` decimal(10,2)');
-        $this->changefield('disamt3', $this->prefix . 'sreturndetail', 'CHANGE `disamt3` `discount_amount3` decimal(10,2)');
-
-        $this->addfield('allow', $this->prefix . 'salary', 'ADD `allow` decimal(15,2)');
-        $this->addfield('add_allow', $this->prefix . 'salary', 'ADD `add_allow` decimal(15,2)');
-        $this->addfield('id_head', $this->prefix . 'employee', 'ADD `id_head` INT (11)');
-        $this->addfield('status', $this->prefix . 'employee', 'ADD `status` TINYINT (1) NOT NULL');
-        $this->addfield('id_approve', $this->prefix . 'salesorder', 'ADD `id_approve` INT (11)');
-        $this->addfield('is_approve', $this->prefix . 'salesorder', 'ADD `is_approve` TINYINT (1)');
-        $this->addfield('is_billed', $this->prefix . 'salesorder', 'ADD `is_billed` TINYINT (1)');
-        $this->addfield('approve_date', $this->prefix . 'salesorder', 'ADD `approve_date` timestamp');
-        $this->addfield('schemeapprove', $this->prefix . 'salesorder', 'ADD `schemeapprove` TEXT');
-        $this->addfield('scheme', $this->prefix . 'salesorder', 'ADD `scheme` TINYINT (1)');
-        $this->addfield('id_series', $this->prefix . 'salesorder', 'ADD `id_series` INT (11)');
-        $this->addfield('id_sale', $this->prefix . 'salesorder', 'ADD `id_sale` INT (11)');
-        $this->addfield('vehicle', $this->prefix . 'sale', 'ADD `vehicle` TINYINT (1)');
-        $this->addfield('vehicle_contact', $this->prefix . 'sale', 'ADD `vehicle_contact` VARCHAR(40)');
-        $this->addfield('vehicle_number', $this->prefix . 'sale', 'ADD `vehicle_number` VARCHAR(30)');
-        $this->addfield('vehicle_amount', $this->prefix . 'sale', 'ADD `vehicle_amount` FLOAT(12,2)');
-        $this->addfield('cessamt', $this->prefix . 'saledetail', 'ADD `cessamt` FLOAT(12,2) NOT NULL');
-        $this->addfield('totalcess', $this->prefix . 'sale', 'ADD `totalcess` FLOAT(12,2) NOT NULL');
-        $this->addfield('totalcess', $this->prefix . 'purchase', 'ADD `totalcess` FLOAT(12,2) NOT NULL');
-        $this->addfield('cess', $this->prefix . 'purchasedetail', 'ADD `cess` FLOAT(10,4) NOT NULL;');
-        $this->addfield('cessamt', $this->prefix . 'purchasedetail', 'ADD `cessamt` FLOAT(12,2) NOT NULL;');
-        $this->addfield('acno', $this->prefix . 'employee', 'ADD COLUMN `acno` VARCHAR(30)');
-        $this->addfield('health', $this->prefix . 'employee', 'ADD COLUMN `health` decimal(15,2)');
-        $this->addfield('hsncode', $this->prefix . 'product', 'ADD COLUMN `hsncode` VARCHAR(20) NOT NULL AFTER `name`');
-        $this->addfield('maximum_stock', $this->prefix . 'product', 'ADD `maximum_stock`  decimal(12,3)');
-        $this->addfield('minimum_stock', $this->prefix . 'product', 'ADD `minimum_stock`  decimal(12,3)');
-        $this->addfield('cess', $this->prefix . 'product', 'ADD COLUMN `cess` FLOAT(6,2) AFTER `hsncode`');
-        $this->addfield('dealer', $this->prefix . 'head', 'ADD COLUMN `dealer` INT(2) COMMENT "0-Distributor/Retailer, 1-Super-Distributor"');
         $this->addfield('pincode', $this->prefix . 'head', 'ADD COLUMN `pincode` VARCHAR(30)');
         $this->addfield('gstin', $this->prefix . 'head', 'ADD COLUMN `gstin` VARCHAR(30)');
         $this->addfield('adhar', $this->prefix . 'head', 'ADD COLUMN adhar VARCHAR(30)');
@@ -533,181 +110,27 @@ class util extends common {
         $this->addfield('id_user', $this->prefix . 'head', 'ADD COLUMN `id_user` INT (11)');
         $this->addfield('ip', $this->prefix . 'head', 'ADD COLUMN `ip` VARCHAR (30)');
         $this->addfield('flicence', $this->prefix . 'head', 'ADD COLUMN `flicence` VARCHAR(40) NOT NULL AFTER dlicence');
-
         $this->addfield('acno', $this->prefix . 'head', 'ADD COLUMN `acno` VARCHAR(45)');
         $this->addfield('acifsc', $this->prefix . 'head', 'ADD COLUMN `acifsc` VARCHAR(30)');
         $this->addfield('acname', $this->prefix . 'head', 'ADD COLUMN `acname` VARCHAR(45)');
         $this->addfield('actype', $this->prefix . 'head', 'ADD COLUMN `actype` VARCHAR(30)');
-        $this->addfield('moderntrade_price', $this->prefix . 'batch', 'ADD COLUMN `moderntrade_price` decimal(15,2)');
-
 
 
         $this->addfield('id_represent', $this->prefix . 'area', 'ADD COLUMN `id_represent` INT(10)');
-        $this->changefield('rate', $this->prefix . 'adjustdetail', 'CHANGE `rate` `rate` FLOAT(15,2) NOT NULL');
         $this->changefield('ref1', $this->prefix . 'voucher', 'CHANGE `ref1` `ref1` VARCHAR(40)');
         $this->changefield('ref2', $this->prefix . 'voucher', 'CHANGE `ref2` `ref2` VARCHAR(40)');
-        $this->addfield('ref1', $this->prefix . 'voucher_details', 'ADD COLUMN `ref1` VARCHAR (40)');
-        $this->addfield('ref2', $this->prefix . 'voucher_details', 'ADD COLUMN `ref2` VARCHAR (40)');
-        $this->changefield('ref1', $this->prefix . 'voucher_details', 'CHANGE `ref1` `ref1` VARCHAR(40)');
-        $this->changefield('ref2', $this->prefix . 'voucher_details', 'CHANGE `ref2` `ref2` VARCHAR(40)');
-        $this->changefield('id', $this->prefix . 'sreturn', 'CHANGE `id` `id_sreturn` INT(11) AUTO_INCREMENT');
-        $this->changefield('id', $this->prefix . 'sreturndetail', 'CHANGE `id` `id_sreturndetail` INT(11) AUTO_INCREMENT');
-        $this->changefield('id', $this->prefix . 'preturn', 'CHANGE `id` `id_preturn` INT(11) AUTO_INCREMENT');
-        $this->changefield('id', $this->prefix . 'preturndetail', 'CHANGE `id` `id_preturndetail` INT(11) AUTO_INCREMENT');
-        $this->changefield('add', $this->prefix . 'sreturn', 'CHANGE `add` `add` decimal(10,2) NOT NULL');
-        $this->changefield('less', $this->prefix . 'sreturn', 'CHANGE `less` `less` decimal(10,2) NOT NULL');
-        $this->addfield('mode', $this->prefix . 'sreturn', 'ADD COLUMN `mode` TINYINT (1)');
-        $this->addfield('mode', $this->prefix . 'sreturndetail', 'ADD COLUMN `mode` TINYINT (1)');
-        $this->addfield('mode', $this->prefix . 'preturn', 'ADD COLUMN `mode` TINYINT (1)');
-        $this->addfield('mode', $this->prefix . 'preturndetail', 'ADD COLUMN `mode` TINYINT (1)');
-        $this->addfield('challan_no', $this->prefix . 'preturn', 'ADD COLUMN `challan_no` VARCHAR (20)');
-        $this->addfield('challan_date', $this->prefix . 'preturn', 'ADD COLUMN `challan_date` DATE ');
 
-        $this->addfield('totalamt', $this->prefix . 'preturn', 'ADD `totalamt` decimal(15,2)');
-        $this->addfield('round', $this->prefix . 'preturn', 'ADD `round` decimal(15,2)');
-        $this->addfield('pending', $this->prefix . 'preturn', 'ADD `pending` decimal(15,2)');
-        $this->addfield('totalcess', $this->prefix . 'preturn', 'ADD `totalcess` decimal(15,2)');
-        $this->addfield('id_taxmaster', $this->prefix . 'preturndetail', 'ADD `id_taxmaster` INT (11)');
-        $this->addfield('goods_amount', $this->prefix . 'preturndetail', 'ADD `goods_amount` FLOAT(14,2) NOT NULL');
-        $this->addfield('net_amount', $this->prefix . 'preturndetail', 'ADD `net_amount` FLOAT(14,2) NOT NULL');
-        $this->addfield('batch_no', $this->prefix . 'preturndetail', 'ADD `batch_no` varchar(15)');
-        $this->addfield('cessamt', $this->prefix . 'preturndetail', 'ADD `cessamt` FLOAT(12,2) NOT NULL');
-        $this->addfield('cess', $this->prefix . 'preturndetail', 'ADD COLUMN `cess` FLOAT(6,2)');
-        $this->changefield('tax', $this->prefix . 'preturndetail', 'CHANGE `tax` `tax_per` decimal(8,2)	');
-        $this->changefield('taxamt', $this->prefix . 'preturndetail', 'CHANGE `taxamt` `tax_amount` decimal(15,2)');
-        $this->changefield('distype1', $this->prefix . 'preturndetail', 'CHANGE `distype1` `discount_type1` TINYINT (2)');
-        $this->changefield('distype2', $this->prefix . 'preturndetail', 'CHANGE `distype2` `discount_type2` TINYINT (2)');
-        $this->changefield('distype3', $this->prefix . 'preturndetail', 'CHANGE `distype3` `discount_type3` TINYINT (2)');
-        $this->changefield('dis1', $this->prefix . 'preturndetail', 'CHANGE `dis1` `discount1` decimal(10,2)');
-        $this->changefield('dis2', $this->prefix . 'preturndetail', 'CHANGE `dis2` `discount2` decimal(10,2)');
-        $this->changefield('dis3', $this->prefix . 'preturndetail', 'CHANGE `dis3` `discount3` decimal(10,2)');
-        $this->changefield('disamt1', $this->prefix . 'preturndetail', 'CHANGE `disamt1` `discount_amount1` decimal(10,2)');
-        $this->changefield('disamt2', $this->prefix . 'preturndetail', 'CHANGE `disamt2` `discount_amount2` decimal(10,2)');
-        $this->changefield('disamt3', $this->prefix . 'preturndetail', 'CHANGE `disamt3` `discount_amount3` decimal(10,2)');
-
-        $this->addfield('waybill', $this->prefix . 'sale', 'ADD `waybill` VARCHAR(25)');
-        $this->addfield('waybill_date', $this->prefix . 'sale', 'ADD `waybill_date` DATE');
-        $this->addfield('waybill_amount', $this->prefix . 'sale', 'ADD `waybill_amount` decimal(15,2)');
-
-        $this->addfield('mode', $this->prefix . 'debitnotedetail', 'ADD `mode` varchar(1)');
-        $this->addfield('mode', $this->prefix . 'creditnotedetail', 'ADD `mode` varchar(1)');
+        
         $sql = "SHOW COLUMNS FROM `info` LIKE 'gstin'";
         $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
         if ($uid == 0) {
             $sql = "ALTER TABLE `info` ADD COLUMN adhar VARCHAR(30), ADD COLUMN `gstin` VARCHAR(30) NOT NULL AFTER `membercode`, ADD COLUMN `gstdate` DATE NULL AFTER `gstin`,ADD COLUMN `flicence` VARCHAR(40) NOT NULL AFTER gstin, ADD COLUMN `dlicence` VARCHAR(40) NOT NULL AFTER flicence";
             $this->m->query($sql);
         }
-        $sql = "SHOW COLUMNS FROM `{$this->prefix}salesorder` LIKE 'totalcess'";
-        $uid = $this->m->num_rows($this->m->query($sql)) == 0 ? 0 : 1;
-        if ($uid == 0) {
-            $sql = "ALTER TABLE `{$this->prefix}salesorder` ADD `totalcess` FLOAT(16,2) NOT NULL AFTER `vat`;";
-            $this->m->query($sql);
-            $sql = "ALTER TABLE `{$this->prefix}salesorderdetail` ADD `cess` FLOAT(8,2) NOT NULL AFTER `tax_amount`, ADD `cessamt` FLOAT(15,2) NOT NULL AFTER `cess`;";
-            $this->m->query($sql);
-        }
-        $this->check_index();
         $this->upgrade();
         $_SESSION['msg'] = "Software Upgraded Successful.";
         $this->sm->assign("page", "util/check.tpl.html");
     }
-    function check_index() {
-        $this->m->query("DROP view IF EXISTS `{$this->prefix}product_ledger`");
-        $sql = "SELECT SUM(opening_stock+opening_stock_free) AS stock FROM `{$this->prefix}batch`";
-        $rs = $this->m->fetch_assoc($sql);
-        if ($rs['stock']>0) {
-            $prod = "SELECT 'O' AS type, id_product, '' AS id_head, '' AS ttype, id_batch, '' AS id, '' AS refno, NULL AS date, ROUND(opening_stock,4) AS qty, ROUND(opening_stock_free,4) as free, 0 AS amount FROM `{$this->prefix}batch`";
-        } else {
-            $prod = "SELECT 'O' AS type, id_product, '' AS id_head, '' AS ttype, 0 AS id_batch, '' AS id, '' AS refno, NULL AS date, ROUND(opening_stock,4) AS qty, 0 as free, 0 AS amount FROM `{$this->prefix}product`";
-        }
-        $sql = "CREATE view `{$this->prefix}product_ledger` AS $prod
-                  UNION ALL 
-                  SELECT 'S' AS type, id_product, id_head, 'Sales' AS ttype, id_batch, id_sale AS id, invno AS refno, date, ROUND(-qty,4), ROUND(-free,4), -amount FROM `{$this->prefix}saledetail` 
-                  UNION ALL
-                  SELECT 'SR' AS type, id_product, id_head, 'Sales Return' AS ttype, id_batch, id_sreturn AS id, slno AS refno, date, ROUND(qty,4), ROUND(free,4), amount  FROM `{$this->prefix}sreturndetail`
-                  UNION ALL
-		  SELECT 'DN' AS type, id_product, id_head, 'Debit Note' AS ttype, id_batch, id_debitnotedetail AS id, no AS refno, date, ROUND(-qty,4), ROUND(-free,4), amount  FROM `{$this->prefix}debitnotedetail`WHERE mode='S'
-		  UNION ALL
-                  SELECT 'CN' AS type, id_product, id_head, 'Credit Note' AS ttype, id_batch, id_creditnotedetail AS id, no AS refno, date, ROUND(qty,4), ROUND(free,4), amount  FROM `{$this->prefix}creditnotedetail` WHERE mode='S'
-                  UNION ALL
-                  SELECT 'PR' AS type, id_product, id_head, 'Purchase Return' AS ttype, id_batch, id_preturn AS id, slno AS refno, date, ROUND(-qty,4), ROUND(-free,4), -amount  FROM `{$this->prefix}preturndetail` 
-                  UNION ALL
-                  SELECT 'SA' AS type, id_product, '', 'Stock Adjustment' AS ttype, id_batch, id_adjust AS id, no AS refno, date, ROUND(qty,4), ROUND(free,4), amount  FROM `{$this->prefix}adjustdetail` 
-                  UNION ALL
-                  SELECT 'P' AS type, id_product, id_head, 'Purchase' AS ttype, id_batch, id_purchase AS id, no AS refno, date, ROUND(qty,4), ROUND(free,4), amount  FROM `{$this->prefix}purchasedetail`
-                  UNION ALL
-                  SELECT 'PD' AS type, id_product, '', type AS ttype, id_batch, id_production AS id, slno AS refno, date, ROUND(qty,4), ROUND(free,4), amount  FROM `{$this->prefix}productiondetail` WHERE `type`='Produce' OR `type`='Add'
-                  UNION ALL
-                  SELECT 'S' AS type, id_product, '', type AS ttype, id_batch, id_production AS id, slno AS refno, date, ROUND(-qty,4), ROUND(-free,4), -amount  FROM `{$this->prefix}productiondetail` WHERE `type`='Issue' OR `type`='Reduce' OR `type`='Wastage'";
-        $this->m->query($sql);
-
-        $this->m->query("DROP view IF EXISTS `{$this->prefix}product_ledger_summary`");
-        $sql = "CREATE view `{$this->prefix}product_ledger_summary` AS SELECT id_product, SUM(qty+free) AS balance, SUM(amount) AS amount FROM `{$this->prefix}product_ledger` GROUP BY id_product";
-        $this->m->query($sql);
-
-	    $sql = "SELECT UPPER(p.name) AS name, h.id_head FROM `{$this->prefix}param` p, `{$this->prefix}head` h
-                WHERE (p.name='saleac' OR p.name='purcac' OR p.name='cash' OR p.name='SALESRETURN' OR p.name='PURCHASERETURN') AND p.content=h.code";
-        $data = $this->m->sql_getall($sql, 2, "id_head", "name");
-        $cash = $data['CASH'];
-        $sale = $data['SALEAC'];
-        $purc = $data['PURCAC'];
-        $saler = isset($data['SALESRETURN']) ? $data['SALESRETURN'] : $sale;
-        $purcr = isset($data['PURCHASERETURN']) ? $data['PURCHASERETURN'] : $purc;
-
-        $this->addfield('purchase_type', $this->prefix . 'purchase', 'ADD purchase_type VARCHAR(10) NOT NULL DEFAULT "Purchase"');
-        $this->addfield('id_account', $this->prefix . 'purchase', 'ADD `id_account` INT(11)');
-        $sql = "UPDATE `{$this->prefix}purchase` SET id_account='$purc' WHERE id_account=0 OR purchase_type='Purchase'";
-        $this->m->query($sql);
-
-        $sql = "DROP view IF EXISTS `{$this->prefix}ledger`";
-        $this->m->query($sql);
-        
-	    $sql = "SELECT value FROM `configuration` WHERE name='ADJUST SRETURN IN LEDGER'";
-        $data = $this->m->sql_getall($sql);
-	    $srtnsql = @$data[0]['value']=="NO" ? "" : "SELECT 'S' AS type, id_sreturn AS id, slno AS refno, date, id_head AS chead, {$saler} AS dhead, total, memo FROM `{$this->prefix}sreturn` WHERE date BETWEEN '{$_SESSION['sdate']}' AND '{$_SESSION['edate']}' UNION ALL";
-        
-        $sql = "CREATE view `{$this->prefix}ledger` AS {$srtnsql}
-                SELECT 'S' AS type, id_sale AS id, invno AS refno, date, {$sale} AS chead, IF(cash=1,id_head,{$cash}) AS dhead, total, memo FROM `{$this->prefix}sale` WHERE date BETWEEN '{$_SESSION['sdate']}' AND '{$_SESSION['edate']}'
-                UNION ALL
-                SELECT 'P' AS type, id_preturn AS id, slno AS refno, date, {$purcr} AS chead, id_head AS dhead, total, memo FROM `{$this->prefix}preturn` WHERE date BETWEEN '{$_SESSION['sdate']}' AND '{$_SESSION['edate']}'
-                UNION ALL
-                SELECT 'P' AS type, id_purchase AS id, bill_no AS refno, date, IF(cash=1,id_head,{$cash}) AS chead, id_account AS dhead, total, memo  FROM `{$this->prefix}purchase` WHERE date BETWEEN '{$_SESSION['sdate']}' AND '{$_SESSION['edate']}'
-                UNION ALL
-                SELECT 'V' AS type, id_voucher AS id, no AS refno, date, id_head_credit AS chead, id_head_debit AS dhead, total, memo FROM `{$this->prefix}voucher` WHERE date BETWEEN '{$_SESSION['sdate']}' AND '{$_SESSION['edate']}'
-                UNION ALL
-                SELECT 'H' AS type, id_head AS id, '' AS refno, '' AS date, IF(otype='D' OR otype='0', 0, id_head) AS chead, IF(otype='D' OR otype='0', id_head, 0) AS dhead, opening_balance AS total, '' AS memo FROM `{$this->prefix}head`";
-        $this->m->query($sql);
-        $this->m->query("DROP view IF EXISTS `{$this->prefix}tb`");
-        $sql = "CREATE view `{$this->prefix}tb` AS 
-                  SELECT dhead AS id_head, ROUND(SUM(total),2) AS debit, 0 AS credit  FROM `{$this->prefix}ledger` GROUP BY 1
-                  UNION ALL 
-                  SELECT chead AS id_head, 0 AS debit, ROUND(SUM(total),2) AS credit FROM `{$this->prefix}ledger` GROUP BY 1";
-        $this->m->query($sql);
-        $this->sm->assign("msg", "Ledger View create/replace.<br>TB View create/replace.<br>");
-        $this->sm->assign("page", "util/check.tpl.html");
-    }
-    function dropindex() {
-        $this->dropone($this->prefix."sreturndetail");
-        $this->dropone($this->prefix."preturndetail");
-        //$this->dropone($this->prefix."saledetail");
-        //$this->dropone($this->prefix."purchasedetail");
-        $this->dropone($this->prefix."salesorderdetail");
-        $this->dropone($this->prefix."debitnotedetail");
-        $this->dropone($this->prefix."creditnotedetail");
-        $_SESSION['msg'] = "Index dropped. Successful.";
-        $this->redirect("index.php");
-    }
-
-    function dropone($tbl) {
-        $sql = "SHOW INDEX FROM $tbl";
-        $r = $this->m->sql_getall($sql);
-        foreach ($r as $k => $v) {
-            $idx = $v['Key_name'];
-            $sql1 = "ALTER TABLE $tbl DROP INDEX $idx;";
-            echo $sql1."<br>";
-            mysql_query($sql1);
-        }
-    }
-
     function check_autoincrement() {
         $msg = "<b>Autoincrement Checking</b><br><br>";
         $prefix = $this->prefix;
@@ -740,17 +163,14 @@ class util extends common {
         $this->sm->assign("msg", $msg);
         $this->sm->assign("page", "util/check.tpl.html");
     }
-
     function detail() {
         $data = $this->m->all_Tables($this->prefix);
         $this->sm->assign("prefix", $this->prefix);
         $this->sm->assign("detail", $data);
     }
-
     function import() {
         //    $this->sm->assign("page", "util/import.tpl.html");
     }
-
     function ulocal() {
         $sql = "SELECT id_head AS id,name FROM {$this->prefix}head WHERE debtor ORDER BY name";
         $this->sm->assign("head", json_encode($this->m->sql_getall($sql, 2, "name", "id")));
@@ -760,11 +180,6 @@ class util extends common {
         $data = json_encode($this->m->sql_getall($sql, 1, "name", "id"));
         $this->sm->assign("product", $data);
     }
-
-    function drawform() {
-        
-    }
-
     function upload() {
         ini_set('upload_max_filesize', '250M');
         ini_set('post_max_size', '250M');
