@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-06-08 05:53:09
+/* Smarty version 3.1.39, created on 2022-06-08 06:28:22
   from 'C:\xampp\htdocs\transport\templates\common\menu.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_629febedc91000_53183036',
+  'unifunc' => 'content_629ff42e3e4cc7_76256380',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,8 +20,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_629febedc91000_53183036 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '1077505171629febedc80f18_25053592';
+function content_629ff42e3e4cc7_76256380 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '1003789590629ff42e3d95d9_21788938';
 ?>
 <div class="sidenav col-2">
   <a class="home active" href="index.php"><i class="fa fa-home"></i> Home</a>

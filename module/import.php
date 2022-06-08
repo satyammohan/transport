@@ -251,7 +251,7 @@ class import extends common {
                     $newRecord[$nk] = addslashes($v);
                 }
             }
-            $masters = array("group", "head", "area", "mode", "company", "item");
+            $masters = array("group", "head", "area", "mode", "company", "item", "vowner");
             if (in_array( $file, $masters)) {
                 if ($newRecord['code']=="") {
                     $newRecord = [];

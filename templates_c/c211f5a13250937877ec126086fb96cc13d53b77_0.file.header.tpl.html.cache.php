@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-06-08 05:53:09
+/* Smarty version 3.1.39, created on 2022-06-08 06:28:22
   from 'C:\xampp\htdocs\transport\templates\common\header.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_629febedb69780_56710592',
+  'unifunc' => 'content_629ff42e300916_26401444',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,9 +20,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_629febedb69780_56710592 (Smarty_Internal_Template $_smarty_tpl) {
+function content_629ff42e300916_26401444 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Smarty-3\\libs\\plugins\\modifier.date_format.php','function'=>'smarty_modifier_date_format',),));
-$_smarty_tpl->compiled->nocache_hash = '1333084794629febedb5e1b1_10930442';
+$_smarty_tpl->compiled->nocache_hash = '1543541511629ff42e2f5641_29313323';
 ?>
 <div class="header">
   <nav class="navbar fixed-top" style="padding: 0">
