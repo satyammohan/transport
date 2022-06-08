@@ -171,15 +171,6 @@ class util extends common {
     function import() {
         //    $this->sm->assign("page", "util/import.tpl.html");
     }
-    function ulocal() {
-        $sql = "SELECT id_head AS id,name FROM {$this->prefix}head WHERE debtor ORDER BY name";
-        $this->sm->assign("head", json_encode($this->m->sql_getall($sql, 2, "name", "id")));
-        $sql = "SELECT id_company AS id,name FROM {$this->prefix}company ORDER BY name";
-        $this->sm->assign("company", json_encode($this->m->sql_getall($sql, 2, "name", "id")));
-        $sql = "SELECT id_product AS id,name,mrp,seller_price,id_taxmaster_sale,pack,unit,`case`,closing_stock FROM {$this->prefix}product ORDER BY name";
-        $data = json_encode($this->m->sql_getall($sql, 1, "name", "id"));
-        $this->sm->assign("product", $data);
-    }
     function upload() {
         ini_set('upload_max_filesize', '250M');
         ini_set('post_max_size', '250M');
@@ -326,93 +317,5 @@ class util extends common {
         $this->redirect("index.php?module=util&func=listing");
     }
 
-    function transentry() {
-        echo "Please create Account Head as followings<br>";
-        $sql = "SELECT p.name, h.id_head FROM `{$this->prefix}param` p, `{$this->prefix}head` h
-                WHERE (p.name = 'saleac' OR p.name='purcac' OR p.name='cash' OR p.name='SALESRETURN' OR p.name='PURCHASERETURN') AND p.content=h.code";
-        $data = $this->m->sql_getall($sql, 2, "id_head", "name");
-        $sale = $data['saleac'] ? $data['saleac'] : $data['SALEAC'];
-        $purc = $data['purcac'] ? $data['purcac'] : $data['PURCAC'];
-        $saler = isset($data['SALESRETURN']) ? $data['SALESRETURN'] : $sale;
-        $purcr = isset($data['PURCHASERETURN']) ? $data['PURCHASERETURN'] : $purc;
-        $sql = 'DELETE FROM ' . $this->prefix . "voucher WHERE type=10";
-        $this->m->query($sql);
-
-        $sql = "SELECT sd.date, h.local, sd.tax_per, SUM(sd.tax_amount) as tax_amount 
-                FROM {$this->prefix}saledetail sd LEFT JOIN {$this->prefix}head h ON sd.id_head=h.id_head GROUP BY 1, 2,3";
-        $this->updategstentries($sql, $sale, 1, "SALES GST");
-
-        $sql = "SELECT sd.date, h.local, sd.tax_per, SUM(sd.tax_amount) as tax_amount 
-                FROM {$this->prefix}purchasedetail sd LEFT JOIN {$this->prefix}head h ON sd.id_head=h.id_head GROUP BY 1,2,3";
-        $this->updategstentries($sql, $purc, 2, "PURCHASE GST");
-
-        $sql = "SELECT sd.date, h.local, sd.tax_per, SUM(sd.tax_amount) as tax_amount 
-                FROM {$this->prefix}sreturndetail sd LEFT JOIN {$this->prefix}head h ON sd.id_head=h.id_head GROUP BY 1,2,3";
-        $this->updategstentries($sql, $saler, 2, "SALES RETURN GST");
-        // $_SESSION['msg'] = "GST Journal Entry passed from Sales, Purchases and Sales Return.";
-        // $this->redirect("index.php");
-        echo "<h2>Please click <a href='index.php'>here</a> to go to Menu options.</h2>"; exit;
-    }
-
-    function updategstentries($sql, $acno, $type, $memo) {
-        $data = $this->m->sql_getall($sql);
-        foreach ($data as $k => $v) {
-            if ($v['tax_per'] == 0) {
-                continue;
-            }
-            if ($v['local'] == 0) {
-                $tp = $v['tax_per'] / 2;
-                $tp = (intval($tp) == $tp) ? intval($tp) : $tp;
-                $str = "CGST " . $tp . "%";
-                if (!isset($main[$str])) {
-                    $sql = "SELECT id_head FROM {$this->prefix}head WHERE name='{$str}' LIMIT 1";
-                    $c = $this->m->sql_getall($sql);
-                    $main[$str] = isset($c[0]['id_head']) ? $c[0]['id_head'] : "";
-                }
-                if ($main[$str] != '') {
-                    $dhead = ($type == 1) ? $acno : $main[$str];
-                    $chead = ($type == 1) ? $main[$str] : $acno;
-                    $sql = 'INSERT INTO ' . $this->prefix . "voucher (type, date, total, id_head_debit, id_head_credit, memo) VALUES 
-                           (10, '$v[date]', $v[tax_amount]/2, $dhead, $chead, '$memo')";
-                    $this->m->query($sql);
-                } else {
-                    echo $str . "- under DUTIES AND TAXES<br>";
-                }
-                $str = "SGST " . $tp . "%";
-                if (!isset($main[$str])) {
-                    $sql = "SELECT id_head FROM {$this->prefix}head WHERE name='{$str}' LIMIT 1";
-                    $c = $this->m->sql_getall($sql);
-                    $main[$str] = isset($c[0]['id_head']) ? $c[0]['id_head'] : "";
-                }
-                if ($main[$str] != '') {
-                    $dhead = ($type == 1) ? $acno : $main[$str];
-                    $chead = ($type == 1) ? $main[$str] : $acno;
-                    $sql = 'INSERT INTO ' . $this->prefix . "voucher (type, date, total, id_head_debit, id_head_credit, memo) VALUES 
-                           (10, '$v[date]', $v[tax_amount]/2, $dhead, $chead, '$memo')";
-                    $this->m->query($sql);
-                } else {
-                    echo $str . "- under DUTIES AND TAXES<br>";
-                }
-            } else {
-                $tp = $v['tax_per'];
-                $tp = (intval($tp) == $tp) ? intval($tp) : $tp;
-                $str = "IGST " . $tp . "%";
-                if (!isset($main[$str])) {
-                    $sql = "SELECT id_head FROM {$this->prefix}head WHERE name='{$str}' LIMIT 1";
-                    $c = $this->m->sql_getall($sql);
-                    $main[$str] = isset($c[0]['id_head']) ? $c[0]['id_head'] : "";
-                }
-                if ($main[$str] != '') {
-                    $dhead = ($type == 1) ? $acno : $main[$str];
-                    $chead = ($type == 1) ? $main[$str] : $acno;
-                    $sql = 'INSERT INTO ' . $this->prefix . "voucher (type, date, total, id_head_debit, id_head_credit, memo) VALUES 
-                           (10, '$v[date]', $v[tax_amount], $dhead, $chead, '$memo')";
-                    $this->m->query($sql);
-                } else {
-                    echo $str . "- under DUTIES AND TAXES<br>";
-                }
-            }
-        }
-    }
 }
 ?>

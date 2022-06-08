@@ -211,6 +211,12 @@ class import extends common {
                 case "tax_stru":
                     $file = "taxmaster";
                     break;
+                case "vomaster":
+                    $file = "vowner";
+                    break;
+                case "transpor":
+                    $file = "transport";
+                    break;
                 default:
                     $file = strtolower($file);
             }
@@ -243,6 +249,24 @@ class import extends common {
                     }
                 } else {
                     $newRecord[$nk] = addslashes($v);
+                }
+            }
+            $masters = array("group", "head", "area", "mode", "company", "item");
+            if (in_array( $file, $masters)) {
+                if ($newRecord['code']=="") {
+                    $newRecord = [];
+                }
+            }
+            $masters = array("param", "book");
+            if (in_array( $file, $masters)) {
+                if ($newRecord['name']=="") {
+                    $newRecord = [];
+                }
+            }
+            $masters = array("bill", "billdet");
+            if (in_array( $file, $masters)) {
+                if ($newRecord['invno']=="") {
+                    $newRecord = [];
                 }
             }
             $val = $this->create_sql_from_array($newRecord);

@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-05-29 09:36:28
+/* Smarty version 3.1.39, created on 2022-06-08 05:38:38
   from 'C:\xampp\htdocs\transport\templates\company\listing.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_6292f144d89104_85223239',
+  'unifunc' => 'content_629fe886043df1_49827724',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,9 +20,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6292f144d89104_85223239 (Smarty_Internal_Template $_smarty_tpl) {
+function content_629fe886043df1_49827724 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Smarty-3\\libs\\plugins\\function.html_options.php','function'=>'smarty_function_html_options',),));
-$_smarty_tpl->compiled->nocache_hash = '4581611166292f144d35420_98168603';
+$_smarty_tpl->compiled->nocache_hash = '794407667629fe885f2e184_50644016';
 ?>
 <h3>Company Master<hr></h3>
 <table id="dataTable" class="table table-striped table-bordered" width="100%">

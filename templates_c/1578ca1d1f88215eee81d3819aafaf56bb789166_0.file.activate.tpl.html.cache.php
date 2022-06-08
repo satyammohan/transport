@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-06-06 06:31:55
+/* Smarty version 3.1.39, created on 2022-06-08 05:23:52
   from 'C:\xampp\htdocs\transport\templates\user\activate.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_629d52034f3434_78558050',
+  'unifunc' => 'content_629fe5100e49b7_82873857',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,8 +20,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_629d52034f3434_78558050 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '1536349066629d52034d6606_72756169';
+function content_629fe5100e49b7_82873857 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '1789234442629fe5100aab59_56357943';
 echo '<script'; ?>
  src="js/ddslick.js"><?php echo '</script'; ?>
 >

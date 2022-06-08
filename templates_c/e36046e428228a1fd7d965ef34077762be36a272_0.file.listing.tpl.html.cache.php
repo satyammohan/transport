@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-05-29 10:11:11
+/* Smarty version 3.1.39, created on 2022-06-08 05:39:57
   from 'C:\xampp\htdocs\transport\templates\vowner\listing.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_6292f96769fcd8_96942592',
+  'unifunc' => 'content_629fe8d5435a94_82615989',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,8 +20,8 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6292f96769fcd8_96942592 (Smarty_Internal_Template $_smarty_tpl) {
-$_smarty_tpl->compiled->nocache_hash = '17373717646292f9676666e1_75191403';
+function content_629fe8d5435a94_82615989 (Smarty_Internal_Template $_smarty_tpl) {
+$_smarty_tpl->compiled->nocache_hash = '87664049629fe8d541e740_61920514';
 ?>
 <h3>Vehicle Owner Master<hr></h3>
 <table id="dataTable" class="table table-striped table-bordered" width="100%">

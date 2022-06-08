@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-06-06 06:32:31
+/* Smarty version 3.1.39, created on 2022-06-08 05:53:09
   from 'C:\xampp\htdocs\transport\templates\common\container.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_629d522704caf0_04822654',
+  'unifunc' => 'content_629febedeb1417_15601326',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -27,10 +27,10 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
       1 => 1654445531,
       2 => 'file',
     ),
-    '6419ce60bc82f832963375b697ad5cb0b17e7290' => 
+    'bafc8cbcc1df1d19eb6a23fc75231d3bfa5e1192' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\transport\\templates\\util\\import.tpl.html',
-      1 => 1654446120,
+      0 => 'C:\\xampp\\htdocs\\transport\\templates\\util\\check.tpl.html',
+      1 => 1630646412,
       2 => 'file',
     ),
     '18a79272cdce391e9d69255398d88e6abf9728de' => 
@@ -42,7 +42,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   ),
   'cache_lifetime' => 3600,
 ),true)) {
-function content_629d522704caf0_04822654 (Smarty_Internal_Template $_smarty_tpl) {
+function content_629febedeb1417_15601326 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!DOCTYPE html>
 <html>
     <head>
@@ -83,6 +83,9 @@ function content_629d522704caf0_04822654 (Smarty_Internal_Template $_smarty_tpl)
         </script>
     </head>
     <body>
+                    <div class="row w-100">
+                <div class="err_msg">Software Upgraded Successful.</div>
+            </div>
                             <div class="row w-100">
                 <div class="col-12">
                     <div class="header">
@@ -295,27 +298,7 @@ $(document).ready(function() {
 </style>                </div>
                 <div class="col-10 w-100 h-100"  style="left: 20px !important;">
                     <br><br><br>
-                    <script type="text/javascript">
-    function checkaccept() {
-        var cacc = $("#confirm").is(':checked');
-        if (!cacc) {
-            alert("Please Check the 'Confirm updating the Current data.'");
-        }
-        return cacc;
-    }
-</script>
-<fieldset>
-    <legend>Data Import Setup</legend>
-    <form enctype="multipart/form-data" action="index.php?module=util&func=upload" onsubmit="return checkaccept();" method="post">
-        <input type="hidden" name="MAX_FILE_SIZE" value="1073741824" />
-        Choose a file : <input type="file" name="upload">
-        <br><br>
-        <input type="checkbox" id="confirm" name="confirm"><label for="confirm">Confirm updating the Current data.</label>
-        <br><br>
-        <b>The current data will be overwritten by the uploaded Zip file. <br>No revert will be possible. Please be very very careful before pressing Upload.<br><br></b>
-        <input type="submit" value="Upload">
-    </form>
-</fieldset>
+                    
                     <br><br>
                 </div>
                         <div class="footer">

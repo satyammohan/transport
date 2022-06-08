@@ -1,11 +1,11 @@
 <?php
-/* Smarty version 3.1.39, created on 2022-05-29 10:10:26
+/* Smarty version 3.1.39, created on 2022-06-08 05:37:41
   from 'C:\xampp\htdocs\transport\templates\area\listing.tpl.html' */
 
 /* @var Smarty_Internal_Template $_smarty_tpl */
 if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   'version' => '3.1.39',
-  'unifunc' => 'content_6292f93ae6c8d2_02546487',
+  'unifunc' => 'content_629fe84deb6258_42096809',
   'has_nocache_code' => false,
   'file_dependency' => 
   array (
@@ -20,9 +20,9 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
   array (
   ),
 ),false)) {
-function content_6292f93ae6c8d2_02546487 (Smarty_Internal_Template $_smarty_tpl) {
+function content_629fe84deb6258_42096809 (Smarty_Internal_Template $_smarty_tpl) {
 $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'C:\\xampp\\htdocs\\Smarty-3\\libs\\plugins\\function.html_options.php','function'=>'smarty_function_html_options',),));
-$_smarty_tpl->compiled->nocache_hash = '11783621656292f93ae3cb71_27914119';
+$_smarty_tpl->compiled->nocache_hash = '462226723629fe84de589d1_62127019';
 ?>
 <h3>Area Master<hr></h3>
 <table id="dataTable" class="table table-striped table-bordered" width="100%">
