@@ -109,6 +109,7 @@ class import extends common {
     }
     function make_bill($prefix) {
         $sql = "ALTER TABLE `{$prefix}_bill`
+            CHANGE `idate` `date` DATE,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -120,12 +121,25 @@ class import extends common {
     }
     function make_billdet($prefix) {
         $sql = "ALTER TABLE `{$prefix}_billdet`
+            CHANGE `idate` `date` DATE,
+            ADD `id_bill` INT( 11 ) NOT NULL,
+            ADD `id_from_area` INT( 11 ) NOT NULL,
+            ADD `id_to_area` INT( 11 ) NOT NULL,
+            ADD `id_company` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
             ADD `modify_date` TIMESTAMP NOT NULL, ADD INDEX ( `invno` ) ";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_billdet` l, `{$prefix}_area` a SET l.id_from_area = a.id_area WHERE l.from = a.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_billdet` l, `{$prefix}_area` a SET l.id_to_area = a.id_area WHERE l.area = a.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_billdet` l, `{$prefix}_company` c SET l.id_company= c.id_company WHERE l.company = c.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_bill` l, `{$prefix}_billdet` d SET d.id_bill=l.id_bill WHERE l.invno=d.invno";
         $this->m->query($sql);
         echo "Bill Detail converted Successfully<br>";
     }

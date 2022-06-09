@@ -10,7 +10,7 @@ class report extends common {
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
 
-        $sql = "SELECT * FROM {$this->prefix}bill WHERE (date >= '$sdate' AND date <= '$edate') ORDER BY date";
+        $sql = "SELECT b.*, a.fromarea, b.toarea, c.cname FROM {$this->prefix}bill b,  WHERE (b.date >= '$sdate' AND b.date <= '$edate') ORDER BY date";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
