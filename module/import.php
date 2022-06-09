@@ -126,6 +126,7 @@ class import extends common {
             ADD `id_from_area` INT( 11 ) NOT NULL,
             ADD `id_to_area` INT( 11 ) NOT NULL,
             ADD `id_company` INT( 11 ) NOT NULL,
+            ADD `vehno` varchar(15)	NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -139,7 +140,7 @@ class import extends common {
         $this->m->query($sql);
         $sql = "UPDATE `{$prefix}_billdet` l, `{$prefix}_company` c SET l.id_company= c.id_company WHERE l.company = c.code";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_bill` l, `{$prefix}_billdet` d SET d.id_bill=l.id_bill WHERE l.invno=d.invno";
+        $sql = "UPDATE `{$prefix}_bill` l, `{$prefix}_billdet` d SET d.vehno=l.vehno, d.id_bill=l.id_bill WHERE l.invno=d.invno";
         $this->m->query($sql);
         echo "Bill Detail converted Successfully<br>";
     }

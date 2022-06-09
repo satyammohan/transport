@@ -10,7 +10,13 @@ class report extends common {
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
 
-        $sql = "SELECT b.*, a.fromarea, b.toarea, c.cname FROM {$this->prefix}bill b,  WHERE (b.date >= '$sdate' AND b.date <= '$edate') ORDER BY date";
+
+        $_REQUEST['vehno'] = $vehno = isset($_REQUEST['vehno']) ? $_REQUEST['vehno'] : "";
+
+
+        $sql = "SELECT b.*, a.name AS aname, c.name AS cname FROM {$this->prefix}billdet b, {$this->prefix}company c, {$this->prefix}area a
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.vehno='$vehno' AND b.id_from_area=a.id_area AND b.id_company=c.id_company ORDER BY date";
+        echo $sql;
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
