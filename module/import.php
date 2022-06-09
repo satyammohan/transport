@@ -70,23 +70,40 @@ class import extends common {
     }
     function make_lr($prefix) {
         $sql = "ALTER TABLE `{$prefix}_lr`
+            ADD `id_head` INT( 11 ) NOT NULL,
+            ADD `id_company` INT( 11 ) NOT NULL,
+            ADD `id_area` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
-            ADD `modify_date` TIMESTAMP NOT NULL ";
+            ADD `modify_date` TIMESTAMP NOT NULL, ADD INDEX ( `lrno` ) ";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_lr` l, `{$prefix}_company` c SET l.id_company = c.id_company WHERE l.company = c.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_lr` l, `{$prefix}_area` c SET l.id_area = c.id_area WHERE l.area = c.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_lr` l, `{$prefix}_head` c SET l.id_head = c.id_head WHERE l.cust = c.code";
         $this->m->query($sql);
         echo "LR converted Successfully<br>";
     }
     function make_lrdet($prefix) {
         $sql = "ALTER TABLE `{$prefix}_lrdet`
+            ADD `id_lr` INT( 11 ) NOT NULL,
+            ADD `id_head` INT( 11 ) NOT NULL,
+            ADD `id_company` INT( 11 ) NOT NULL,
+            ADD `id_item` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
-            ADD `modify_date` TIMESTAMP NOT NULL ";
+            ADD `modify_date` TIMESTAMP NOT NULL, ADD INDEX ( `lrno` ) ";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_lrdet` l, `{$prefix}_item` i SET l.id_item = i.id_item WHERE l.code = i.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_lr` l, `{$prefix}_lrdet` d SET d.id_company = l.id_company, d.id_lr=l.id_lr, d.id_head = l.id_head WHERE l.lrno=d.lrno";
         $this->m->query($sql);
         echo "LRdet converted Successfully<br>";
     }
