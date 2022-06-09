@@ -8,7 +8,13 @@ class vehicle extends common {
     function insert() {
         $this->get_permission("vehicle", "INSERT");
         $data = $_REQUEST['vehicle'];
-        $res = $this->m->query($this->create_insert("{$this->prefix}vehicle", $data));
+        $data['status'] = 0;
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $sql = $this->create_insert("{$this->prefix}vehicle", $data);
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Inserted";
         $this->redirect("index.php?module=vehicle&func=listing");
     }
@@ -25,7 +31,9 @@ class vehicle extends common {
     }
     function update() {
         $this->get_permission("vehicle", "UPDATE");
-        $res = $this->m->query($this->create_update("{$this->prefix}vehicle", $_REQUEST['vehicle'], "id_vehicle='{$_REQUEST['id']}'"));
+        $sql = $this->create_update("{$this->prefix}vehicle", $_REQUEST['vehicle'], "id_vehicle='{$_REQUEST['id']}'");
+        pr($sql);
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Updated";
         $this->redirect("index.php?module=vehicle&func=listing");
     }
@@ -39,9 +47,7 @@ class vehicle extends common {
     function listing() {
         $this->get_permission("vehicle", "REPORT");
         $wcond = isset($_REQUEST['status']) ?  "WHERE status={$_REQUEST['status']}" : "";
-        $sql = "SELECT * FROM {$this->prefix}vehicle $wcond ";
-        $res1 = $this->m->query("SELECT * FROM {$this->prefix}vowner WHERE status=0 ORDER BY name");
-        $this->sm->assign("vowner", $this->m->getall($res1, 2, "name", "id_vowner"));
+        $sql = "SELECT *, m.name AS vname, m.panno FROM {$this->prefix}vehicle v $wcond LEFT JOIN {$this->prefix}vowner m ON v.id_vowner=m.id_vowner";
         $this->sm->assign("vehicle", $this->m->getall($this->m->query($sql)));
     }
 }

@@ -14,8 +14,8 @@
         <td>{$mod.name}</td>			
         <td>{$mod.address}</td>
         <td>{$mod.address1}</td>
-        <td>{$mod.registration_date}</td>
-        <td>{$mod.pan}</td>
+        <td>{$mod.redgdate|date_format:"%d-%m-%Y"}</td>
+        <td>{$mod.panno}</td>
         <td><a title="Edit Vehicle Owner" href="index.php?module=vowner&func=edit&id={$mod.id_vowner}"><i class="fa fa-edit fa-2x"></i></a>
             <a title="Delete Vehicle Owner" href="index.php?module=vowner&func=delete&id={$mod.id_vowner}" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
         </td>

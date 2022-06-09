@@ -14,7 +14,7 @@
     {foreach from=$product item=mod}
     <tr>
         <td>{$mod.name}</td>
-        <td>{$mod.convert}</td>
+        <td>{$mod.conv_tin}</td>
         <td ><select  onchange="update_status('product', '{$mod.id_product}', this.value, $('#list_status').val());">
                 {html_options options=$ini.status selected=$mod.status}
             </select>

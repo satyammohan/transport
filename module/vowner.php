@@ -27,6 +27,13 @@ class vowner extends common {
     function insert() {
         $this->get_permission("vowner", "INSERT");
         $data = $_REQUEST['comp'];
+        $data['status'] = 0;
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
+        $data['redgdate'] = $this->format_date($data['redgdate']);
+        $data['redgdate'] = $data['redgdate'] ? $data['redgdate'] : "0000-00-00";
         $sql = $this->create_insert($this->prefix . "vowner", $data);
         $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Inserted";
@@ -34,7 +41,11 @@ class vowner extends common {
     }
     function update() {
         $this->get_permission("vowner", "UPDATE");
-        $res = $this->m->query($this->create_update($this->prefix . "vowner", $_REQUEST['comp'], "id_vowner='{$_REQUEST['id']}'"));
+        $data =  $_REQUEST['comp'];
+        $data['redgdate'] = $this->format_date($data['redgdate']);
+        $data['redgdate'] = $data['redgdate'] ? $data['redgdate'] : "0000-00-00";
+        $sql = $this->create_update($this->prefix . "vowner",$data, "id_vowner='{$_REQUEST['id']}'");
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Updated";
         $this->redirect("index.php?module=vowner&func=listing");
     }

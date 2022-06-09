@@ -8,8 +8,13 @@ class company extends common {
     function insert() {
         $this->get_permission("company", "INSERT");
         $data = $_REQUEST['comp'];
+        $data['status'] = 0;
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
-        $res = $this->m->query($this->create_insert($this->prefix . "company", $data));
+        $sql = $this->create_insert($this->prefix . "company", $data);
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Inserted";
         $this->redirect("index.php?module=company&func=listing");
     }

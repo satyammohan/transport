@@ -12,7 +12,11 @@
             </tr>
             <tr>
                 <td><b>Freight:</b></td>
-                <td><input type="text" name="area[freight]" value="{$data.freight}" class="form-control" required size="40"/></td>
+                <td><input type="text" name="area[fr_rate]" value="{$data.fr_rate}" class="form-control" required size="40"/></td>
+            </tr>
+            <tr>
+                <td><b>New Rae:</b></td>
+                <td><input type="text" name="area[newrate]" value="{$data.newrate}" class="form-control" required size="40"/></td>
             </tr>
             <tr>
                 <td><b>Status:</b></td>
@@ -24,7 +28,7 @@
             <tr>
                 <td align="center" colspan="2">
                     <input type="hidden" id="hide" name="id" value="{$data.id_area}" />
-                    <input class="btn btn-primary" type="submit" value="Submit" />
+                    <input class="btn btn-primary" type="submit" value="Save" />
                     <input class="btn btn-danger" type="reset" value="Reset"/>
                 </td>
             </tr>

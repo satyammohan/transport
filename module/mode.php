@@ -8,6 +8,11 @@ class mode extends common {
     function insert() {
         $this->get_permission("mode", "INSERT");
         $data = $_REQUEST['mode'];
+        $data['status'] = 0;
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
         $res = $this->m->query($this->create_insert("{$this->prefix}mode", $data));
         $_SESSION['msg'] = "Record Successfully Inserted";
         $this->redirect("index.php?module=mode&func=listing");

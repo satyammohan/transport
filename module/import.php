@@ -19,21 +19,33 @@ class import extends common {
         }
         print("Tables for <b>{$prefix}</b> removed Successfully.<br>");
     }
+    function make_transport($prefix) {
+        $sql = "ALTER TABLE `{$prefix}_transport`
+            CHANGE `transport` `name` VARCHAR( 60 ),
+            ADD `status` TINYINT( 1 ) NOT NULL,
+            ADD `ip` VARCHAR( 30 ) NOT NULL,
+            ADD `id_create` INT( 11 ) NOT NULL,
+            ADD `create_date` TIMESTAMP NOT NULL,
+            ADD `id_modify` INT( 11 ) NOT NULL,
+            ADD `modify_date` TIMESTAMP NOT NULL";
+        $this->m->query($sql);
+        echo "Transport created Successfully<br>";
+    }
     function make_vomaster($prefix) {
-        $sql = "ALTER TABLE `{$prefix}_vomaster`
+        $sql = "ALTER TABLE `{$prefix}_vowner`
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
             ADD `modify_date` TIMESTAMP NOT NULL,
-            DROP `consider` ";
+            DROP `consider`, ADD INDEX ( `code` )  ";
         $this->m->query($sql);
         echo "Vomaster converted Successfully<br>";
     }
     function make_vehicle($prefix) {
         $sql = "ALTER TABLE `{$prefix}_vehicle`
-            ADD `id_vomaster` INT( 11 ) NOT NULL,
+            ADD `id_vowner` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -41,7 +53,7 @@ class import extends common {
             ADD `id_modify` INT( 11 ) NOT NULL,
             ADD `modify_date` TIMESTAMP NOT NULL ";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_vehicle` h, `{$prefix}_vomaster` a SET h.id_vomaster = a.id_vomaster WHERE h.vocode = a.code";
+        $sql = "UPDATE `{$prefix}_vehicle` h, `{$prefix}_vowner` a SET h.id_vowner = a.id_vowner WHERE h.vocode = a.code";
         $this->m->query($sql);
         echo "Vehicle converted Successfully<br>";
     }
@@ -447,8 +459,6 @@ class import extends common {
             `waybill_no` varchar(30) NOT NULL,
             `waybill_date` date NOT NULL,
             `waybill_amount` decimal(16,2) NOT NULL,
-            `is_transport` tinyint(1) NOT NULL,
-            `id_transport` int(11) NOT NULL,
             `lr_no` varchar(20) NULL,
             `lr_date` date NULL,
             `transport_mr_date` date NULL,
@@ -610,27 +620,14 @@ class import extends common {
         $this->m->query($sql);
         echo "Sale converted Successfully<br>";
     }
-    function make_transport($prefix) {
-
-        $sql = "CREATE TABLE `{$prefix}_transport` (
-            `id_transport` int(11) NOT NULL AUTO_INCREMENT,
-            `name` varchar(60) NOT NULL,
-            `address` text NOT NULL,
-            `panno` varchar (50) NOT NULL,
-            `contact_person` text NOT NULL,
-            `contact_no` text NOT NULL,
-            `status` TINYINT( 1 ) NOT NULL,
-            `ip` VARCHAR( 30 ) NOT NULL,
-            `id_create` INT( 11 ) NOT NULL,
-            `create_date` TIMESTAMP NOT NULL,
-            `id_modify` INT( 11 ) NOT NULL,
-            `modify_date` TIMESTAMP NOT NULL,
-            PRIMARY KEY (`id_transport`))";
-        $this->m->query($sql);
-        echo "Transport created Successfully<br>";
-    }
     function make_item($prefix) {
-        $sql = "ALTER TABLE `{$prefix}_item`  ADD `status` TINYINT( 1 ) NOT NULL, ADD `ip` VARCHAR( 30 ) NOT NULL, ADD `id_create` INT( 11 ) NOT NULL, ADD `create_date` TIMESTAMP NOT NULL, ADD `id_modify` INT( 11 ) NOT NULL, ADD `modify_date` TIMESTAMP NOT NULL, ADD INDEX ( `code` ); ";
+        $sql = "ALTER TABLE `{$prefix}_item`  ADD `status` TINYINT( 1 ) NOT NULL, ADD `ip` VARCHAR( 30 ) NOT NULL, ADD `id_create` INT( 11 ) NOT NULL, ADD `create_date` TIMESTAMP NOT NULL, ADD `id_modify` INT( 11 ) NOT NULL, ADD `modify_date` TIMESTAMP NOT NULL, ADD `id_company` INT( 11 ) NOT NULL, ADD `id_product` INT( 11 ) NOT NULL, ADD INDEX ( `code` ); ";
+        $this->m->query($sql);
+
+        $sql = "UPDATE `{$prefix}_item` i, `{$prefix}_product` p SET i.id_product = p.id_product WHERE i.product = p.code";
+        $this->m->query($sql);
+
+        $sql = "UPDATE `{$prefix}_item` i, `{$prefix}_company` p SET i.id_company = p.id_company WHERE i.company = p.code";
         $this->m->query($sql);
         echo "Item converted Successfully<br>";
     }
@@ -650,22 +647,13 @@ class import extends common {
         echo "Book converted Successfully<br>";
     }
     function make_company($prefix) {
-        $sql = "SHOW COLUMNS FROM `{$prefix}_company` LIKE 'stockist'";
-        if ($this->m->num_rows($this->m->query($sql)) == 0) {
-            $sql = "ALTER TABLE `{$prefix}_company` DROP `consider`";
-        } else {
-            $sql = "ALTER TABLE `{$prefix}_company` DROP `stockist`, DROP `consider`";
-        }
-        $this->m->query($sql);
-        $sql = "ALTER TABLE `{$prefix}_company` ADD `description` TEXT NOT NULL,
+        $sql = "ALTER TABLE `{$prefix}_company`
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
-            ADD `modify_date` TIMESTAMP NOT NULL ";
-        $this->m->query($sql);
-        $sql = "ALTER TABLE `{$prefix}_company` ADD INDEX ( `code` );";
+            ADD `modify_date` TIMESTAMP NOT NULL,  ADD INDEX ( `code` ); ";
         $this->m->query($sql);
         echo "Company converted Successfully<br>";
     }
@@ -743,17 +731,16 @@ class import extends common {
             ADD `creditor` smallint( 1 ) AFTER `name`,
             ADD `id_group` INT( 11 ) NOT NULL AFTER `gcode`,
             ADD `id_area` INT( 11 ) NOT NULL AFTER `area`,
-            ADD `id_transport` INT( 11 ) NOT NULL,
             ADD `email` TEXT NOT NULL AFTER `address`,
             ADD `contact_person` VARCHAR ( 50 ) NOT NULL AFTER `address`,
             ADD `pincode` VARCHAR ( 20 ) NOT NULL,
             ADD `mobile` TEXT NOT NULL,
             ADD `climit` DECIMAL ( 12,2 ),
             ADD `address3` VARCHAR( 60 ),
-            ADD cday DECIMAL( 16, 2 ),
-            ADD gstin VARCHAR(30),
-            ADD `credit_limit` DECIMAL( 16, 2 ),
-            ADD `credit_days` DECIMAL( 16, 2 ),
+            ADD `cday` DECIMAL( 16, 2 ),
+            ADD `gstin` VARCHAR(30),
+            ADD `credit_limit` DECIMAL( 16, 2 ) NULL DEFAULT 0,
+            ADD `credit_days` DECIMAL( 16, 2 ) NULL DEFAULT 0,
             ADD `vattype` VARCHAR ( 4 ),
             ADD `vatno` VARCHAR ( 11 ),
             ADD `dealer` INT(2) COMMENT '0-Distributor/Retailer, 1-Super-Distributor',
@@ -762,7 +749,28 @@ class import extends common {
             ADD `id_create` INT( 11 ) NOT NULL,
             ADD `create_date` TIMESTAMP NOT NULL,
             ADD `id_modify` INT( 11 ) NOT NULL,
-            ADD `modify_date` TIMESTAMP NOT NULL";
+            ADD `modify_date` TIMESTAMP NOT NULL,
+            ADD `message` varchar(200) NULL,
+            ADD `dob` date NULL,
+            ADD `doa` date  NULL,
+            ADD `location` varchar(30) NULL,
+            ADD `tanno` varchar(30) NULL,
+            ADD `transport` varchar(60) NULL,
+            ADD `banker` varchar(60) NULL,
+            ADD `station` varchar(30) NULL,
+            ADD `dlicence` VARCHAR(60) NULL,
+            ADD `acno` VARCHAR(45) NULL,
+            ADD `acifsc` VARCHAR(30) NULL,
+            ADD `acname` VARCHAR(45) NULL,
+            ADD `actype` VARCHAR(45) NULL,
+            ADD `flicence` VARCHAR(40) NULL,
+            ADD `tcs` int(1) NULL DEFAULT 0,
+            ADD `tcsper` decimal(9,3) NULL DEFAULT 0,
+            ADD `distance` varchar(10) NULL,
+            ADD `statecode` varchar(2) NULL";
+
+
+
         $this->m->query($sql);
         $sql = "ALTER TABLE `{$prefix}_head` CHANGE `address` `address1` VARCHAR( 60 )";
         $this->m->query($sql);
@@ -811,9 +819,10 @@ class import extends common {
     }
     function make_rates($prefix) {
         $sql = "ALTER TABLE `{$prefix}_rates`
-            ADD `from_area` INT( 11 ) NOT NULL,
-            ADD `to_area` INT( 11 ) NOT NULL,
+            ADD `id_from_area` INT( 11 ) NOT NULL,
+            ADD `id_to_area` INT( 11 ) NOT NULL,
             ADD `id_mode` INT( 11 ) NOT NULL,
+            ADD `id_head` INT( 11 ) NOT NULL,
             ADD `status` TINYINT( 1 ) NOT NULL,
             ADD `ip` VARCHAR( 30 ) NOT NULL,
             ADD `id_create` INT( 11 ) NOT NULL,
@@ -823,9 +832,11 @@ class import extends common {
         $this->m->query($sql);
         $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_mode` m SET r.id_mode = m.id_mode WHERE r.mode = m.code";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_area` a SET r.from_area = a.id_area WHERE r.from = a.code";
+        $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_area` a SET r.id_from_area = a.id_area WHERE r.from = a.code";
         $this->m->query($sql);
-        $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_area` a SET r.to_area = a.id_area WHERE r.to = a.code";
+        $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_area` a SET r.id_to_area = a.id_area WHERE r.to = a.code";
+        $this->m->query($sql);
+        $sql = "UPDATE `{$prefix}_rates` r, `{$prefix}_head` h SET r.id_head = h.id_head WHERE r.code = h.code";
         $this->m->query($sql);
         echo "Mood converted Successfully<br>";
     }

@@ -18,12 +18,12 @@
         <td>{$area[$mod.id_to_area]}</td>
         <td>{$mode[$mod.id_mode]}</td>
         <td>{$mod.rate}</td>
-        <td><select  onchange="update_status('rate', '{$mod.id_rate}', this.value, $('#list_status').val());">
+        <td><select  onchange="update_status('rate', '{$mod.id_rates}', this.value, $('#list_status').val());">
                 {html_options options=$ini.status selected=$mod.status}
             </select>
         </td>
-        <td><a title="Edit Rate" href="index.php?module=rate&func=edit&id={$mod.id_rate}"><i class="fa fa-edit fa-2x"></i></a>
-            <a title="Delete Rate" href="index.php?module=rate&func=delete&id={$mod.id_rate}&ce=0" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
+        <td><a title="Edit Rate" href="index.php?module=rate&func=edit&id={$mod.id_rates}"><i class="fa fa-edit fa-2x"></i></a>
+            <a title="Delete Rate" href="index.php?module=rate&func=delete&id={$mod.id_rates}&ce=0" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
         </td>
     </tr>
     {/foreach}

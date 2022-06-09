@@ -15,15 +15,20 @@ class head extends common {
     function insert() {
         $this->get_permission("head", "INSERT");
         $data = $_REQUEST['head'];
+        $data['status'] = 0;
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
         $data['ip'] = $_SERVER['REMOTE_ADDR'];
-        $data['id_user'] = $_SESSION['id_user'];
         $data['name'] = addslashes($data['name']);
         $data['doa'] = $this->format_date($data['doa']);
+        $data['doa'] = $data['doa'] ? $data['doa'] : "0000-00-00";
         $data['dob'] = $this->format_date($data['dob']);
-        $data['cst_date'] = $this->format_date($data['cst_date']);
-        $res = $this->m->query($this->create_insert("{$this->prefix}head", $data));
+        $data['dob'] = $data['dob'] ? $data['dob'] : "0000-00-00";
+        $sql = $this->create_insert("{$this->prefix}head", $data);
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Inserted";
-        $this->redirect("index.php?module=head&func=edit");
+        $this->redirect("index.php?module=head&func=listing");
     }
     function edit() {
         $id = isset($_REQUEST['id']) ? $_REQUEST['id'] : "0";
@@ -46,21 +51,19 @@ class head extends common {
         $data = $_REQUEST['head'];
         $data['name'] =  addslashes($data['name']);
         $data['doa'] = $this->format_date($data['doa']);
+        $data['doa'] = $data['doa'] ? $data['doa'] : "0000-00-00";
         $data['dob'] = $this->format_date($data['dob']);
-        $data['cst_date'] = $this->format_date($data['cst_date']);
-        $res = $this->m->query($this->create_update("{$this->prefix}head", $data, "id_head='{$_REQUEST['id']}'"));
+        $data['dob'] = $data['dob'] ? $data['dob'] : "0000-00-00";
+        $sql = $this->create_update("{$this->prefix}head", $data, "id_head='{$_REQUEST['id']}'");
+        $res = $this->m->query($sql);
         $_SESSION['msg'] = "Record Successfully Updated";
         $this->redirect("index.php?module=head&func=listing");
     }
     function delete() {
         $this->get_permission("head", "DELETE");
-        $res1 = $this->m->query($this->create_select("{$this->prefix}sale", "id_head='{$_REQUEST['id']}'"));
-        if ($this->m->num_rows($res1) > 0) {
-            $_SESSION['msg'] = "Head Can't be Deleted<br>It's Found to be Associated With some Other Information! ";
-        } else {
-            $res = $this->m->query($this->create_delete("{$this->prefix}head", "id_head='{$_REQUEST['id']}'"));
-            $_SESSION['msg'] = "Record Successfully Deleted";
-        }
+        // $res = $this->m->query($this->create_select("{$this->prefix}sale", "id_head='{$_REQUEST['id']}'"));
+        // $_SESSION['msg'] = "Record Successfully Deleted";
+        $_SESSION['msg'] = "Delete disabled. Action not Successful";
         $this->redirect("index.php?module=head&func=listing");
     }
     function listing() {

@@ -1,6 +1,6 @@
-<form method="post" action="index.php?module=rate&func={if $data.id_rate}update{else}insert{/if}">
+<form method="post" action="index.php?module=rate&func={if $data.id_rates}update{else}insert{/if}">
     <fieldset>
-        <legend>{if $data.id_rate}Edit{else}Add{/if} Rate</legend>
+        <legend>{if $data.id_rates}Edit{else}Add{/if} Rate</legend>
         <table id="dataTable" class="table table-striped table-bordered" width="100%">
             <tr>
                 <td><b>Party Name:</b></td>
@@ -40,8 +40,8 @@
             </tr>
             <tr>
                 <td align="center" colspan="2">
-                    <input type="hidden" id ="hide" name="id" value="{$data.id_rate}">
-                    <input class="btn btn-primary" type="submit" id="submit" value="Submit" />
+                    <input type="hidden" id ="hide" name="id" value="{$data.id_rates}">
+                    <input class="btn btn-primary" type="submit" id="submit" value="Save" />
                     <input class="btn btn-danger" type="reset" name="res" value="Reset"/>
                 </td>
             </tr>

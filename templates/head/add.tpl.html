@@ -57,11 +57,6 @@
                     <fieldset>
                         <table>
                             <tr>
-                                <td><b>Code:</b></td>
-                                <td><input type="text" name="head[code]" value="{$data.code}"/>
-                                    <label for="code"></label></td>
-                            </tr>
-                            <tr>
                                 <td><b>Name:</b></td>
                                 <td><input type="text" name="head[name]" id="name" value="{$data.name}" size="30"/>
                                     <label for="name"></label></td>
@@ -93,21 +88,6 @@
                                 <td><input type="text"  name="head[address3]" value='{$data.address3}'></td>
                             </tr>
                             <tr>
-                                <td><b>Opening Balance:</b></td>
-                                <td><spam><input type="text" size="12" name="head[opening_balance]" value="{$data.opening_balance}"/></spam>
-                                    <spam><select name="head[otype]" >
-                                    {html_options  options=$ini.balance_type selected=$data.otype } 
-                                </select></spam>
-                            </tr>
-<!--
-                            <tr>
-                                <td><b>Second Opening Balance:</b></td>
-                                <td><spam><input type="text" size="12" name="head[sopening_balance]" value="{$data.sopening_balance}"/></spam>
-                                    <spam><select name="head[sotype]" >
-                                    {html_options  options=$ini.balance_type selected=$data.sotype } 
-                                </select></spam>
-                            </tr>-->
-                            <tr>
                                 <td><b style="color: red">State Code:</b></td>
                                 <td><input type="text" name="head[statecode]" value="{$data.statecode}"/></td>
                             </tr>
@@ -138,15 +118,6 @@
                             <tr>
                                 <td><b>Tan No:</b></td>
                                 <td><input type="text" name="head[tanno]" value="{$data.tanno}"/></td>
-                            </tr>
-                            <tr>
-                                <td><b style="color: red">TCS Applicable:</b></td>
-                                <td><select name="head[tcs]" onchange="updatetcs(this.value)">
-                                        <option {if $data.tcs!=1}selected="selected"{/if} value="0">No</option>
-                                        <option {if $data.tcs==1}selected="selected"{/if} value="1">Yes</option>
-                                    </select>
-                                    <input {if $data.tcs!=1}readonly="readonly"{/if} type="text" style="text-align: right;" name="head[tcsper]" value="{$data.tcsper}" size="3" id="tcsper" />%
-                                </td>
                             </tr>
                             <tr>
                                 <td><b>Date of Birth:</b></td>
@@ -194,16 +165,6 @@
                                         <option>Select</option>
                                         {html_options  options=$area selected=$data.id_area } 
                                     </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><b>Transport:</b></td>
-                                <td>
-                                    <input type="text" name="head[transport]" value="{$data.transport}"/>
-				    <!--<select name="head[id_transport]" id="area">
-                                        <option> Select</option>
-                                        {html_options  options=$transport selected=$data.id_transport } 
-                                    </select>-->
                                 </td>
                             </tr>
                             <tr>

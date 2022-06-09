@@ -7,7 +7,11 @@ class product extends common {
     }
     function insert() {
         $this->get_permission("product", "INSERT");
-        $data = $_REQUEST['product'];
+        $data = $_REQUEST['product'];        
+        $data['id_create'] = $_SESSION['id_user'];
+        $data['id_modify'] = $_SESSION['id_user'];
+        $data['create_date'] = date("Y-m-d h:i:s");
+        $data['ip'] = $_SERVER['REMOTE_ADDR'];
         $res = $this->m->query($this->create_insert("{$this->prefix}product", $data));
         $_SESSION['msg'] = "Record Successfully Inserted";
         $this->redirect("index.php?module=product&func=listing");
@@ -19,8 +23,6 @@ class product extends common {
         else
             $this->get_permission("product", "UPDATE");
         $sql = "SELECT * FROM {$this->prefix}product WHERE id_product='$id'";
-        $res1 = $this->m->query("SELECT * FROM {$this->prefix}vowner WHERE status=0 ORDER BY name");
-        $this->sm->assign("vowner", $this->m->getall($res1, 2, "name", "id_vowner"));
         $this->sm->assign("data", $this->m->fetch_assoc($sql));
     }
     function update() {

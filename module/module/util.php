@@ -23,13 +23,9 @@ class util extends common {
         $this->redirect("index.php");
     }
     function newstru() {
-        $this->addfield('id_represent', $this->prefix . 'head', 'ADD `id_represent` integer');
         $this->addfield('message', $this->prefix . 'head', 'ADD `message` varchar(200)');
-        $this->addfield('partyuser', $this->prefix . 'head', 'ADD `partyuser` varchar(20)');
-        $this->addfield('partypass', $this->prefix . 'head', 'ADD `partypass` varchar(20)');
         $this->addfield('dob', $this->prefix . 'head', 'ADD `dob` date');
         $this->addfield('doa', $this->prefix . 'head', 'ADD `doa` date');
-        $this->addfield('sopening_balance', $this->prefix . 'head', 'ADD `sopening_balance` double(16,2)');
         $this->addfield('sotype', $this->prefix . 'head', 'ADD `sotype` varchar(1)');
         $this->addfield('location', $this->prefix . 'head', 'ADD `location` varchar(30)');
         $this->addfield('distance', $this->prefix . 'head', 'ADD `distance` varchar(10)');
@@ -48,7 +44,7 @@ class util extends common {
         $this->addfield('qrcode', $this->prefix . 'sale', 'ADD `qrcode` text');
         $this->addfield('wbdetails', $this->prefix . 'sale', 'ADD `wbdetails` text');
         
-	$this->addfield('ack', $this->prefix . 'sreturn', 'ADD `ack` varchar(30)');
+    	$this->addfield('ack', $this->prefix . 'sreturn', 'ADD `ack` varchar(30)');
         $this->addfield('ackdate', $this->prefix . 'sreturn', 'ADD `ackdate` varchar(30)');
         $this->addfield('irn', $this->prefix . 'sreturn', 'ADD `irn` varchar(128)');
         $this->addfield('qrcode', $this->prefix . 'sreturn', 'ADD `qrcode` text');
