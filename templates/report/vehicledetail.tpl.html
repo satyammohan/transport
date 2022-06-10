@@ -4,11 +4,11 @@
         <table>
             <tr>
                 <td>Start</td>
-                <td><input type="date" nam e="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
                 <td>End</td>
                 <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
                 <td>Vehicle No.</td>
-                <td><input type="text" name="vehno" size="9" value='{$smarty.request.vehno}' /></td>
+                <td><input type="text" name="vehno" size="12" value='{$smarty.request.vehno}' /></td>
                 <td><input type="submit" value="Go" />
                     <input type="button" class="print" value="Print" />
                     <input type="hidden" id="excelfile" value="vehdetail" />
@@ -40,7 +40,7 @@
                 <td>{$x.bno}</td>
                 <td>{$x.bnodate|date_format:"%d-%m-%Y"}</td>
                 <td align="right">{$x.weight}</td>
-                <td align="right">{$x.qty}</td>
+                <td align="right">{$x.qty|string_format:"%.0f"}</td>
                 <td align="right">{$x.freight|string_format:"%.2f"}</td>
                 <td>{$x.ddate|date_format:"%d-%m-%Y"}</td>
                 <td>{$x.ack}</td>
@@ -52,7 +52,7 @@
         <tr>
             <th colspan="8">Total :</th>
             <td align="right"><b>{$weight|string_format:"%.2f"}</b></td>
-            <td align="right"><b>{$qty|string_format:"%.2f"}</b></td>
+            <td align="right"><b>{$qty|string_format:"%.0f"}</b></td>
             <td align="right"><b>{$freight|string_format:"%.2f"}</b></td>
         </tr>
     </table>
