@@ -1,3 +1,6 @@
+<link href="js/jquery.multi-select.css" media="screen" rel="stylesheet" type="text/css">
+<script src="js/jquery.multi-select.js" type="text/javascript"></script>
+<!-- http://loudev.com/#project -->
 <fieldset>
     <legend><h3>Trip Summary<hr></h3></legend>
     <form method="post">
@@ -22,16 +25,14 @@
             </tr>
             <tr>
                 <td>Company</td>
-                <td><select name="company">
-                    <option value="actual">Actual</option>
-                    <option value="freight">Freight-wise</option>
+                <td><select id="company" name="company" multiple="multiple" size='4'>
+                    {html_options options=$company} 
                     </select>
                 </td>
                 <td>Area</td>
-                <td><select name="area">
-                    <option value="actual">Actual</option>
-                    <option value="freight">Freight-wise</option>
-                    </select>
+                <td><select id="area" name="area" multiple="multiple" size='4'>
+                    {html_options  options=$area}
+                </select>
                 </td>
                 <td>Type</td>
                 <td><select name="type">
@@ -82,3 +83,15 @@
         </tr>
     </table>
 </div>
+<script>
+$(document).ready(function () {
+    $('#area').multiSelect();
+    $('#company').multiSelect();
+});
+</script>
+<style>
+.ms-container .ms-selectable
+{
+   height: 50px !important;
+}
+</style>
