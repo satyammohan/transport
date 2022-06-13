@@ -10,7 +10,7 @@ date_default_timezone_set("Asia/Calcutta");
 session_set_cookie_params(18000);
 session_start();
 $smarty = getSmarty();
-require 'config/mysql.php';
+require 'module/mysql.php';
 include "module/common.php";
 call_class($_REQUEST);
 

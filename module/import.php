@@ -355,7 +355,7 @@ class import extends common {
                         $type = "DECIMAL (16, 4) DEFAULT 0";
                     } else {
                         $size = $v['Size'] + 4;
-                        $type = "DECIMAL ({$size}, 2) DEFAULT 0";
+                        $type = "DECIMAL ({$size}, 3) DEFAULT 0";
                     }
                     break;
                 default:
