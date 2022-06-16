@@ -30,7 +30,7 @@ class database {
     function query($sql) {
         $this->rs = $rs = mysqli_query($this->conn, $sql);
         if (!$rs) {
-            echo("Error in query: " . mysqli_error($this->conn)."---".$sql."<br><br>");
+            echo("Error in query: " . mysqli_error($this->conn)."<br>".$sql."<br><br>");
             exit;
         }
         return $rs;
