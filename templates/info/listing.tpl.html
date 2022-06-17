@@ -1,4 +1,4 @@
-nage Company / Financial Year</h2>
+<h3>Mananage Company / Financial Year</h3>
 <table  border="1" id="dataTable">
     <thead>
         <tr> 
@@ -7,7 +7,7 @@ nage Company / Financial Year</h2>
                     {html_options options=$ini.status_all selected=$smarty.request.status}
                 </select>
             </th>
-            <th><a class="info" href="index.php?module=info&func=edit&ce=0"><div class="add_bg"></div></a></th>
+            <th><a title="Add Company/Fy" href="index.php?module=info&func=edit"><i class="fa fa-plus fa-2x"></i></a></th>
         </tr>
         <tr>
             <th>Name</th><th>Address1</th><th>Contact</th><th>Email</th><th>GSTIN</th><th>TIN</th><th>Pan</th><th>Tan</th>
@@ -32,9 +32,9 @@ nage Company / Financial Year</h2>
                 {html_options options=$ini.status selected=$mod.status}
             </select></td>
         <td width="190px">
-            <a href="index.php?module=info&func=edit&id={$mod.id_info}"><div class="edit_bg">&nbsp;</div></a>
-            <a href="#" id="index.php?module=info&func=delete&id={$mod.id_info}&ce=0" onclick="del(this.id)"><div class="delete_bg">&nbsp;</div></a>
-            <a href="index.php?module=info&func=newyear&id={$mod.id_info}" ><b>New Year</b></a>
+            <a title="Edit FY" href="index.php?module=info&func=edit&id={$mod.id_info}"><i class="fa fa-edit fa-2x"></i></a>
+            <a title="Delete FY" href="index.php?module=info&func=delete&id={$mod.id_info}&ce=0" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
+            <a title="New Year" href="index.php?module=info&func=newyear&id={$mod.id_info}">New Year</a>
         </td>
     </tr>
     {/foreach}
