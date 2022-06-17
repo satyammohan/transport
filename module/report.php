@@ -78,6 +78,7 @@ class report extends common {
                 GROUP BY bd.date, bd.invno
                 ORDER BY bd.date, bd.invno, bd.vehno";
         $data = $this->m->sql_getall($sql);
+        pr($data);
         $this->sm->assign("data", $data);
     }
 }
