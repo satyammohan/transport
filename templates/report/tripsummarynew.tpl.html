@@ -20,19 +20,19 @@
                 <td>
                     <input class="btn btn-primary" type="submit" value="Go" />
                     <input class="btn btn-primary" type="button" class="print" value="Print" />
-                    <input type="hidden" id="excelfile" value="tripsummary" />
+                    <input type="hidden" id="excelfile" value="tripsummarynew" />
                     <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
                 </td>
             </tr>
             <tr>
                 <td>Company</td>
-                <td colspan="3"><select id="company" name="company" multiple="multiple">
+                <td colspan="3"><select id="company" name="company[]" multiple="multiple">
                     <option value="0">All Company</option>
                     {html_options options=$company} 
                     </select>
                 </td>
                 <td>Area</td>
-                <td colspan="3"><select id="area" name="area" multiple="multiple">
+                <td colspan="3"><select id="area" name="area[]" multiple="multiple">
                     <option value="0">All Area</option>
                     {html_options  options=$area}
                 </select>
