@@ -126,7 +126,8 @@ class report extends common {
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
         $sql = "SELECT b.date, b.tfreight, b.advance, b.cadvance, b.fuel, b.vno, b.balance, b.odate, b.ovno, b.other, b.narration, 
                     a_bank, a_cheque, bank, cheque, chqdate, b_name,
-                    b.unload+b.detaintion+b.epoint+b.chanda+b.other AS other, group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight,
+                    b.unload+b.detaintion+b.epoint+b.chanda+b.other AS other, 
+                    group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight,
                     SUM(if(bd.company='PP' OR bd.company='07' OR bd.company='18', 1, 0)*qty) AS qty,
                     SUM(if(bd.company='PP' OR bd.company='07' OR bd.company='18', 1, 0)*weight) AS twt,
                     SUM(if(bd.company='ST' OR bd.company='03', 1, 0)*weight) AS tsaltwt,
@@ -143,6 +144,38 @@ class report extends common {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $sql = "SELECT * FROM {$this->prefix}bill WHERE (odate >= '$sdate' AND odate <= '$edate') AND tdsamt<>0 ORDER BY date, invno";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+    }
+    function paydet() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $type = $_REQUEST['type'];
+        $cash = $_REQUEST['cash'];
+        switch ($type) {
+        case "A":
+            if ($cash=="Q") {
+                $wcond = " s.cadvance<>0 AND (s.date >= '$sdate' AND s.date <= '$edate') ";
+            } else {
+                $wcond = " s.advance<>0 AND (s.date >= '$sdate' AND s.date <= '$edate') ";
+            }
+            break;
+        case "B":
+            if ($cash=="Q") {
+                $wcond = " s.balance-s.tdsamt+s.detaintion<>0 AND (s.odate >= '$sdate' AND s.odate <= '$edate') AND (s.cheque!='' OR s.cheque IS NOT NULL) ";
+            } else {
+                $wcond = " s.balance-s.tdsamt+s.detaintion<>0 AND (s.odate >= '$sdate' AND s.odate <= '$edate') AND (s.cheque='' OR s.cheque IS NULL) ";
+            }
+            break;
+        case "F":
+            $wcond = " s.fuel<>0 AND (s.date >= '$sdate' AND s.date <= '$edate') ";
+            break;
+        }
+        $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance-s.tdsamt+s.detaintion AS balance, s.unload+s.epoint+s.chanda+s.other-s.shortage AS other,
+                s.treturn, s.fuel, s.odate, s.ovno, s.narration, s.cadvance, s.a_name, s.a_cheque, s.a_chqdate, s.a_bank, s.b_name, s.cheque, s.chqdate, s.bank,
+                group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
+               FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a
+               WHERE s.invno=sd.invno AND sd.id_to_area=a.id_area AND $wcond GROUP BY sd.date, sd.invno ORDER BY s.date, sd.invno, s.vehno ";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
