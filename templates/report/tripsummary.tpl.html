@@ -26,13 +26,13 @@
             </tr>
             <tr>
                 <td>Company</td>
-                <td colspan="3"><select id="company" name="company" multiple="multiple">
+                <td colspan="3"><select id="company" name="company[]" multiple="multiple">
                     <option value="0">All Company</option>
                     {html_options options=$company} 
                     </select>
                 </td>
                 <td>Area</td>
-                <td colspan="3"><select id="area" name="area" multiple="multiple">
+                <td colspan="3"><select id="area" name="area[]" multiple="multiple">
                     <option value="0">All Area</option>
                     {html_options  options=$area}
                 </select>

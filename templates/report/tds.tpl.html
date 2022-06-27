@@ -1,0 +1,48 @@
+<fieldset>
+    <legend><h3>TDS Statement<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Go" />
+                    <input class="btn btn-primary" type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="tds" />
+                    <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    TDS Statement Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}
+    <br />
+    <table id='report' border="1">
+        <tr><th>Date</th><th>No</th><th>Vehicle No</th><th>Amount</th><th>TDS Deducted</th><th>TDS Date</th></tr>
+        {$s=0}{$total=0}{$tds=0}
+        {foreach item=x name=it from=$data}
+            {$s=$s+1}
+            <tr>
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.invno}</td>
+                <td>{$x.vehno}</td>
+                <td align="right">{($x.tfreight+$x.epoint+$x.detaintion+$x.other+$x.treturn)|string_format:"%.2f"}</td>
+                <td align="right">{$x.tdsamt|string_format:"%.2f"}</td>
+                <td align="right">{$x.odate|date_format:"%d-%m-%Y"}</td>
+                {$total=$total+($x.tfreight+$x.epoint+$x.detaintion+$x.other+$x.treturn)}
+                {$tds=$tds+$x.tdsamt}
+            </tr>
+        {/foreach}
+        <tr>
+            <th colspan="3">Total trips: {$s}</th>
+            <td align="right">{$total|string_format:"%.2f"}</td>
+            <td align="right">{$tds|string_format:"%.2f"}</td>
+            <th colspan="1">&nbsp;</th>
+        </tr>
+    </table>
+</div>
