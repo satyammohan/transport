@@ -32,7 +32,7 @@ class report extends common {
                 s.treturn, s.fuel, s.odate, s.ovno, s.narration, s.cadvance, s.a_name, s.a_cheque, s.a_chqdate, s.a_bank, s.b_name, s.cheque, s.chqdate, s.bank,
                 group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
                FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a
-               WHERE s.invno=sd.invno AND sd.id_to_area=a.id_area AND $wcond GROUP BY sd.date, sd.invno ORDER BY s.date, sd.invno, s.vehno ";
+               WHERE s.invno=sd.invno AND sd.id_to_area=a.id_area $wcond GROUP BY sd.date, sd.invno ORDER BY s.date, sd.invno, s.vehno ";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
