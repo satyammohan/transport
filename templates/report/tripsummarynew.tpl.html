@@ -2,7 +2,7 @@
 <script src="js/jquery.multi-select.js" type="text/javascript"></script>
 <!-- http://loudev.com/#project -->
 <fieldset>
-    <legend><h3>Trip Summary<hr></h3></legend>
+    <legend><h3>Trip Summary (New)</h3></legend>
     <form method="post">
         <table>
             <tr>
@@ -11,7 +11,9 @@
                 <td>End</td>
                 <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
                 <td>Vehicle Type</td>
-                <td><input type="text" name="type" size="1" value='{$smarty.request.type}' /></td>
+                <td><input type="text" name="ownveh" size="1" value='{$smarty.request.ownveh}' /></td>
+                <td>Vehicle No.</td>
+                <td><input type="text" name="vehno" size="12" value='{$smarty.request.vehno}' /></td>
                 <!-- <td>Loading Charges</td>
                 <td><input type="text" name="charge" size="1" value='{if $smarty.request.charge}{$smarty.request.charge}{else}25{/if}' /></td>
                 <td>Ton Between</td>
@@ -51,6 +53,7 @@
 <div class="print_content">
     {$smarty.session.cname} {$smarty.session.fyear}<br>
     Trip Summary Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
+    {if $smarty.request.vehno} for Vehicle No : {$smarty.request.vehno}{/if}
     <table id='report' border="1">
         <tr>
             <th>Date</th><th>Vehicle No</th><th>Destination</th><th>Weight</th>
