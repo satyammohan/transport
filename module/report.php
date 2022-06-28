@@ -27,7 +27,7 @@ class report extends common {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
-        $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
+        $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
         $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
         $wcond .= isset($_REQUEST['area']) ? " AND a.id_area IN (".implode(",", $_REQUEST['area']).") " : " " ;
 
@@ -51,7 +51,8 @@ class report extends common {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
-        $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
+        $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
+        $wcond .= @$_REQUEST['vehno'] ? " AND bd.vehno = '".$_REQUEST['vehno']."' " : " " ;
         $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
         $wcond .= isset($_REQUEST['area']) ? " AND a.id_area IN (".implode(",", $_REQUEST['area']).") " : " " ;
 
@@ -68,6 +69,7 @@ class report extends common {
                 WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
                 GROUP BY bd.date, bd.invno
                 ORDER BY bd.date, bd.invno, bd.vehno";
+        //echo $sql;exit;
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
