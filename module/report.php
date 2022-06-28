@@ -27,7 +27,33 @@ class report extends common {
         $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
-
+/*
+wcond = IIF(EMPT(destype), " .T. ", " s.ownveh=destype ")
+wcond = wcond + " AND s.vehno=vehopt"
+wcond = wcond + " AND sd.area$acode"
+ocond = "sd.idate, sd.invno, sd.no"
+IF desorder="Areawise" OR desorder="Companywise" OR desorder="Bill-no wise" OR desorder="L/C No wise" OR desorder="Vehicle-wise"
+	wcond = wcond + " AND sd.company$cstr"
+	DO CASE
+	CASE desorder="Bill-no wise"
+		ocond = "sd.bno, sd.bnodate, sd.invno, sd.no"
+	CASE desorder="Companywise"
+		ocond = "sd.bnodate, sd.invno, sd.no"
+	CASE desorder="L/C No wise"
+		ocond = "sd.invno, sd.idate, sd.bnodate, sd.no"
+	CASE desorder="Vehicle-wise"
+ 		ocond = "sd.idate, sd.invno, sd.no"
+	CASE desorder="Areawise"
+ 		ocond = "sd.idate, sd.invno, sd.no"
+	ENDCASE
+ENDIF
+SELE s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, ;
+	 s.odate, s.ovno, s.narration, s.tdsamt, sd.* ;
+	FROM bill s, billdet sd ;
+	WHERE s.invno=sd.invno AND BETW(s.idate,msdate,medate) AND &wcond ;
+	ORDER BY &ocond ;
+	INTO CURSOR desreg
+*/
         $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance-s.tdsamt+s.detaintion AS balance, s.unload+s.epoint+s.chanda+s.other-s.shortage AS other,
                 s.treturn, s.fuel, s.odate, s.ovno, s.narration, s.cadvance, s.a_name, s.a_cheque, s.a_chqdate, s.a_bank, s.b_name, s.cheque, s.chqdate, s.bank,
                 group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 

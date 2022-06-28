@@ -58,6 +58,15 @@
     {$smarty.session.cname} {$smarty.session.fyear}<br>
     Despatch Register Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
     <table id='report' border="1">
+        <!-- IF desorder="Vehicle-wise"
+	retdata = "Date  Lc No   Destination Inv No     Date  LR No   Weight    Qty"
+ELSE
+	retdata = "Date  Truck No        Lc No   Company      Destination Inv No     Date  LR No   Weight    Qty"
+ENDIF
+retdata = retdata + IIF(_super,"  Freight","")
+retdata = retdata + IIF(destruck," Truck Fr  Advance  V.No   Balance    Other   TDS AMT  V.Dt  V.No ","")
+retdata = retdata + " Remark              "
+retdata = retdata + IIF(desdd, " Deli  Ack.  ","") -->
         <tr>
             <th>Sl</th><th>Date</th><th>Company</th><th>LC No.</th><th>Destination</th><th>Lrno</th><th>Inv. No.</th><th>Date</th>
             <th>Weight</th><th>Qty</th><th>Freight</th><th colspan="2">Del. Ack.</th>
@@ -83,6 +92,57 @@
                 {$qty=$qty+$x.qty}
                 {$freight=$freight+$x.freight}
             </tr>
+
+
+<!-- 
+            DO WHILE !EOF()
+            STORE 0 TO twt, tqty, tfr
+            grp1 = DTOS(idate)+invno
+            DO WHILE grp1 = DTOS(idate)+invno AND !EOF()
+                IF desorder="Vehicle-wise"
+                    ?LEFT(DTOC(idate),5), PADL(ALLT(no),5), loading, ;
+                     PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
+                     weight PICT "999.999", qty PICT "999999"
+                ELSE
+                    ?LEFT(DTOC(idate),5), vehno, PADL(ALLT(no),5), loading, LEFT(company.name,12), ;
+                     PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
+                     weight PICT "999.999", qty PICT "999999"
+                ENDIF
+                twt = twt + weight
+                tqty = tqty + qty
+                rwt = rwt + weight
+                rqty = rqty + qty
+                IF _super
+                    ??freight PICT "999999.99"
+                    tfr = tfr + freight
+                ENDIF
+                SKIP
+            ENDDO
+            SKIP -1
+            ?CHR(27)+CHR(71), "TOTAL :" AT printatpos, twt PICT "9999.999", tqty PICT "999999"
+            IF _super
+                ??tfr PICT "999999.99"
+            ENDIF
+            IF destruck
+                ??tfreight PICT "999999.99", advance PICT "99999.99", ;
+                  vno, balance PICT "99999.99", other PICT "99999.99", ;
+                  IIF(TYPE("tdsamt")="N", tdsamt, 0) PICT "999999.99", ;
+                  LEFT(DTOC(odate),5), ovno
+            ENDIF
+            ?? " "+PADL(narration, 20)
+            IF desdd
+                ??" "+LEFT(DTOC(ddate),5), LEFT(ack,6)
+            ENDIF
+            ??CHR(27)+CHR(72)
+            rfr = rfr + tfr
+            rtfr = rtfr + tfreight
+            radv = radv + advance
+            rbal = rbal + balance
+            roth = roth + other
+            rtdsamt = rtdsamt + IIF(TYPE("tdsamt")="N", tdsamt, 0)
+            SKIP
+        ENDDO -->
+
         {/foreach}
         <tr>
             <th colspan="8">Total :</th>

@@ -1,0 +1,198 @@
+DO setout WITH "Despatch Register"
+headpnm= "pghead"
+footpnm= "footer"
+endpnm = "resetrepo"
+IF !outdev()
+	RETU .F.
+ENDIF
+msdate = _sdate
+medate=IIF(BETW(DATE(), _sdate, _edate), DATE(), _edate)
+m.proceed = .F.
+DO desreg.spr
+IF m.proceed
+	IF desorder="Areawise" OR desorder="Companywise" OR desorder="Bill-no wise" OR desorder="L/C No wise" OR desorder="Vehicle-wise"
+		cstr = ""
+		=ophelp("company.name", "company.code", "-Ocompname-P")
+		DO strcomp
+	ENDIF
+	printatpos = 70
+	IF desorder="Vehicle-wise"
+		SELE DIST vehno, .F. AS consider FROM bill INTO TABLE vehtab
+		SELE vehtab
+		INDEX ON vehno TAG vehno
+		=ophelp("vehtab.vehno")
+		vehopt = vehtab.vehno
+		=closedbf("vehtab", "-")
+		printatpos = printatpos - 29
+	ENDIF
+	IF desorder="Areawise"
+		acode = ""
+		=ophelp("area.name", "area.code", "-Oareaname-P")
+		DO strarea
+	ENDIF
+	IF setrepo()
+		heading = heading()
+		DO pghead
+		DO printrep
+		DO lastfoot
+	ENDIF
+ENDIF
+RELE destype, desorder, destruck, desdd
+DO resetout
+RETU .T.
+
+FUNC strarea
+SELE area
+SET FILTER TO consider
+GO TOP
+acode = ""
+SCAN WHILE !EOF()
+	acode = acode + area.code + "|"
+ENDSCAN
+SET FILTER TO
+RETU
+
+FUNC setrepo
+SET ORDER TO areacode IN area
+SET ORDER TO compcode IN company
+wcond = IIF(EMPT(destype), " .T. ", " s.ownveh=destype ")
+IF desorder="Vehicle-wise"
+	wcond = wcond + " AND s.vehno=vehopt"
+ENDIF
+IF desorder="Areawise"
+	wcond = wcond + " AND sd.area$acode"
+ENDIF
+IF desorder="Areawise" OR desorder="Companywise" OR desorder="Bill-no wise" OR desorder="L/C No wise" OR desorder="Vehicle-wise"
+	wcond = wcond + " AND sd.company$cstr"
+	DO CASE
+	CASE desorder="Bill-no wise"
+		ocond = "sd.bno, sd.bnodate, sd.invno, sd.no"
+	CASE desorder="Companywise"
+		ocond = "sd.bnodate, sd.invno, sd.no"
+	CASE desorder="L/C No wise"
+		ocond = "sd.invno, sd.idate, sd.bnodate, sd.no"
+	CASE desorder="Vehicle-wise"
+ 		ocond = "sd.idate, sd.invno, sd.no"
+	CASE desorder="Areawise"
+ 		ocond = "sd.idate, sd.invno, sd.no"
+	ENDCASE
+ELSE
+	ocond = "sd.idate, sd.invno, sd.no"
+ENDIF
+SELE s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, ;
+	 s.odate, s.ovno, s.narration, s.tdsamt, sd.* ;
+	FROM bill s, billdet sd ;
+	WHERE s.invno=sd.invno AND BETW(s.idate,msdate,medate) AND &wcond ;
+	ORDER BY &ocond ;
+	INTO CURSOR desreg
+SET RELA TO area INTO area, company INTO company
+GO TOP
+RETU !EOF()
+
+FUNC resetrepo
+=closedbf("desreg", "-")
+RETU .T.
+
+FUNC heading
+IF desorder="Vehicle-wise"
+	retdata = "Date  Lc No   Destination Inv No     Date  LR No   Weight    Qty"
+ELSE
+	retdata = "Date  Truck No        Lc No   Company      Destination Inv No     Date  LR No   Weight    Qty"
+ENDIF
+retdata = retdata + IIF(_super,"  Freight","")
+retdata = retdata + IIF(destruck," Truck Fr  Advance  V.No   Balance    Other   TDS AMT  V.Dt  V.No ","")
+retdata = retdata + " Remark              "
+retdata = retdata + IIF(desdd, " Deli  Ack.  ","")
+RETU retdata
+
+FUNC pghead
+?_company
+?REPL("_",80)
+?"DESPATCH REGISTER FOR "
+IF desorder="Companywise" OR desorder="Bill-no wise" OR desorder="L/C No wise" OR desorder="Vehicle-wise"
+	?? ALLT(company.name)+" "
+ENDIF
+IF desorder="Areawise"
+	?? ALLT(area.name)+" "
+ENDIF
+IF desorder="Vehicle-wise"
+	?? "FOR VEHICLE NO: ", vehopt
+ELSE
+	?? IIF(destype=" ", "ALL VEHICLES", IIF(destype="O", "OWN VEHICLES", IIF(destype="H", "HIRED VEHICLES", "")))
+ENDIF
+IF desorder="Bill-no wise" 
+	?? "(BILL DATE/NO WISE)"
+ENDIF
+IF desorder="L/C No wise"
+	?? "(LOADING CHART WISE)"
+ENDIF
+?"PERIOD", msdate, "TO", medate, "" 
+?
+?heading
+?REPL("-",LEN(heading))
+?
+RETU .T.
+
+FUNC printrep
+GO TOP
+STORE 0 TO rwt, rqty, rfr, rtfr, radv, rbal, roth, rtdsamt
+DO WHILE !EOF()
+	STORE 0 TO twt, tqty, tfr
+	grp1 = DTOS(idate)+invno
+	DO WHILE grp1 = DTOS(idate)+invno AND !EOF()
+		IF desorder="Vehicle-wise"
+			?LEFT(DTOC(idate),5), PADL(ALLT(no),5), loading, ;
+			 PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
+			 weight PICT "999.999", qty PICT "999999"
+		ELSE
+			?LEFT(DTOC(idate),5), vehno, PADL(ALLT(no),5), loading, LEFT(company.name,12), ;
+			 PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
+			 weight PICT "999.999", qty PICT "999999"
+		ENDIF
+		twt = twt + weight
+		tqty = tqty + qty
+		rwt = rwt + weight
+		rqty = rqty + qty
+		IF _super
+			??freight PICT "999999.99"
+			tfr = tfr + freight
+		ENDIF
+		SKIP
+	ENDDO
+	SKIP -1
+	?CHR(27)+CHR(71), "TOTAL :" AT printatpos, twt PICT "9999.999", tqty PICT "999999"
+	IF _super
+		??tfr PICT "999999.99"
+	ENDIF
+	IF destruck
+		??tfreight PICT "999999.99", advance PICT "99999.99", ;
+		  vno, balance PICT "99999.99", other PICT "99999.99", ;
+		  IIF(TYPE("tdsamt")="N", tdsamt, 0) PICT "999999.99", ;
+		  LEFT(DTOC(odate),5), ovno
+	ENDIF
+	?? " "+PADL(narration, 20)
+	IF desdd
+		??" "+LEFT(DTOC(ddate),5), LEFT(ack,6)
+	ENDIF
+	??CHR(27)+CHR(72)
+	rfr = rfr + tfr
+	rtfr = rtfr + tfreight
+	radv = radv + advance
+	rbal = rbal + balance
+	roth = roth + other
+	rtdsamt = rtdsamt + IIF(TYPE("tdsamt")="N", tdsamt, 0)
+	SKIP
+ENDDO
+?REPL("-",LEN(heading))
+?"REPORT TOTAL :" AT printatpos-9, rwt PICT "9999.999", rqty PICT "999999"
+IF _super
+	??rfr PICT "99999999.99"
+ENDIF
+IF destruck
+	??rtfr PICT "999999.99", radv PICT "999999.99", ;
+	  rbal PICT "99999999999.99", roth PICT "999999.99", ;
+ 	  rtdsamt PICT "999999.99"
+ENDIF
+?REPL("-",LEN(heading))
+?
+RETU .T.
