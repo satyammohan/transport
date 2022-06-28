@@ -1,5 +1,8 @@
+<link href="js/jquery.multi-select.css" media="screen" rel="stylesheet" type="text/css">
+<script src="js/jquery.multi-select.js" type="text/javascript"></script>
+<!-- http://loudev.com/#project -->
 <fieldset>
-    <legend><h3>Despatch Register<hr></h3></legend>
+    <legend><h3>Despatch Register</h3></legend>
     <form method="post">
         <table>
             <tr>
@@ -7,12 +10,44 @@
                 <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
                 <td>End</td>
                 <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td>Vehicle Type</td>
+                <td><input type="text" name="ownveh" size="1" value='{$smarty.request.ownveh}' /></td>
                 <td>Vehicle No.</td>
                 <td><input type="text" name="vehno" size="12" value='{$smarty.request.vehno}' /></td>
-                <td><input type="submit" value="Go" />
-                    <input type="button" class="print" value="Print" />
+                <td>
+                    <input type="checkbox" value="1" name="truckdetail" {if $smarty.request.truckdetail=="1"}checked="checked"{/if} value='{$smarty.request.truckdetail}' />Truck Details<br>
+                    <input type="checkbox" value="1" name="ddac" {if $smarty.request.ddac=="1"}checked="checked"{/if} value='{$smarty.request.ddac}' />DD & AC
+                </td>
+                <td>Order</td>
+                <td>
+                    <select name="order">
+                        <option value="D" {if $smarty.request.order=="D"}selected="selected"{/if}>Date-wise</option>
+                        <option value="C" {if $smarty.request.order=="C"}selected="selected"{/if}>Company-wise</option>
+                        <option value="A" {if $smarty.request.order=="A"}selected="selected"{/if}>Area-wise</option>
+                        <option value="B" {if $smarty.request.order=="B"}selected="selected"{/if}>Bill No.-wise</option>
+                        <option value="L" {if $smarty.request.order=="L"}selected="selected"{/if}>L/c No-wise</option>
+                        <option value="V" {if $smarty.request.order=="V"}selected="selected"{/if}>Vehicle-wise</option>
+                    </select>
+                </td>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Go" />
+                    <input class="btn btn-primary" type="button" class="print" value="Print" />
                     <input type="hidden" id="excelfile" value="despatchregister" />
-                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                    <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+            <tr>
+                <td>Company</td>
+                <td colspan="4"><select id="company" name="company[]" multiple="multiple">
+                    <option value="0">All Company</option>
+                    {html_options options=$company} 
+                    </select>
+                </td>
+                <td>Area</td>
+                <td colspan="3"><select id="area" name="area[]" multiple="multiple">
+                    <option value="0">All Area</option>
+                    {html_options  options=$area}
+                </select>
                 </td>
             </tr>
         </table>
@@ -57,3 +92,9 @@
         </tr>
     </table>
 </div>
+<script>
+    $(document).ready(function () {
+        $('#area').multiSelect();
+        $('#company').multiSelect();
+    });
+</script>
