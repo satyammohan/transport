@@ -41,10 +41,10 @@ class report extends common {
             break;
         }
         $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, s.odate, s.ovno, s.narration, s.tdsamt,
-                group_concat(DISTINCT c.name) AS cname, group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
+                c.name AS cname, a.name AS aname, sd.date, sd.invno 
                FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a, {$this->prefix}company c
                WHERE (s.date >= '$sdate' AND s.date <= '$edate') AND s.invno=sd.invno AND sd.id_to_area=a.id_area AND sd.id_company=c.id_company $wcond
-               GROUP BY sd.date, sd.invno ORDER BY $ocond ";
+               ORDER BY $ocond ";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}company WHERE status=0 ORDER BY name");
