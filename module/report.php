@@ -150,8 +150,8 @@ class report extends common {
     function paydet() {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
-        $type = $_REQUEST['type'];
-        $cash = $_REQUEST['cash'];
+        $_REQUEST['type'] = $type = @$_REQUEST['type'] ? $_REQUEST['type'] : "A";
+        $_REQUEST['cash'] = $cash = @$_REQUEST['cash'] ? $_REQUEST['cash'] : "C";
         switch ($type) {
         case "A":
             if ($cash=="Q") {
