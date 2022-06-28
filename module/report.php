@@ -18,49 +18,39 @@ class report extends common {
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $_REQUEST['vehno'] = $vehno = isset($_REQUEST['vehno']) ? $_REQUEST['vehno'] : "";
 
-        $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
-        $wcond .= @$_REQUEST['vehno'] ? " AND bd.vehno = '".$_REQUEST['vehno']."' " : " " ;
+        $wcond = @$_REQUEST['ownveh'] ? " AND s.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
+        $wcond .= @$_REQUEST['vehno'] ? " AND sd.vehno = '".$_REQUEST['vehno']."' " : " " ;
         $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
         $wcond .= isset($_REQUEST['area']) ? " AND a.id_area IN (".implode(",", $_REQUEST['area']).") " : " " ;
-
+        $ocond = "sd.date, sd.invno, sd.no";
+        switch (@$_REQUEST['order']) {
+        case "B":
+            $ocond = "sd.bno, sd.bnodate, sd.invno, sd.no";
+            break;
+        case "C":
+            $ocond = "sd.bnodate, sd.invno, sd.no";
+            break;
+        case "L":
+            $ocond = "sd.invno, sd.date, sd.bnodate, sd.no";
+            break;
+        case "V":
+            $ocond = "sd.date, sd.invno, sd.no";
+            break;
+        case "A":
+            $ocond = "sd.date, sd.invno, sd.no";
+            break;
+        }
+        $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, s.odate, s.ovno, s.narration, s.tdsamt,
+                group_concat(DISTINCT c.name) AS cname, group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
+               FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a, {$this->prefix}company c
+               WHERE (s.date >= '$sdate' AND s.date <= '$edate') AND s.invno=sd.invno AND sd.id_to_area=a.id_area AND sd.id_company=c.id_company $wcond
+               GROUP BY sd.date, sd.invno ORDER BY $ocond ";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}company WHERE status=0 ORDER BY name");
         $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
-/*
-wcond = IIF(EMPT(destype), " .T. ", " s.ownveh=destype ")
-wcond = wcond + " AND s.vehno=vehopt"
-wcond = wcond + " AND sd.area$acode"
-ocond = "sd.idate, sd.invno, sd.no"
-IF desorder="Areawise" OR desorder="Companywise" OR desorder="Bill-no wise" OR desorder="L/C No wise" OR desorder="Vehicle-wise"
-	wcond = wcond + " AND sd.company$cstr"
-	DO CASE
-	CASE desorder="Bill-no wise"
-		ocond = "sd.bno, sd.bnodate, sd.invno, sd.no"
-	CASE desorder="Companywise"
-		ocond = "sd.bnodate, sd.invno, sd.no"
-	CASE desorder="L/C No wise"
-		ocond = "sd.invno, sd.idate, sd.bnodate, sd.no"
-	CASE desorder="Vehicle-wise"
- 		ocond = "sd.idate, sd.invno, sd.no"
-	CASE desorder="Areawise"
- 		ocond = "sd.idate, sd.invno, sd.no"
-	ENDCASE
-ENDIF
-SELE s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, ;
-	 s.odate, s.ovno, s.narration, s.tdsamt, sd.* ;
-	FROM bill s, billdet sd ;
-	WHERE s.invno=sd.invno AND BETW(s.idate,msdate,medate) AND &wcond ;
-	ORDER BY &ocond ;
-	INTO CURSOR desreg
-*/
-        $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance-s.tdsamt+s.detaintion AS balance, s.unload+s.epoint+s.chanda+s.other-s.shortage AS other,
-                s.treturn, s.fuel, s.odate, s.ovno, s.narration, s.cadvance, s.a_name, s.a_cheque, s.a_chqdate, s.a_bank, s.b_name, s.cheque, s.chqdate, s.bank,
-                group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
-               FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a
-               WHERE s.invno=sd.invno AND sd.id_to_area=a.id_area $wcond GROUP BY sd.date, sd.invno ORDER BY s.date, sd.invno, s.vehno ";
-        $data = $this->m->sql_getall($sql);
-        $this->sm->assign("data", $data);
     }
     function shortagedetail() {
     }
@@ -143,8 +133,7 @@ SELE s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.e
                 ORDER BY bd.date, bd.invno, bd.vehno";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
-    }
-    
+    }    
     function balancepaymentnew() {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
