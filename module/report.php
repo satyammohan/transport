@@ -6,7 +6,7 @@ class report extends common {
         parent:: __construct();
     }
     function vehicledetail() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $_REQUEST['vehno'] = $vehno = isset($_REQUEST['vehno']) ? $_REQUEST['vehno'] : "";
         $sql = "SELECT b.*, a.name AS aname, c.name AS cname FROM {$this->prefix}billdet b, {$this->prefix}company c, {$this->prefix}area a WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.vehno='$vehno' AND b.id_from_area=a.id_area AND b.id_company=c.id_company ORDER BY date";
@@ -14,7 +14,7 @@ class report extends common {
         $this->sm->assign("data", $data);
     }
     function despatchregister() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-01");
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $_REQUEST['vehno'] = $vehno = isset($_REQUEST['vehno']) ? $_REQUEST['vehno'] : "";
 
@@ -55,7 +55,7 @@ class report extends common {
     function shortagedetail() {
     }
     function tripsummary() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
         $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
@@ -79,7 +79,7 @@ class report extends common {
         $this->sm->assign("data", $data);
     }
     function tripsummarynew() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
         $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
@@ -100,15 +100,14 @@ class report extends common {
                 WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
                 GROUP BY bd.date, bd.invno
                 ORDER BY bd.date, bd.invno, bd.vehno";
-        //echo $sql;exit;
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
     function balancepayment() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
-        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : $_SESSION['sdate'];
+        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : date("Y-m-d");
         $_REQUEST['end_date1'] = $edate1 = isset($_REQUEST['end_date1']) ? $_REQUEST['end_date1'] : date("Y-m-d");
 
         $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
@@ -135,10 +134,10 @@ class report extends common {
         $this->sm->assign("data", $data);
     }    
     function balancepaymentnew() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
-        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : $_SESSION['sdate'];
+        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : date("Y-m-d");
         $_REQUEST['end_date1'] = $edate1 = isset($_REQUEST['end_date1']) ? $_REQUEST['end_date1'] : date("Y-m-d");
 
         $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
@@ -166,7 +165,7 @@ class report extends common {
         $this->sm->assign("data", $data);
     }
     function tds() {
-        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : $_SESSION['sdate'];
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
         $sql = "SELECT * FROM {$this->prefix}bill WHERE (odate >= '$sdate' AND odate <= '$edate') AND tdsamt<>0 ORDER BY date, invno";
         $data = $this->m->sql_getall($sql);
