@@ -1,4 +1,25 @@
-<div class="sidenav col-2">
+<?php /* Smarty version Smarty-3.1.21-dev, created on 2022-06-11 09:05:26
+         compiled from "templates/common/menu.tpl.html" */ ?>
+<?php /*%%SmartyHeaderCode:198285939362a40d7eb6cac6-26812220%%*/if(!defined('SMARTY_DIR')) exit('no direct access allowed');
+$_valid = $_smarty_tpl->decodeProperties(array (
+  'file_dependency' => 
+  array (
+    '788af11a266deb0197e4739cb9b89f12d82980fa' => 
+    array (
+      0 => 'templates/common/menu.tpl.html',
+      1 => 1654918146,
+      2 => 'file',
+    ),
+  ),
+  'nocache_hash' => '198285939362a40d7eb6cac6-26812220',
+  'function' => 
+  array (
+  ),
+  'has_nocache_code' => false,
+  'version' => 'Smarty-3.1.21-dev',
+  'unifunc' => 'content_62a40d7eb77eb7_65110725',
+),false); /*/%%SmartyHeaderCode%%*/?>
+<?php if ($_valid && !is_callable('content_62a40d7eb77eb7_65110725')) {function content_62a40d7eb77eb7_65110725($_smarty_tpl) {?><div class="sidenav col-2">
   <a class="home active" href="index.php"><i class="fa fa-home"></i> Home</a>
   <button class="dropdown-btn group head area mode rate company vowner vehicle product item transport"><i class="fa fa-bar-chart-o"></i> Master
     <i class="fa fa-caret-down"></i>
@@ -56,34 +77,32 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-container">
-      <a class="report_vehicledetail" href="index.php?module=report&func=vehicledetail"><i class="fa fa-bar-chart-o"></i> Vehicle Detail (*)</a>
-      <a class="report_despatchregister" href="index.php?module=report&func=despatchregister"><i class="fa fa-bar-chart-o"></i> Despatch Register (*)</a>
-      <a class="report_tripsummary" href="index.php?module=report&func=tripsummary"><i class="fa fa-bar-chart-o"></i> Trip Summary (*)</a>
-      <a class="report_tripsummarynew" href="index.php?module=report&func=tripsummarynew"><i class="fa fa-bar-chart-o"></i> Trip Summary (New) (*)</a>
-      <a class="report_balancepayment" href="index.php?module=report&func=balancepayment"><i class="fa fa-bar-chart-o"></i> Balance Payment (*)</a>
-      <a class="report_balancepaymentnew" href="index.php?module=report&func=balancepaymentnew"><i class="fa fa-bar-chart-o"></i> Balance Payment (New) (*)</a>
-      <a class="report_tds" href="index.php?module=report&func=tds"><i class="fa fa-bar-chart-o"></i> TDS Statement (*)</a>
-      <a class="report_paydet" href="index.php?module=report&func=paydet"><i class="fa fa-bar-chart-o"></i> Payment Statement (*)</a>
+      <a class="report" href="index.php?module=report&func=vehicledetail"><i class="fa fa-bar-chart-o"></i> Vehicle Detail</a>
+      <a class="report" href="index.php?module=report&func=companydetail"><i class="fa fa-bar-chart-o"></i> Company Detail</a>
+      <a class="report" href="index.php?module=report&func=areadetail"><i class="fa fa-bar-chart-o"></i> Area Detail</a>
+      <a class="report" href="index.php?module=report&func=pendingtruckfreight"><i class="fa fa-bar-chart-o"></i> Pending Truck Freight</a>
+      <a class="report" href="index.php?module=report&func=pendingfreight"><i class="fa fa-bar-chart-o"></i> Pending Freight</a>
+      <a class="report" href="index.php?module=report&func=ackdue"><i class="fa fa-bar-chart-o"></i> Acknowledgement Due</a>
+      
+      <a class="report" href="index.php?module=report&func=shortagedetail"><i class="fa fa-bar-chart-o"></i> Shorage Detail</a>
+      <a class="report" href="index.php?module=report&func=despatchregister"><i class="fa fa-bar-chart-o"></i> Despatch Register</a>
+      <a class="report" href="index.php?module=report&func=tripsummary"><i class="fa fa-bar-chart-o"></i> Trip Summary</a>
+      
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> Balance Payment Detail</a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> TDS Statement</a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
+      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
 
 
-      <a class="report_companydetail" href="index.php?module=report&func=companydetail"><i class="fa fa-bar-chart-o"></i> Company Detail</a>
-      <a class="report_pendingtruckfreight" href="index.php?module=report&func=areadetail"><i class="fa fa-bar-chart-o"></i> Area Detail</a>
-      <a class="report_pendingtruckfreight" href="index.php?module=report&func=pendingtruckfreight"><i class="fa fa-bar-chart-o"></i> Pending Truck Freight</a>
-      <a class="report_pendingfreight" href="index.php?module=report&func=pendingfreight"><i class="fa fa-bar-chart-o"></i> Pending Freight</a>
-      <a class="report_ackdue" href="index.php?module=report&func=ackdue"><i class="fa fa-bar-chart-o"></i> Acknowledgement Due</a>
-      <a class="report_shortagedetail" href="index.php?module=report&func=shortagedetail"><i class="fa fa-bar-chart-o"></i> Shorage Detail</a>
-
-      <!-- <a class="report" href="index.php?module=report&func=paydet&type=A&cash=C"><i class="fa fa-bar-chart-o"></i> Advance (Cash) (*)</a>
-      <a class="report" href="index.php?module=report&func=paydet&type=A&cash=Q"><i class="fa fa-bar-chart-o"></i> Advance (Cheque) (*)</a>
-      <a class="report" href="index.php?module=report&func=paydet&type=B&cash=C"><i class="fa fa-bar-chart-o"></i> Balance (Cash) (*)</a>
-      <a class="report" href="index.php?module=report&func=paydet&type=B&cash=Q"><i class="fa fa-bar-chart-o"></i> Balance (Cheque) (*)</a> -->
-      <!-- <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a>
-      <a class="report" href="index.php?module=report&func="><i class="fa fa-bar-chart-o"></i> </a> -->
 <!---
 DEFINE BAR 1 OF _rtj0iam84 PROMPT "\<Vehicle Detail"
 DEFINE BAR 2 OF _rtj0iam84 PROMPT "\<Company Detail"
@@ -205,13 +224,12 @@ ON SELECTION BAR 8 OF account DO receipt
     </div>
   </div>
 
-  <button class="dropdown-btn util info"><i class="fa fa-gear"></i> Setting
+  <button class="dropdown-btn backup restore"><i class="fa fa-gear"></i> Setting
     <i class="fa fa-caret-down"></i>
   </button>
   <div class="dropdown-container">
-    <a class="util_listing" href="index.php?module=util&func=listing"><i class="fa fa-hdd-o"></i> Backup</a>
-    <a class="util_import" href="index.php?module=util&func=import"><i class="fa fa-window-restore"></i> Restore from Neuron</a>
-    <a class="info_listing" href="index.php?module=info&func=listing"><i class="fa fa-window-restore"></i> Manage Company/FY Year</a>
+    <a class="group" href="index.php?module=util&func=listing"><i class="fa fa-hdd-o"></i> Backup</a>
+    <a class="group" href="index.php?module=util&func=import"><i class="fa fa-window-restore"></i> Restore from Neuron</a>
   </div>
 
   
@@ -225,7 +243,8 @@ ON SELECTION BAR 8 OF account DO receipt
 </div>
 
 
-<script>
+<?php echo '<script'; ?>
+>
 var dropdown = document.getElementsByClassName("dropdown-btn");
 var i;
 for (i = 0; i < dropdown.length; i++) {
@@ -239,18 +258,16 @@ for (i = 0; i < dropdown.length; i++) {
     }
   });
 }
-var showactive = "{if $smarty.request.module}{$smarty.request.module}{else}home{/if}";
-var showactivesubmenu = "{if $smarty.request.module}{$smarty.request.module}_{$smarty.request.func}{else}home{/if}";
+var showactive = "<?php if ($_REQUEST['module']) {
+echo $_REQUEST['module'];
+} else { ?>home<?php }?>";
 $(document).ready(function() {
     $("."+showactive).trigger('click').addClass("active");
-    $("."+showactivesubmenu).addClass("showme");
 });
-</script>
+<?php echo '</script'; ?>
+>
 
-<style>
-.showme {
-  color:white !important;
-}
+<style>  
 .navbar {
   background-color: #09192A !important;
 }
@@ -294,4 +311,4 @@ $(document).ready(function() {
   float: right;
   padding-right: 8px;
 }
-</style>
+</style><?php }} ?>
