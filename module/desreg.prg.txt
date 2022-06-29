@@ -1,8 +1,6 @@
-DESPATCH REGISTER FOR CUTTACK-JD ALL VEHICLES
-PERIOD 01/04/2022 TO 04/04/2022
+DESPATCH REGISTER FOR CUTTACK-JD ALL VEHICLES PERIOD 01/04/2022 TO 04/04/2022
 Date  Truck No        Lc No   Company      Destination Inv No     Date  LR No   Weight    Qty  Freight Truck Fr  Advance  V.No   Balance    Other   TDS AMT  V.Dt  V.No  Remark               Deli  Ack.  
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
 02/04 OD05AF 7933         1   HORLICKS     CUTTACK-JD  9221000007 02/04          0.046      5     0.00
 02/04 OD05AF 7933         1   DETERGENT&PP CUTTACK-JD  9221000008 02/04          2.862    280     0.00
 02/04 OD05AF 7933         1   HORLICKS     CUTTACK-JD  9221000009 02/04          0.014      1     0.00

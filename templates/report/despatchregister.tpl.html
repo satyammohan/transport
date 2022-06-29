@@ -59,70 +59,104 @@
     Despatch Register Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
     <table id='report' border="1">
         <tr>
-            <th>Sl</th><th>Date</th><th>Truck No</th><th>Company</th><th>Destination</th><th>Inv. No.</th><th>Date</th><th>Lrno</th>
-            <th>Weight</th><th>Qty</th><th>Freight</th>
-            {if $smarty.request.truckdetail=="1"}<th>Truck Fr</th><th>Advance</th><th>V.No</th><th>Balance</th><th>Other</th><th>TDS AMT</th><th>V.Dt</th><th>V.No</th>{/if}
+            <th>Sl</th><th>Date</th><th>Truck No</th><th>LC No.</th><th>Company</th><th>Destination</th><th>Inv. No.</th><th>Date</th><th>Lrno</th><th>Weight</th><th>Qty</th>
+            <!-- <th>Freight</th> -->
+            {if $smarty.request.truckdetail}
+                <th>Truck Fr</th><th>Advance</th><th>V.No</th><th>Balance</th><th>Other</th><th>TDS AMT</th><th>V.Dt</th><th>V.No</th>
+            {/if}
             <th>Remark</th>
-            {if $smarty.request.ddac=="1"}<th>Deli  Ack.</th>{/if}
+            {if $smarty.request.ddac}<th>Deli  Ack.</th>{/if}
         </tr>
-        {$weight=0}{$qty=0}{$freight=0}
-        {$s=1}
+        {$weight=0}{$qty=0}{$freight=0}{$gweight=0}{$gqty=0}{$gfreight=0}{$s=1}{$start=1}{$invno=0}
+        {$tfreight=0}{$advance=0}{$balance=0}{$other=0}{$tdsamt=0}
         {foreach item=x name=it from=$data}
+            {if $invno!=$x.invno && $start!=1}
+                <tr>
+                    <td align="right" colspan="9">Total:</td>
+                    <td align="right">{$weight|string_format:"%.3f"}</td>
+                    <td align="right">{$qty|string_format:"%.0f"}</td>
+                    <!-- <td align="right">{$freight|string_format:"%.2f"}</td> -->
+                    {if $smarty.request.truckdetail}
+                        <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
+                        <td align="right">{$prev.advance|string_format:"%.2f"}</td>
+                        <td>{$prev.vno}</td>
+                        <td align="right">{$prev.balance|string_format:"%.2f"}</td>
+                        <td align="right">{$prev.other|string_format:"%.2f"}</td>
+                        <td align="right">{$prev.tdsamt|string_format:"%.2f"}</td>
+                        <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
+                        <td>{$prev.ovno}</td>
+                        {$tfreight=$tfreight+$prev.tfreight}
+                        {$advance=$advance+$prev.advance}
+                        {$balance=$balance+$prev.balance}
+                        {$other=$other+$prev.other}
+                        {$tdsamt=$tdsamt+$prev.tdsamt}
+                    {/if}
+                    <td>{$prev.narration}</td>
+                    {if $smarty.request.ddac}<td>{$prev.ddate|date_format:"%d-%m-%Y"} {$prev.ack}</td>{/if}
+                </tr>
+                {$weight=0}{$qty=0}{$freight=0}
+                {$s=1}
+            {/if}
             <tr>
-                <td>{$s}{$s=$s+1}</td>
+                <td>{$s}{$s=$s+1}{$start=$start+1}</td>
                 <td>{$x.date|date_format:"%d-%m-%Y"}</td>
-                <td>{$x.cname}</td>
+                <td>{$x.vehno}</td>
                 <td>{$x.no}</td>
+                <td>{$x.cname}</td>
                 <td>{$x.aname}</td>
-                <td>{$x.lrno}</td>
                 <td>{$x.bno}</td>
                 <td>{$x.bnodate|date_format:"%d-%m-%Y"}</td>
-                <td align="right">{$x.weight}</td>
+                <td>{$x.lrno}</td>
+                <td align="right">{$x.weight|string_format:"%.3f"}</td>
                 <td align="right">{$x.qty|string_format:"%.0f"}</td>
-                <td align="right">{$x.freight|string_format:"%.2f"}</td>
-                <td>{$x.ddate|date_format:"%d-%m-%Y"}</td>
-                <td>{$x.ack}</td>
+                <!-- <td align="right">{$x.freight|string_format:"%.2f"}</td> -->
                 {$weight=$weight+$x.weight}
                 {$qty=$qty+$x.qty}
                 {$freight=$freight+$x.freight}
+                {$gweight=$gweight+$x.weight}
+                {$gqty=$gqty+$x.qty}
+                {$gfreight=$gfreight+$x.freight}
             </tr>
-<!-- 
-            DO WHILE !EOF()
-            STORE 0 TO twt, tqty, tfr
-            grp1 = DTOS(idate)+invno
-            DO WHILE grp1 = DTOS(idate)+invno AND !EOF()
-                IF desorder="Vehicle-wise"
-                    ?LEFT(DTOC(idate),5), PADL(ALLT(no),5), loading, ;
-                     PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
-                     weight PICT "999.999", qty PICT "999999"
-                ELSE
-                    ?LEFT(DTOC(idate),5), vehno, PADL(ALLT(no),5), loading, LEFT(company.name,12), ;
-                     PADL(area.name,11), bno, LEFT(DTOC(bnodate),5), PADL(ALLT(lrno),6), ;
-                     weight PICT "999.999", qty PICT "999999"
-                ENDIF
-                ??freight PICT "999999.99"
-                SKIP
-            ENDDO
-            SKIP -1
-            ?CHR(27)+CHR(71), "TOTAL :" AT printatpos, twt PICT "9999.999", tqty PICT "999999"
-            ??tfr PICT "999999.99"
-            IF destruck
-                ??tfreight PICT "999999.99", advance PICT "99999.99", ;
-                  vno, balance PICT "99999.99", other PICT "99999.99", ;
-                  IIF(TYPE("tdsamt")="N", tdsamt, 0) PICT "999999.99", ;
-                  LEFT(DTOC(odate),5), ovno
-            ENDIF
-            ?? " "+PADL(narration, 20)
-            IF desdd
-                ??" "+LEFT(DTOC(ddate),5), LEFT(ack,6)
-            ENDIF
-        ENDDO -->
+            {$invno=$x.invno}
+            {$prev = $x}
         {/foreach}
         <tr>
-            <th colspan="8">Total :</th>
-            <td align="right"><b>{$weight|string_format:"%.2f"}</b></td>
-            <td align="right"><b>{$qty|string_format:"%.0f"}</b></td>
-            <td align="right"><b>{$freight|string_format:"%.2f"}</b></td>
+            <td align="right" colspan="9">Total:</td>
+            <td align="right">{$weight|string_format:"%.3f"}</td>
+            <td align="right">{$qty|string_format:"%.0f"}</td>
+            <!-- <td align="right">{$freight|string_format:"%.2f"}</td> -->
+            {if $smarty.request.truckdetail}
+                <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
+                <td align="right">{$prev.advance|string_format:"%.2f"}</td>
+                <td>{$prev.vno}</td>
+                <td align="right">{$prev.balance|string_format:"%.2f"}</td>
+                <td align="right">{$prev.other|string_format:"%.2f"}</td>
+                <td align="right">{$prev.tdsamt|string_format:"%.2f"}</td>
+                <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
+                <td>{$prev.ovno}</td>
+                {$tfreight=$tfreight+$prev.tfreight}
+                {$advance=$advance+$prev.advance}
+                {$balance=$balance+$prev.balance}
+                {$other=$other+$prev.other}
+                {$tdsamt=$tdsamt+$prev.tdsamt}
+            {/if}
+            <td>{$prev.narration}</td>
+            {if $smarty.request.ddac}<td>{$prev.ddate|date_format:"%d-%m-%Y"} {$prev.ack}</td>{/if}
+        </tr>
+
+        <tr>
+            <th colspan="9">Grand Total :</th>
+            <td align="right"><b>{$gweight|string_format:"%.3f"}</b></td>
+            <td align="right"><b>{$gqty|string_format:"%.0f"}</b></td>
+            <!-- <td align="right"><b>{$gfreight|string_format:"%.2f"}</b></td> -->
+            {if $smarty.request.truckdetail}
+                <td align="right"><b>{$tfreight|string_format:"%.2f"}</b></td>
+                <td align="right"><b>{$advance|string_format:"%.2f"}</b></td>
+                <td>&nbsp;</td>
+                <td align="right"><b>{$balance|string_format:"%.2f"}</b></td>
+                <td align="right"><b>{$other|string_format:"%.2f"}</b></td>
+                <td align="right"><b>{$tdsamt|string_format:"%.2f"}</b></td
+            {/if}
         </tr>
     </table>
 </div>

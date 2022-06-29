@@ -41,7 +41,7 @@ class report extends common {
             break;
         }
         $sql = "SELECT s.vehno, s.tfreight, s.advance, s.vno, s.balance, s.unload+s.detaintion+s.epoint+s.chanda+s.other AS other, s.odate, s.ovno, s.narration, s.tdsamt,
-                c.name AS cname, a.name AS aname, sd.date, sd.invno 
+                c.name AS cname, a.name AS aname, sd.date, sd.invno, sd.no, sd.loading, sd.bno, sd.bnodate, sd.lrno, sd.weight, sd.qty, sd.freight
                FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a, {$this->prefix}company c
                WHERE (s.date >= '$sdate' AND s.date <= '$edate') AND s.invno=sd.invno AND sd.id_to_area=a.id_area AND sd.id_company=c.id_company $wcond
                ORDER BY $ocond ";
