@@ -33,7 +33,7 @@
     Pending Truck Freight Statement Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}
     <br />
     <table id='report' border="1">
-        <tr><th>Date</th><th>Vehicle No</th><th>Lc No</th><th>Company</th><th>Destination</th><th>Inv No</th><th>Date</th><th>LR No</th><th>Weight</th><th>Qty</th><th>Freight</th>
+        <tr><th>Date</th><th>Vehicle No</th><th>Lc No</th><th>Company</th><th>Destination</th><th>Inv No</th><th>Date</th><th>LR No</th><th>Weight</th><th>Qty</th>
             <th>Truck Fr</th><th>Advance</th><th>V.No</th><th>Balance</th><th>Other</th><th>V.Date</th><th>V.No</th><th>Remark</th></tr>
         {$s=0}
         {$weight=0}{$qty=0}{$freight=0}{$gweight=0}{$gqty=0}{$gfreight=0}
@@ -44,7 +44,6 @@
                     <td align="right" colspan="8">Total:</td>
                     <td align="right">{$weight|string_format:"%.3f"}</td>
                     <td align="right">{$qty|string_format:"%.0f"}</td>
-                    <td align="right">{$freight|string_format:"%.2f"}</td>
                     <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
                     <td align="right">{$prev.advance|string_format:"%.2f"}</td>
                     <td>{$prev.vno}</td>
@@ -85,7 +84,6 @@
             <td align="right" colspan="8">Total:</td>
             <td align="right">{$weight|string_format:"%.3f"}</td>
             <td align="right">{$qty|string_format:"%.0f"}</td>
-            <td align="right">{$freight|string_format:"%.2f"}</td>
             <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
             <td align="right">{$prev.advance|string_format:"%.2f"}</td>
             <td>{$prev.vno}</td>
