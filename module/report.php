@@ -268,15 +268,18 @@ class report extends common {
         $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
-        $sql = "SELECT b.date, b.tfreight, b.advance, b.cadvance, b.fuel, b.vno, b.balance, b.odate, b.ovno, b.other, b.narration, 
-                    a_bank, a_cheque, bank, cheque, chqdate, b_name,
-                    b.unload+b.detaintion+b.epoint+b.chanda+b.other AS other, group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight,
-                    SUM(qty) AS qty, SUM(weight) AS twt
+        $sql = "SELECT b.vehno, b.tfreight, b.advance, b.cadvance, b.a_cheque, b.a_bank, b.vno, b.balance, b.tdsamt,
+                    b.unload+b.detaintion+b.epoint+b.chanda+b.other-b.shortage AS other,
+                    bank, cheque, chqdate, b_name, odate, ovno, narration,
+                    group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, 
+                    SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight, bd.date, bd.invno
                 FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
-                WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.odate >= '$sdate1' AND b.odate <= '$edate1') AND 
-                        b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
+                WHERE b.id_bill=bd.id_bill AND (b.date >= '$sdate' AND b.date <= '$edate') AND
+                        (b.odate >= '$sdate1' AND b.odate <= '$edate1') AND 
+                        bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
                 GROUP BY bd.date, bd.invno
                 ORDER BY bd.date, bd.invno, bd.vehno";
+
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
