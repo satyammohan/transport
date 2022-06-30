@@ -4344,8 +4344,8 @@ DO WHILE !EOF()
 		tfr = tfr + freight
 		SKIP
 	ENDDO
-		?LEFT(DTOC(idate),5), vehno, tarea, twt PICT "@Z 9999.999", totherwt PICT "@Z 9999.999", tqty PICT "@Z 999999"
-		??tfreight PICT "999999.99", advance PICT "99999.99", ;
+		?LEFT(DTOC(idate),5), vehno, tarea, twt PICT "@Z 9999.999", totherwt PICT "@Z 9999.999", tqty PICT "@Z 999999",
+		  tfreight PICT "999999.99", advance PICT "99999.99", ;
 		  cadvance PICT "99999.99", ;
 		  balance-tdsamt PICT "99999.99", tother PICT "99999.99", ;
 		  balance+tother-tdsamt PICT "99999.99", ;

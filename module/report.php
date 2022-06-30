@@ -213,13 +213,16 @@ class report extends common {
     function pendingtruckfreight() {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
-        $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
-        $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
+        pr($_REQUEST);
+        $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
 
-        $sql = "SELECT b.vehno, b.tfreight, b.advance, b.vno, b.balance, b.other, b.odate, b.ovno, b.narration, bd.*, c.name as cname, a.name as aname 
+        $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
+        $sql = "SELECT b.ownveh, b.vehno, b.tfreight, b.advance, b.vno, b.balance, b.other, b.odate, b.ovno, b.narration, bd.*, c.name as cname, a.name as aname 
             FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
-            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.ovno='' OR b.ovno IS NULL) AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.ovno='' OR b.ovno IS NULL) AND b.id_bill=bd.id_bill AND 
+                    bd.id_to_area=a.id_area AND bd.id_company=c.id_company {$wcond}
             ORDER BY bd.date, bd.invno, bd.no";
+
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}company WHERE status=0 ORDER BY name");
