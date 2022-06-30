@@ -33,24 +33,22 @@
     Pending Truck Freight Statement Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}
     <br />
     <table id='report' border="1">
-        <tr><th>Date</th><th>Vehicle No</th><th>Lc No</th><th>Company</th><th>Destination</th><th>Inv No</th><th>Date</th><th>LR No</th><th>Weight</th><th>Qty</th>
-            <th>Truck Fr</th><th>Cash Advance</th><th>Chq. Advance</th><th>Balance</th><th>Other</th><th>V.Date</th><th>V.No</th><th>Remark</th></tr>
+        <tr><th>Date</th><th>Vehicle No</th><th>Lc No</th><th>Company</th><th>Destination</th><th>Inv No</th><th>Date</th><th>Weight</th><th>Qty</th>
+            <th>Truck Fr</th><th>Cash Advance</th><th>Chq. Advance</th><th>Fuel</th><th>Balance</th><th>Remark</th></tr>
         {$s=0}
         {$weight=0}{$qty=0}{$freight=0}{$gweight=0}{$gqty=0}{$gfreight=0}
         {$prev=""}{$start=1}
         {foreach item=x name=it from=$data}
             {if $invno!=$x.invno && $start!=1}
                 <tr>
-                    <td align="right" colspan="8">Total:</td>
+                    <td align="right" colspan="7">Total:</td>
                     <td align="right">{$weight|string_format:"%.3f"}</td>
                     <td align="right">{$qty|string_format:"%.0f"}</td>
                     <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
                     <td align="right">{$prev.advance|string_format:"%.2f"}</td>
-                    <td>{$prev.vno}</td>
+                    <td align="right">{$prev.cadvance|string_format:"%.2f"}</td>
+                    <td align="right">{$prev.fuel|string_format:"%.2f"}</td>
                     <td align="right">{$prev.balance|string_format:"%.2f"}</td>
-                    <td align="right">{$prev.other|string_format:"%.2f"}</td>
-                    <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
-                    <td>{$prev.ovno}</td>
                     <td>{$prev.narration}</td>
                 </tr>
                 {$weight=0}{$qty=0}{$freight=0}
@@ -66,7 +64,6 @@
                 <td>{$x.aname}</td>
                 <td>{$x.bno}</td>
                 <td>{$x.bnodate|date_format:"%d-%m-%Y"}</td>
-                <td>{$x.lrno}</td>
                 <td align="right">{$x.weight|number_format:3}</td>
                 <td align="right">{$x.qty|number_format:0}</td>
                 <td align="right">{$x.freight|number_format:2}</td>
@@ -81,16 +78,14 @@
             {$prev = $x}
         {/foreach}
         <tr>
-            <td align="right" colspan="8">Total:</td>
+            <td align="right" colspan="7">Total:</td>
             <td align="right">{$weight|string_format:"%.3f"}</td>
             <td align="right">{$qty|string_format:"%.0f"}</td>
             <td align="right">{$prev.tfreight|string_format:"%.2f"}</td>
             <td align="right">{$prev.advance|string_format:"%.2f"}</td>
-            <td>{$prev.vno}</td>
+            <td align="right">{$prev.cadvance|string_format:"%.2f"}</td>
+            <td align="right">{$prev.fuel|string_format:"%.2f"}</td>
             <td align="right">{$prev.balance|string_format:"%.2f"}</td>
-            <td align="right">{$prev.other|string_format:"%.2f"}</td>
-            <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
-            <td>{$prev.ovno}</td>
             <td>{$prev.narration}</td>
         </tr>
 </table>
