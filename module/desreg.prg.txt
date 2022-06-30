@@ -4307,8 +4307,7 @@ FUNC resetrepo
 RETU .T.
 
 FUNC heading
-retdata = "Date  Vehicle No      Destination               Wt.PP   Wt.OTH   Case"
-retdata = retdata + " Truck Fr  Cash Ad.  Chq Adv Balance   Other  Ac.Bl.Pd Bal.P.Dt Chq No.  Bank"
+retdata = "Date  Vehicle No      Destination               Wt   Case Truck Fr  Cash Ad.  Chq Adv Balance   Other  Ac.Bl.Pd Bal.P.Dt Chq No.  Bank"
 RETU retdata
 
 FUNC pghead
@@ -4345,19 +4344,13 @@ DO WHILE !EOF()
 		tfr = tfr + freight
 		SKIP
 	ENDDO
-	tarea = ALLT(tarea)
-	SKIP -1
-		?LEFT(DTOC(idate),5), vehno
-		??tarea AT 22 FUNCTION 'V20'
-		??twt PICT "@Z 9999.999" AT 45, totherwt PICT "@Z 9999.999", ;
-		  tqty PICT "@Z 999999"
-		tother = other + ROUND((twt+totherwt), 2)
+		?LEFT(DTOC(idate),5), vehno, tarea, twt PICT "@Z 9999.999", totherwt PICT "@Z 9999.999", tqty PICT "@Z 999999"
 		??tfreight PICT "999999.99", advance PICT "99999.99", ;
 		  cadvance PICT "99999.99", ;
 		  balance-tdsamt PICT "99999.99", tother PICT "99999.99", ;
 		  balance+tother-tdsamt PICT "99999.99", ;
-		  IIF(EMPT(odate), "", y2k(odate)), PADL(ALLT(a_cheque),10), ALLT(a_bank)
-		?LEFT(bank,10), LEFT(ALLT(cheque),11), IIF(EMPT(chqdate), "", chqdate), ALLT(b_name)
+		  IIF(EMPT(odate), "", y2k(odate)), PADL(ALLT(a_cheque),10), ALLT(a_bank), 
+		  LEFT(bank,10), LEFT(ALLT(cheque),11), IIF(EMPT(chqdate), "", chqdate), ALLT(b_name)
 		rwt = rwt + twt
 		rotherwt = rotherwt + totherwt
 		rqty = rqty + tqty
@@ -4369,8 +4362,6 @@ DO WHILE !EOF()
 		roth = roth + tother
 		rabp = rabp + (balance+tother-tdsamt)
 		trips = trips + 1
-		?
-	SKIP
 ENDDO
 ?"TRIPS :", trips PICT "999999", "REPORT TOTAL :", rwt PICT "99999.999" AT 43, rotherwt PICT "99999.999", rqty PICT "9999999",
 rtfr PICT "99999999.99", radv PICT "99999999.99", rqadv PICT "99999999.99", rbal PICT "99999999999.99", roth PICT "999999.99", rabp PICT "99999999.99"

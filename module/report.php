@@ -271,10 +271,7 @@ class report extends common {
         $sql = "SELECT b.date, b.tfreight, b.advance, b.cadvance, b.fuel, b.vno, b.balance, b.odate, b.ovno, b.other, b.narration, 
                     a_bank, a_cheque, bank, cheque, chqdate, b_name,
                     b.unload+b.detaintion+b.epoint+b.chanda+b.other AS other, group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight,
-                    SUM(if(bd.company='PP' OR bd.company='07' OR bd.company='18', 1, 0)*qty) AS qty,
-                    SUM(if(bd.company='PP' OR bd.company='07' OR bd.company='18', 1, 0)*weight) AS twt,
-                    SUM(if(bd.company='ST' OR bd.company='03', 1, 0)*weight) AS tsaltwt,
-                    SUM(if(bd.company='PP' OR bd.company='07' OR bd.company='18' OR bd.company='ST' OR bd.company='03', 0, 1)*weight) AS totherwt
+                    SUM(qty) AS qty, SUM(weight) AS twt
                 FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
                 WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.odate >= '$sdate1' AND b.odate <= '$edate1') AND 
                         b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
