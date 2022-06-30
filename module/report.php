@@ -216,7 +216,7 @@ class report extends common {
         $wcond = @$_REQUEST['ownveh'] ? " AND b.ownveh = '".$_REQUEST['ownveh']."' " : " " ;
 
         $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
-        $sql = "SELECT b.ownveh, b.vehno, b.tfreight, b.advance, b.vno, b.balance, b.other, b.odate, b.ovno, b.narration, bd.*, c.name as cname, a.name as aname 
+        $sql = "SELECT b.ownveh, b.vehno, b.tfreight, b.advance, b.cadvance, b.fuel, b.vno, b.balance, b.other, b.odate, b.ovno, b.narration, bd.*, c.name as cname, a.name as aname 
             FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
             WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.ovno='' OR b.ovno IS NULL) AND b.id_bill=bd.id_bill AND 
                     bd.id_to_area=a.id_area AND bd.id_company=c.id_company {$wcond}
