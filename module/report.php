@@ -52,8 +52,6 @@ class report extends common {
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
     }
-    function shortagedetail() {
-    }
     function tripsummary() {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
@@ -200,6 +198,85 @@ class report extends common {
                 group_concat(DISTINCT a.name) AS aname, sd.date, sd.invno 
                FROM {$this->prefix}bill s, {$this->prefix}billdet sd, {$this->prefix}area a
                WHERE s.invno=sd.invno AND sd.id_to_area=a.id_area AND $wcond GROUP BY sd.date, sd.invno ORDER BY s.date, sd.invno, s.vehno ";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+    }
+    function pendingfreight() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $sql = "SELECT b.vehno, bd.*, c.name as cname FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND bd.freight=0 AND b.id_bill=bd.id_bill  AND bd.id_company=c.id_company
+            ORDER BY bd.date, bd.no";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+    }
+    function pendingtruckfreight() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
+        $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
+
+        $sql = "SELECT b.vehno, b.tfreight, b.advance, b.vno, b.balance, b.other, b.odate, b.ovno, b.narration, bd.*, c.name as cname, a.name as aname 
+            FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.ovno='' OR b.ovno IS NULL) AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
+            ORDER BY bd.date, bd.invno, bd.no";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+        $res1 = $this->m->query("SELECT * FROM {$this->prefix}company WHERE status=0 ORDER BY name");
+        $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
+    }
+    function shortagedetail() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+
+        $sql = "SELECT b.date, b.vehno, b.vno, b.odate, b.shortage, b.ovno, b.narration, group_concat(DISTINCT a.name) AS aname
+            FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}area a
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.shortage!=0 AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area
+            GROUP BY bd.date, bd.invno
+            ORDER BY b.date, bd.invno, b.vehno";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+    }
+    function tankwise() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+        $wcond = @$_REQUEST['tankname'] ? " AND b.tankname = '".$_REQUEST['tankname']."' " : " " ;
+
+        $sql = "SELECT b.date, b.vehno, b.token, b.tankname, b.fuel, group_concat(DISTINCT a.name) AS aname
+            FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}area a
+            WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND b.fuel!=0 AND b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area $wcond
+            GROUP BY bd.date, bd.invno
+            ORDER BY b.date, bd.invno, b.vehno";
+        $data = $this->m->sql_getall($sql);
+        $this->sm->assign("data", $data);
+        
+        $res1 = $this->m->query("SELECT DISTINCT tankname FROM {$this->prefix}bill WHERE tankname!=''");
+        $this->sm->assign("tankname", $this->m->getall($res1, 2, "tankname", "tankname"));
+    }
+    function balancepaymentdetail() {
+        $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
+
+        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : date("Y-m-d");
+        $_REQUEST['end_date1'] = $edate1 = isset($_REQUEST['end_date1']) ? $_REQUEST['end_date1'] : date("Y-m-d");
+
+        $wcond = @$_REQUEST['type'] ? " AND b.ownveh = '".$_REQUEST['type']."' " : " " ;
+        $wcond .= isset($_REQUEST['company']) ? " AND c.id_company IN (".implode(",", $_REQUEST['company']).") " : " " ;
+        $wcond .= isset($_REQUEST['area']) ? " AND a.id_area IN (".implode(",", $_REQUEST['area']).") " : " " ;
+
+        $res1 = $this->m->query("SELECT * FROM {$this->prefix}company WHERE status=0 ORDER BY name");
+        $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
+        $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
+        $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
+        $sql = "SELECT b.date, b.tfreight, b.advance, b.cadvance, b.fuel, b.vno, b.balance, b.odate, b.ovno, b.other, b.narration, 
+                    a_bank, a_cheque, bank, cheque, chqdate, b_name,
+                    b.unload+b.detaintion+b.epoint+b.chanda+b.other AS other, group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, SUM(bd.weight) AS weight, SUM(bd.qty) AS qty, SUM(bd.freight) AS freight,
+                    SUM(qty) AS qty, SUM(weight) AS twt
+                FROM {$this->prefix}bill b, {$this->prefix}billdet bd, {$this->prefix}company c, {$this->prefix}area a
+                WHERE (b.date >= '$sdate' AND b.date <= '$edate') AND (b.odate >= '$sdate1' AND b.odate <= '$edate1') AND 
+                        b.id_bill=bd.id_bill AND bd.id_to_area=a.id_area AND bd.id_company=c.id_company $wcond
+                GROUP BY bd.date, bd.invno
+                ORDER BY bd.date, bd.invno, bd.vehno";
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
