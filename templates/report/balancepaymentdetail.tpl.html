@@ -1,0 +1,117 @@
+<fieldset>
+    <legend><h3>Balance Payment Detail<hr></h3></legend>
+    <form method="post">
+        <table>
+            <tr>
+                <td>Start</td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td>End</td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+
+                <td>Start1</td>
+                <td><input type="date" name="start_date1" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date1}' /></td>
+                <td>End1</td>
+                <td><input type="date" name="end_date1" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date1}' /></td>
+
+                <td>Vehicle Type</td>
+                <td><input type="text" name="type" size="1" value='{$smarty.request.type}' /></td>
+                <td>
+                    <input class="btn btn-primary" type="submit" value="Go" />
+                    <input class="btn btn-primary" type="button" class="print" value="Print" />
+                    <input type="hidden" id="excelfile" value="balancepayment" />
+                    <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
+                </td>
+            </tr>
+            <tr>
+                <td>Company</td>
+                <td colspan="3"><select id="company" name="company[]" multiple="multiple">
+                    <option value="0">All Company</option>
+                    {html_options options=$company} 
+                    </select>
+                </td>
+                <td>Area</td>
+                <td colspan="3"><select id="area" name="area[]" multiple="multiple">
+                    <option value="0">All Area</option>
+                    {html_options  options=$area}
+                </select>
+                </td>
+            </tr>
+        </table>
+    </form>
+</fieldset>
+<br />
+<div class="print_content">
+    {$smarty.session.cname} {$smarty.session.fyear}<br>
+    Balance Payment Details Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}
+    for {$smarty.request.start_date1|date_format:"%d-%m-%Y"} - {$smarty.request.end_date1|date_format:"%d-%m-%Y"}
+    <br />
+    <table id='report' border="1">
+        <tr>
+            <th>Date</th><th>Vehicle No</th><th>Destination</th><th>Wt.OTH</th>
+            <th>Truck Fr</th><th>Cash Adv</th><th>Chq Adv</th><th>Fuel </th><th>Balance</th><th>Other</th>
+            <th>Ac.Bl.Pd</th><th>Adv.Chq No.</th><th>Adv.Bank</th><th>Bal.Bank</th><th>Bal.Chq No.</th><th>Chq Date.</th><th>Paid to</th>
+        </tr>
+        {$s=0}
+            {$balance=$balance+$x.balance}
+            {$twt=0}{$tsaltwt=0}{$totherwt=0}{$tot=0}{$advance=0}{$cadvance=0}{$fuel=0}{$balance=0}{$tother=0}{$tfreight=0}{$qty=0}{$freight=0}{$rtfrwt=0}
+        {foreach item=x name=it from=$data}
+            {if ($smarty.request.start_ton==0 AND $smarty.request.end_ton==0) || ($chkwt>$smarty.request.start_ton AND $chkwt<=$smarty.request.end_ton)}
+            {/if}
+            {$twt=$twt+$x.twt}{$tsaltwt=$tsaltwt+$x.tsaltwt}{$totherwt=$totherwt+$x.totherwt}{$tot=$tot+$x.twt+$x.tsaltwt+$x.totherwt}
+            {$tfrwt = $x.weight*(100+$x.freight_p)/100}
+            {$advance=$advance+$x.advance}
+            {$cadvance=$cadvance+$x.cadvance}
+            {$fuel=$fuel+$x.fuel}
+            {$balance=$balance+$x.balance}
+            {$tother=$tother+$x.other}
+            {$tfreight=$tfreight+$x.tfreight}
+            {$freight=$freight+$x.freight}
+            {$rtfrwt = $rtfrwt + $tfrwt}
+            {$qty = $qty + $x.qty}
+            <tr>
+                {$s=$s+1}
+                <td>{$x.date|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.vehno}</td>
+                <td>{$x.aname}</td>
+                <td align="right">{if $x.totherwt==0}&nbsp;{else}{$x.totherwt|number_format:3}{/if}</td>
+                
+                <td align="right">{$x.tfreight|string_format:"%.2f"}</td>
+                <td align="right">{$x.advance|string_format:"%.2f"}</td>
+                <td align="right">{$x.cadvance|string_format:"%.2f"}</td>
+                <td align="right">{$x.fuel|string_format:"%.2f"}</td>
+                <td align="right">{$x.balance|string_format:"%.2f"}</td>
+                <td align="right">{$x.other|string_format:"%.2f"}</td>
+                <td align="right">{$x.odate|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.a_bank}</td>
+                <td>{$x.a_cheque}</td>
+                <td>{$x.bank}</td>
+                <td>{$x.cheque}</td>
+                <td>{$x.chqdate|date_format:"%d-%m-%Y"}</td>
+                <td>{$x.b_name}</td>
+            </tr>
+        {/foreach}
+        <tr>
+            <th colspan="3">Total trips: {$s}</th>
+            <td align="right">{$totherwt|number_format:3}</td>
+
+            <td align="right">{$rtfrwt|string_format:"%.3f"}</td>
+            <td align="right">{$qty|number_format:0}</td>
+            <td align="right">{$freight|string_format:"%.2f"}</td>
+            
+            <td align="right">{$tfreight|string_format:"%.2f"}</td>
+            <td align="right">{$advance|string_format:"%.2f"}</td>
+            <td align="right">{$cadvance|string_format:"%.2f"}</td>
+            <td align="right">{$fuel|string_format:"%.2f"}</td>
+            <td align="right">{$balance|string_format:"%.2f"}</td>
+            <td align="right">{$tother|string_format:"%.2f"}</td>
+            <th colspan="6">&nbsp;</th>
+
+        </tr>
+    </table>
+</div>
+<script>
+$(document).ready(function () {
+    $('#area').multiSelect();
+    $('#company').multiSelect();
+});
+</script>
