@@ -367,6 +367,10 @@ class common {
 		// Process your response here
 		return $response;
 	}
+    function previousyear_prefix($prefix) {
+        $sql ="";
+        return "mch22__";
+    }
 }
 function pr($data) {
     print "<pre>";

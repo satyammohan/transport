@@ -21,9 +21,9 @@
                 <td><input type="text" name="end_ton" size="2" value='{$smarty.request.end_ton}' /></td> -->
                 <td>
                     <input class="btn btn-primary" type="submit" value="Go" />
-                    <input class="btn btn-primary" type="button" class="print" value="Print" />
                     <input type="hidden" id="excelfile" value="tripsummarynew" />
-                    <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
+                    <input class="btn btn-primary" type="button" onclick="print();" value="Print" />
+                    <input class="btn btn-primary" type="button" onclick="download()" value="Download" title="Download as Excel" />
                 </td>
             </tr>
             <tr>

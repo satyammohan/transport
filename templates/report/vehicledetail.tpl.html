@@ -10,9 +10,9 @@
                 <td>Vehicle No.</td>
                 <td><input type="text" name="vehno" size="12" value='{$smarty.request.vehno}' /></td>
                 <td><input type="submit" value="Go" />
-                    <input type="button" class="print" value="Print" />
                     <input type="hidden" id="excelfile" value="vehdetail" />
-                    <input type="button" class="excel" value="Download" title="Download as Excel" />
+                    <input class="btn btn-primary" type="button" onclick="print();" value="Print" />
+                    <input class="btn btn-primary" type="button" onclick="download()" value="Download" title="Download as Excel" />
                 </td>
             </tr>
         </table>

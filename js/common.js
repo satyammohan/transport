@@ -6,21 +6,17 @@ $(function () {
         jQuery.browser.msie = true;
         jQuery.browser.version = RegExp.$1;
     }
-    $(".print").click(function () {
-        $('.print_content').jqprint();
-        return false;
-    });
-    $(".excel").click(function () {
-        flname = $("#excelfile").val() ? $("#excelfile").val() : "accounts";
-        $("#report").table2excel({
-            exclude: ".noExl",
-            name: "Worksheet",
-            filename: flname
-        });
-    });
 });
-function tbl_handler() {
-    $('#dataTable').DataTable();
+function print() {
+    $('.print_content').jqprint();
+}
+function download() {
+    flname = $("#excelfile").val() ? $("#excelfile").val() : "accounts";
+    $("#report").table2excel({
+        exclude: ".noExl",
+        name: "Worksheet",
+        filename: flname
+    });
 }
 $(document).ready(function () {
     $('.openPopup').on('click', function () {
@@ -31,6 +27,9 @@ $(document).ready(function () {
     });
     tbl_handler();
 });
+function tbl_handler() {
+    $('#dataTable').DataTable();
+}
 function update_status(tbl, id, row_status, list_status) {
     let url = "index.php?module=" + tbl + "&func=update_flag&table=" + tbl + "&id=" + id + "&row_status=" + row_status + "&list_status=" + list_status;
     window.location.href = url;

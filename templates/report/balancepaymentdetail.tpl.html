@@ -7,22 +7,23 @@
         <table>
             <tr>
                 <td>Start</td>
-                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
+                <td><input type="date" name="start_date1" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date1}' /></td>
                 <td>End</td>
-                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+                <td><input type="date" name="end_date1" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date1}' /></td>
 
                 <td>Start1</td>
-                <td><input type="date" name="start_date1" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date1}' /></td>
+                <td><input type="date" name="start_date" size="9" placeholder="dd-mm-yyyy" value='{$smarty.request.start_date}' /></td>
                 <td>End1</td>
-                <td><input type="date" name="end_date1" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date1}' /></td>
+                <td><input type="date" name="end_date" size="9"  placeholder="dd-mm-yyyy" value='{$smarty.request.end_date}' /></td>
+
 
                 <td>Vehicle Type</td>
                 <td><input type="text" name="type" size="1" value='{$smarty.request.type}' /></td>
                 <td>
                     <input class="btn btn-primary" type="submit" value="Go" />
-                    <input class="btn btn-primary" type="button" class="print" value="Print" />
                     <input type="hidden" id="excelfile" value="balancepayment" />
-                    <input class="btn btn-primary" type="button" class="excel" value="Download" title="Download as Excel" />
+                    <input class="btn btn-primary" type="button" onclick="print();" value="Print" />
+                    <input class="btn btn-primary" type="button" onclick="download()" value="Download" title="Download as Excel" />
                 </td>
             </tr>
             <tr>
@@ -57,17 +58,16 @@
         </tr>
         {$s=0}
         {$balance=$balance+$x.balance}
-        {$twt=0}{$tsaltwt=0}{$totherwt=0}{$tot=0}{$advance=0}{$cadvance=0}{$fuel=0}{$balance=0}{$tother=0}{$tfreight=0}{$qty=0}{$freight=0}{$rtfrwt=0}
+        {$qty=0}{$weight=0}{$tfreight=0}{$advance=0}{$cadvance=0}{$fuel=0}{$balance=0}{$tother=0}{$tfreight=0}{$qty=0}{$freight=0}{$rtfrwt=0}
         {foreach item=x name=it from=$data}
+            {$weight = $weight + $x.weight}
+            {$qty = $qty + $x.qty}
+            {$tfreight=$tfreight+$x.tfreight}
             {$advance=$advance+$x.advance}
             {$cadvance=$cadvance+$x.cadvance}
-            {$fuel=$fuel+$x.fuel}
             {$balance=$balance+$x.balance}
+            {$tdsamt=$tdsamt+$x.tdsamt}
             {$tother=$tother+$x.other}
-            {$tfreight=$tfreight+$x.tfreight}
-            {$freight=$freight+$x.freight}
-            {$rtfrwt = $rtfrwt + $tfrwt}
-            {$qty = $qty + $x.qty}
             <tr>
                 {$s=$s+1}
                 <td>{$s}</td>
@@ -93,20 +93,16 @@
             </tr>
         {/foreach}
         <tr>
-            <th colspan="3">Total trips: {$s}</th>
-            <td align="right">{$totherwt|number_format:3}</td>
-
-            <td align="right">{$rtfrwt|string_format:"%.3f"}</td>
-            <td align="right">{$qty|number_format:0}</td>
-            <td align="right">{$freight|string_format:"%.2f"}</td>
-            
+            <th colspan="4">Total trips: {$s}</th>
+            <td align="right">{$weight|number_format:3}</td>
+            <td align="right">{$qty|string_format:"%.0f"}</td>
             <td align="right">{$tfreight|string_format:"%.2f"}</td>
             <td align="right">{$advance|string_format:"%.2f"}</td>
             <td align="right">{$cadvance|string_format:"%.2f"}</td>
-            <td align="right">{$fuel|string_format:"%.2f"}</td>
-            <td align="right">{$balance|string_format:"%.2f"}</td>
-            <td align="right">{$tother|string_format:"%.2f"}</td>
-            <th colspan="6">&nbsp;</th>
+            <td align="right">{($balance-$tdsamt)|string_format:"%.2f"}</td>
+            <td align="right">{$other|string_format:"%.2f"}</td>
+            <td align="right">{($balance+$tother-$tdsamt)|string_format:"%.2f"}</td>
+            <th colspan="7">&nbsp;</th>
 
         </tr>
     </table>
