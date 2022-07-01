@@ -51,59 +51,51 @@
     <br />
     <table id='report' border="1">
         <tr>
-            <th>Sl.</th><th>Date</th><th>Vehicle No</th><th>Destination</th>
-            <th>Weight</th><th>Case</th><th>Truck Fr</th><th>Cash Ad.</th><th>Chq Adv</th><th>Balance</th><th>Other</th>
+            <th>Date</th><th>Vehicle No</th><th>Destination</th>
+            <th>Weight</th><th>Truck Fr</th><th>Cash Ad.</th><th>Chq Adv</th><th>Balance</th><th>Other</th>
             <th>Ac.Bl.Pd</th><th>Bal.P.Dt</th><th>Chq No.</th><th>Bank</th>
-            <th>Adv Bank</th><th>Bal. Chq</th><th>Bal. Chq Date</th><th>Bal. Bank</th>
         </tr>
         {$s=0}
         {$balance=$balance+$x.balance}
-        {$qty=0}{$weight=0}{$tfreight=0}{$advance=0}{$cadvance=0}{$fuel=0}{$balance=0}{$tother=0}{$tfreight=0}{$qty=0}{$freight=0}{$rtfrwt=0}
+        {$fuel=0}{$weight=0}{$tfreight=0}{$advance=0}{$cadvance=0}{$fuel=0}{$balance=0}{$tother=0}{$tfreight=0}{$qty=0}{$freight=0}{$rtfrwt=0}
         {foreach item=x name=it from=$data}
             {$weight = $weight + $x.weight}
-            {$qty = $qty + $x.qty}
             {$tfreight=$tfreight+$x.tfreight}
             {$advance=$advance+$x.advance}
             {$cadvance=$cadvance+$x.cadvance}
+            {$fuel=$fuel+$x.fuel}
             {$balance=$balance+$x.balance}
             {$tdsamt=$tdsamt+$x.tdsamt}
             {$tother=$tother+$x.other}
             <tr>
                 {$s=$s+1}
-                <td>{$s}</td>
                 <td>{$x.date|date_format:"%d-%m-%Y"}</td>
                 <td>{$x.vehno}</td>
                 <td>{$x.aname}</td>
                 <td align="right">{$x.weight|number_format:3}</td>
-                <td align="right">{$x.qty|string_format:"%.0f"}</td>
                 <td align="right">{$x.tfreight|string_format:"%.2f"}</td>
                 <td align="right">{$x.advance|string_format:"%.2f"}</td>
                 <td align="right">{$x.cadvance|string_format:"%.2f"}</td>
+                <td align="right">{$x.fule|string_format:"%.2f"}</td>
                 <td align="right">{($x.balance-$x.tdsamt)|string_format:"%.2f"}</td>
                 <td align="right">{$x.other|string_format:"%.2f"}</td>
                 <td align="right">{($x.balance+$x.tother-$x.tdsamt)|string_format:"%.2f"}</td>
                 <td>{$x.odate|date_format:"%d-%m-%Y"}</td>
                 <td>{$x.a_cheque}</td>
                 <td>{$x.a_bank}</td>
-                <td>{$x.bank}</td>
-                <td>{$x.cheque}</td>
-                <td>{$x.chqdate|date_format:"%d-%m-%Y"}</td>
-                <td>{$x.b_name}</td>
-
             </tr>
         {/foreach}
         <tr>
-            <th colspan="4">Total trips: {$s}</th>
+            <th colspan="3">Total trips: {$s}</th>
             <td align="right">{$weight|number_format:3}</td>
-            <td align="right">{$qty|string_format:"%.0f"}</td>
             <td align="right">{$tfreight|string_format:"%.2f"}</td>
             <td align="right">{$advance|string_format:"%.2f"}</td>
             <td align="right">{$cadvance|string_format:"%.2f"}</td>
+            <td align="right">{$fuel|string_format:"%.2f"}</td>
             <td align="right">{($balance-$tdsamt)|string_format:"%.2f"}</td>
             <td align="right">{$other|string_format:"%.2f"}</td>
             <td align="right">{($balance+$tother-$tdsamt)|string_format:"%.2f"}</td>
-            <th colspan="7">&nbsp;</th>
-
+            <th colspan="3">&nbsp;</th>
         </tr>
     </table>
 </div>

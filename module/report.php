@@ -289,13 +289,7 @@ class report extends common {
     function balancesummary() {
         $_REQUEST['start_date'] = $sdate = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
         $_REQUEST['end_date'] = $edate = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
-
-        $_REQUEST['start_date1'] = $sdate1 = isset($_REQUEST['start_date1']) ? $_REQUEST['start_date1'] : date("Y-m-d");
-        $_REQUEST['end_date1'] = $edate1 = isset($_REQUEST['end_date1']) ? $_REQUEST['end_date1'] : date("Y-m-d");
-
-
         $prev = $this->previousyear_prefix($this->prefix);
-
         $s1 = "SELECT 0 AS flag, s.odate, s.vehno, SUM(s.tfreight) AS tfreight, SUM(s.balance-s.tdsamt) AS balance,
             SUM(-s.shortage+s.load+s.unload+s.epoint+s.detaintion+s.chanda+s.treturn+s.other) AS other FROM {$this->prefix}bill s
             WHERE s.balance<>0 AND (s.odate >= '$sdate' AND s.odate <= '$edate') GROUP BY s.odate, s.vehno 
@@ -306,23 +300,6 @@ class report extends common {
         $sql = "SELECT s.*, o.name, o.address, o.address1, o.panno
 	            FROM ($s1) s LEFT JOIN {$this->prefix}vehicle v ON s.vehno=v.vehno LEFT JOIN {$this->prefix}vowner o ON v.id_vowner=o.id_vowner
                 ORDER BY s.vehno, s.odate";
-
-/*
-SET ORDER TO vocode IN vomaster
-SELE vehicle
-SET ORDER TO vehno
-SET RELA TO vocode INTO vomaster
-INDEX ON vehno + DTOS(odate) TAG desreg
-
-IF SEEK(vehno, "vehicle")
-    vname = IIF(EMPT(vomaster.name), PADR("--",30), vomaster.name)
-    vadd = IIF(EMPT(vomaster.address), "", vomaster.address)
-    vadd1 = IIF(EMPT(vomaster.address1), "", vomaster.address1)
-    vpan = IIF(EMPT(vomaster.panno), PADR(" ",15), vomaster.panno)
-ENDIF
-?vehno, vname, vpan, vadd, vadd1, tfreight+other, balance+other, odate, IIF(pv=1, "*", "")
-   */
-
         $data = $this->m->sql_getall($sql);
         $this->sm->assign("data", $data);
     }
