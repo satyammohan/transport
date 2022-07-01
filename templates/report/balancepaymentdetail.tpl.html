@@ -53,7 +53,7 @@
         <tr>
             <th>Date</th><th>Vehicle No</th><th>Destination</th>
             <th>Weight</th><th>Truck Fr</th><th>Cash Ad.</th><th>Chq Adv</th><th>Fuel</th><th>Balance</th><th>Other</th>
-            <th>Ac.Bl.Pd</th><th>Bal.P.Dt</th><th>Chq No.</th><th>Bank</th>
+            <th>Ac.Bl.Pd</th><th>Bal.P.Dt</th><th>Chq No.</th><th>Bank</th><th>Name</th>
         </tr>
         {$s=0}
         {$balance=$balance+$x.balance}
@@ -83,6 +83,7 @@
                 <td>{$x.odate|date_format:"%d-%m-%Y"}</td>
                 <td>{$x.a_cheque}</td>
                 <td>{$x.a_bank}</td>
+                <td>{$x.b_name}</td>
             </tr>
         {/foreach}
         <tr>
@@ -95,7 +96,7 @@
             <td align="right">{($balance-$tdsamt)|string_format:"%.2f"}</td>
             <td align="right">{$other|string_format:"%.2f"}</td>
             <td align="right">{($balance+$tother-$tdsamt)|string_format:"%.2f"}</td>
-            <th colspan="3">&nbsp;</th>
+            <th colspan="4">&nbsp;</th>
         </tr>
     </table>
 </div>
