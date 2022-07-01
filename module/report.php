@@ -271,7 +271,7 @@ class report extends common {
         $this->sm->assign("company", $this->m->getall($res1, 2, "name", "id_company"));
         $res1 = $this->m->query("SELECT * FROM {$this->prefix}area WHERE status=0 ORDER BY name");
         $this->sm->assign("area", $this->m->getall($res1, 2, "name", "id_area"));
-        $sql = "SELECT b.vehno, b.tfreight, b.advance, b.cadvance, b.a_cheque, b.a_bank, b.vno, b.balance, b.tdsamt,
+        $sql = "SELECT b.vehno, b.tfreight, b.advance, b.cadvance, b.fuel, b.a_cheque, b.a_bank, b.vno, b.balance, b.tdsamt,
                     b.unload+b.detaintion+b.epoint+b.chanda+b.other-b.shortage AS other,
                     bank, cheque, chqdate, b_name, odate, ovno, narration,
                     group_concat(DISTINCT a.name) AS aname, c.name AS cname, c.freight_p, bd.vehno, bd.bno, bd.bnodate, 
