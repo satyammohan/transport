@@ -25,7 +25,7 @@
     <table id='report' border="1">
         <tr>
             <th>Sl.</th><th>Vehicle No</th><th>Owner Name</th><th>Pan No.</th><th>Owner Address</th>
-            <th>Address1</th><th>Total Fr.</th><th>Balance Paid</th><th>Pay Date</th><th>Flag</th>
+            <th>Total Fr.</th><th>Balance Paid</th><th>Pay Date</th><th>Flag</th>
         </tr>
         {$s=0}
         {$freight=0}
@@ -38,7 +38,6 @@
                 <td>{$x.name}</td>
                 <td>{$x.panno}</td>
                 <td>{$x.address}</td>
-                <td>{$x.address1}</td>
                 <td align="right">{($x.tfreight+$x.other)|string_format:"%.2f"}</td>
                 <td align="right">{($x.balance+$x.other)|string_format:"%.2f"}</td>
                 <td>{$x.odate|date_format:"%d-%m-%Y"}</td>
@@ -48,7 +47,7 @@
             </tr>
         {/foreach}
         <tr>
-            <th colspan="6">Total Vehicles : {$s}</th>
+            <th colspan="5">Total Vehicles : {$s}</th>
             <td align="right">{$freight|string_format:"%.2f"}</td>
             <td align="right">{$balance|string_format:"%.2f"}</td>
             <th>&nbsp;</th>
