@@ -27,6 +27,26 @@ $(document).ready(function () {
     });
     tbl_handler();
 });
+
+function fancy_handler(id) {
+    $("." + id).fancybox({
+        'scrolling': 'yes',
+        'type': 'ajax',
+        'titleShow': false,
+        'autoScale': false,
+        'hideOnContentClick': false
+    });
+}
+function fancy_handler_iframe(id) {
+    $("." + id).fancybox({
+        'scrolling': 'no',
+        'type': 'ajax',
+        'titleShow': false,
+        'autoScale': false,
+        'hideOnContentClick': false,
+        'type' : 'iframe'
+    });
+}
 function tbl_handler() {
     $('#dataTable').DataTable();
 }

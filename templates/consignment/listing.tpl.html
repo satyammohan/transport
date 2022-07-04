@@ -1,17 +1,15 @@
+<script type="text/javascript" src="js/fancybox/jquery.fancybox.js"></script>
+<link rel="stylesheet" href="js/fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+
 <fieldset>
     <legend><h3>Consignment Listing<hr></h3></legend>
     <form method="post">
         <table>
             <tr>
-                <td>Start</td>
-                <td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
-                <td>End</td>
-                <td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
-                <td>Vehicle</td>
-                <td><input type="text" name="vehno" value='{$smarty.request.vehno}' /></td>
-                <td>
-                    <input class="btn btn-primary" type="submit" value="Go" />
-                </td>
+                <td>Start</td><td><input type="date" name="start_date" value='{$smarty.request.start_date}' /></td>
+                <td>End</td><td><input type="date" name="end_date" value='{$smarty.request.end_date}' /></td>
+                <td>Vehicle</td><td><input type="text" name="vehno" value='{$smarty.request.vehno}' /></td>
+                <td><input class="btn btn-primary" type="submit" value="Go" /></td>
             </tr>
         </table>
     </form>
@@ -23,8 +21,8 @@
             <th>Date</th><th>Invno</th><th>Vehicle No</th><th>Truck Fr</th><th>Cash Adv.</th><th>Chq.Adv.</th><th>Fuel</th><th>Balance</th>
             <td>
                 <a title="Add Consignment" href="index.php?module=consignment&func=edit"><i class="fa fa-plus fa-2x"></i></a>
-                <a id="adv_consignment" title="Advance Freight Print"><i style="color:grey;" class="fa fa-print fa-2x"></i></a>
-                <a id="bal_consignment"title="Balance Freight Print" href="#"><i class="fa fa-print fa-2x"></i></a>
+                <a id="adv_consignment" title="Advance Freight Print"><i style="color:grey;" class="bill fa fa-print fa-2x"></i></a>
+                <a id="bal_consignment"title="Balance Freight Print" href="#"><i class="bill fa fa-print fa-2x"></i></a>
             </td>
         </tr>
     </thead>
@@ -41,8 +39,8 @@
         <td>
             <input class="checkbox" type="checkbox" name="id_bill[]" value="{$mod.id_bill}" />
             <a title="Edit Vehicle Owner" href="index.php?module=consignment&func=edit&id={$mod.id_bill}"><i class="fa fa-edit fa-2x"></i></a>
-            <a title="Advance Freight Print" href="index.php?module=consignment&func=delete&id={$mod.id_bill}"><i style="color:grey;" class="fa fa-print fa-2x"></i></a>
-            <a title="Balance Freight Print" href="index.php?module=consignment&func=delete&id={$mod.id_bill}"><i class="fa fa-print fa-2x"></i></a>
+            <a title="Advance Freight Print" href="index.php?module=consignment&func=printbal&id={$mod.id_bill}"><i style="color:grey;" class="bill fa fa-print fa-2x"></i></a>
+            <a title="Balance Freight Print" href="index.php?module=consignment&func=printadv&id={$mod.id_bill}"><i class="bill fa fa-print fa-2x"></i></a>
             <a title="Delete Vehicle Owner" href="index.php?module=consignment&func=delete&id={$mod.id_bill}" onclick="return confirm('Do you want to delete?');"><i class="fa fa-trash fa-2x"></i></a>
         </td>
     </tr>
@@ -50,6 +48,7 @@
 </table>
 <script type="text/javascript">
     $(function(){
+        fancy_handler("bill");
         $('#adv_consignment').click(function(){
             let val = getids();
             if(val==''){
