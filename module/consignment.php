@@ -41,10 +41,11 @@ class consignment extends common {
     function listing() {
         $this->get_permission("bill", "REPORT");
         $sdate = $_REQUEST['start_date'] = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $edate = $_REQUEST['end_date'] = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
-        $wcond = isset($_REQUEST['vehno']) ? " vehno = '".$_REQUEST['vehno']."'" : " 1 ";
-        $wcond .= $sdate ? " AND date = '$sdate'" : "";
-        $sql = "SELECT * FROM {$this->prefix}bill WHERE $wcond LIMIT 50 ";
+        $wcond = @$_REQUEST['vehno'] ? " vehno = '".$_REQUEST['vehno']."'" : " 1 ";
+        $wcond .= $sdate ? " AND (date >= '$sdate' AND date <= '$edate')" : "";
+        $sql = "SELECT * FROM {$this->prefix}bill WHERE $wcond ORDER BY date, invno LIMIT 100 ";
         $this->sm->assign("bill", $this->m->getall($this->m->query($sql)));
     }
 }
