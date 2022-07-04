@@ -40,7 +40,7 @@ class consignment extends common {
     }
     function listing() {
         $this->get_permission("bill", "REPORT");
-        $sdate = $_REQUEST['start_date'] = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d");
+        $sdate = $_REQUEST['start_date'] = isset($_REQUEST['start_date']) ? $_REQUEST['start_date'] : date("Y-m-d",strtotime('-7 day'));
         $edate = $_REQUEST['end_date'] = isset($_REQUEST['end_date']) ? $_REQUEST['end_date'] : date("Y-m-d");
 
         $wcond = @$_REQUEST['vehno'] ? " vehno = '".trim($_REQUEST['vehno'])."'" : " 1 ";
