@@ -59,10 +59,11 @@
     Despatch Register Period {$smarty.request.start_date|date_format:"%d-%m-%Y"} - {$smarty.request.end_date|date_format:"%d-%m-%Y"}<br />
     <table id='report' border="1">
         <tr>
-            <th>Sl</th><th>Date</th><th>Truck No</th><th>LC No.</th><th>Company</th><th>Destination</th><th>Inv. No.</th><th>Date</th><th>Lrno</th><th>Weight</th><th>Qty</th>
+            <th>Date</th><th>Truck No</th><th>LC No.</th><th>Company</th><th>Destination</th><th>Inv. No.</th><th>Date</th><th>Weight</th><th>Qty</th>
             <!-- <th>Freight</th> -->
             {if $smarty.request.truckdetail}
-                <th>Truck Fr</th><th>Advance</th><th>V.No</th><th>Balance</th><th>Other</th><th>TDS AMT</th><th>V.Dt</th><th>V.No</th>
+                <th>Truck Fr</th><th>Advance</th><th>V.No</th><th>Balance</th><th>Other</th><th>TDS AMT</th><th>V.Dt</th>
+                <!-- <th>V.No</th> -->
             {/if}
             <th>Remark</th>
             {if $smarty.request.ddac}<th>Deli  Ack.</th>{/if}
@@ -72,7 +73,7 @@
         {foreach item=x name=it from=$data}
             {if $invno!=$x.invno && $start!=1}
                 <tr>
-                    <td align="right" colspan="9">Total:</td>
+                    <td align="right" colspan="7">Total:</td>
                     <td align="right">{$weight|string_format:"%.3f"}</td>
                     <td align="right">{$qty|string_format:"%.0f"}</td>
                     <!-- <td align="right">{$freight|string_format:"%.2f"}</td> -->
@@ -84,7 +85,7 @@
                         <td align="right">{$prev.other|string_format:"%.2f"}</td>
                         <td align="right">{$prev.tdsamt|string_format:"%.2f"}</td>
                         <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
-                        <td>{$prev.ovno}</td>
+                        <!-- <td>{$prev.ovno}</td> -->
                         {$tfreight=$tfreight+$prev.tfreight}
                         {$advance=$advance+$prev.advance}
                         {$balance=$balance+$prev.balance}
@@ -98,7 +99,8 @@
                 {$s=1}
             {/if}
             <tr>
-                <td>{$s}{$s=$s+1}{$start=$start+1}</td>
+                <!-- <td>{$s}</td> -->
+                {$s=$s+1}{$start=$start+1}
                 <td>{$x.date|date_format:"%d-%m-%Y"}</td>
                 <td>{$x.vehno}</td>
                 <td>{$x.no}</td>
@@ -106,7 +108,7 @@
                 <td>{$x.aname}</td>
                 <td>{$x.bno}</td>
                 <td>{$x.bnodate|date_format:"%d-%m-%Y"}</td>
-                <td>{$x.lrno}</td>
+                <!-- <td>{$x.lrno}</td> -->
                 <td align="right">{$x.weight|string_format:"%.3f"}</td>
                 <td align="right">{$x.qty|string_format:"%.0f"}</td>
                 <!-- <td align="right">{$x.freight|string_format:"%.2f"}</td> -->
@@ -121,7 +123,7 @@
             {$prev = $x}
         {/foreach}
         <tr>
-            <td align="right" colspan="9">Total:</td>
+            <td align="right" colspan="7">Total:</td>
             <td align="right">{$weight|string_format:"%.3f"}</td>
             <td align="right">{$qty|string_format:"%.0f"}</td>
             <!-- <td align="right">{$freight|string_format:"%.2f"}</td> -->
@@ -133,7 +135,7 @@
                 <td align="right">{$prev.other|string_format:"%.2f"}</td>
                 <td align="right">{$prev.tdsamt|string_format:"%.2f"}</td>
                 <td>{$prev.odate|date_format:"%d-%m-%Y"}</td>
-                <td>{$prev.ovno}</td>
+                <!-- <td>{$prev.ovno}</td> -->
                 {$tfreight=$tfreight+$prev.tfreight}
                 {$advance=$advance+$prev.advance}
                 {$balance=$balance+$prev.balance}
@@ -145,7 +147,7 @@
         </tr>
 
         <tr>
-            <th colspan="9">Grand Total :</th>
+            <th colspan="7">Grand Total :</th>
             <td align="right"><b>{$gweight|string_format:"%.3f"}</b></td>
             <td align="right"><b>{$gqty|string_format:"%.0f"}</b></td>
             <!-- <td align="right"><b>{$gfreight|string_format:"%.2f"}</b></td> -->
